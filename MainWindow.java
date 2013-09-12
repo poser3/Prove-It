@@ -4,10 +4,8 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import javax.swing.*;
 
-import edu.emory.oxford.proofpad.sketch.SketchCanvas;
-import edu.emory.oxford.proofpad.sketch.SketchPanel;
+import javax.swing.*;
 
 import acm.gui.TableLayout;
 import acm.program.Program;

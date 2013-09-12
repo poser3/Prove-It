@@ -3,8 +3,6 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import javax.swing.JOptionPane;
 
-import edu.emory.oxford.proofpad.Expression;
-import edu.emory.oxford.proofpad.MainWindow;
 import acm.graphics.GCanvas;
 import acm.graphics.GObject;
 
