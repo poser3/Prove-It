@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.util.ArrayList;
 
 public class OperatorExpression extends Expression {

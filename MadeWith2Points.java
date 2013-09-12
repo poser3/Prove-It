@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 /**
  * MadeWith2Points provides methods for dealing with geometric objects constructed from two points
  * (segments, lines, rays, and circles).

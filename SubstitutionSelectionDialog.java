@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.awt.Dialog;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

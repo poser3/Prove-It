@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.JButton;

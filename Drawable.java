@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 /**
  * Drawable provides common methods for objects which can be shown on a SketchCanvas.
  * @author Paul Oser, Lee Vian

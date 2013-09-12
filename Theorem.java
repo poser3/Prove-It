@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;

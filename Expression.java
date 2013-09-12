@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 

@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 /**
  * The LabelMaker produces sequential labels for points, segments, lines, circles, and rays.
  * Points are labeled, in the order they are created, A, B, C, ..., Z, AA, AB, ..., AZ, BA, ...

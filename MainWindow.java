@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.FileNotFoundException;

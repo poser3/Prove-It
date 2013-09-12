@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 public class VariableExpression extends Expression {
 	
 	private final String name;

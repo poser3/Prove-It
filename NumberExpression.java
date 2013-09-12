@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.math.BigDecimal;
 
 public class NumberExpression extends Expression {

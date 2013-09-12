@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 import java.util.ArrayList;
 import java.util.Collection;
 

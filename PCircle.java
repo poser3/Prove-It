@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 import java.awt.Color;
 
 import acm.graphics.GOval;

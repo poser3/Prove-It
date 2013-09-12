@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import java.awt.Component;
 import java.awt.Dimension;
 

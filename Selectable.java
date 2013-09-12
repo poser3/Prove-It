@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad.sketch;
-
 public interface Selectable {
 	
 	public final double EPSILON = 10;

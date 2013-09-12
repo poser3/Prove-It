@@ -1,5 +1,3 @@
-package edu.emory.oxford.proofpad;
-
 import javax.swing.DefaultListModel;
 
 @SuppressWarnings("serial")
