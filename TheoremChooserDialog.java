@@ -16,12 +16,12 @@ import acm.gui.TableLayout;
 @SuppressWarnings("serial")
 public class TheoremChooserDialog extends JDialog {
 	
-	private final DefaultListModel theorems = new DefaultListModel();
-	private final DefaultListModel hypotheses = new DefaultListModel();
-	private final DefaultListModel conclusions = new DefaultListModel();
-	private final JList theoremsList = new JList(theorems);
-	private final JList hypothesesList = new JList(hypotheses);
-	private final JList conclusionsList = new JList(conclusions);
+	private final DefaultListModel<Theorem> theorems = new DefaultListModel<Theorem>();
+	private final DefaultListModel<Expression> hypotheses = new DefaultListModel<Expression>();
+	private final DefaultListModel<Expression> conclusions = new DefaultListModel<Expression>();
+	private final JList<Theorem> theoremsList = new JList<Theorem>(theorems);
+	private final JList<Expression> hypothesesList = new JList<Expression>(hypotheses);
+	private final JList<Expression> conclusionsList = new JList<Expression>(conclusions);
 	private final JButton okButton = new JButton("OK");
 	private final JButton cancelButton = new JButton("Cancel");
 	private final TableLayout layout = new TableLayout(7, 2, 10, 10);

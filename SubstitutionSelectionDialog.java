@@ -19,7 +19,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 	private final Expression substitutingIn;
 	private final JLabel previewLabel;
 	private final SubstitutionCellRenderer renderer = new SubstitutionCellRenderer();
-	private final JComboBox selectionBox;
+	private final JComboBox<OperatorExpression> selectionBox;
 	private final JCheckBox checkBox;
 	private boolean choiceMade = true;
 	
@@ -40,7 +40,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 				expressions.add((OperatorExpression) ex);
 		}		
 		
-		selectionBox = new JComboBox(expressions);
+		selectionBox = new JComboBox<OperatorExpression>(expressions);
 		selectionBox.setRenderer(renderer);
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {

@@ -8,7 +8,7 @@ import javax.swing.JList;
 @SuppressWarnings("serial")
 public class ExpressionListCellRenderer extends DefaultListCellRenderer {
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (value instanceof Expression) {
 			Expression ex = (Expression) value;
 			if (ex.isHidden()) {
