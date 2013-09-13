@@ -6,7 +6,7 @@ import javax.swing.JList;
 public class SubstitutionCellRenderer extends ExpressionListCellRenderer {
 	public boolean reversed = false;
 	
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (value instanceof OperatorExpression) {
 			OperatorExpression opEx = (OperatorExpression) value;
 			if (opEx.getOp().equals(Operator.named("="))) {

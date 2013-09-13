@@ -16,7 +16,7 @@ public class MainWindow extends Program {
 	private final static JFileChooser fileChooser = new JFileChooser();
 	
 	private final ExpressionListModel expressions = new ExpressionListModel();
-	private final JList expressionsList = new JList(expressions);
+	private final JList<Expression> expressionsList = new JList<Expression>(expressions);
 	private final JTextArea instructions = new JTextArea(10, 10);
 	
 	private class OperatePanel extends JPanel {
@@ -96,7 +96,7 @@ public class MainWindow extends Program {
 		
 		private void addButton(final String opName, final String buttonText, final String selectName) {			
 			final String[] comboItems = {selectName+" both sides", selectName+" left side", selectName+" right side"};
-			final JComboBox comboBox = new JComboBox(comboItems);
+			final JComboBox<String> comboBox = new JComboBox<String>(comboItems);
 			add(comboBox);
 			
 			final Operator op = Operator.named(opName);
@@ -141,7 +141,7 @@ public class MainWindow extends Program {
 			JButton hideButton = new JButton("Hide selected statements");
 			hideButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
-					for (Object selected : expressionsList.getSelectedValues()) {
+					for (Object selected : expressionsList.getSelectedValuesList()) {
 						((Expression) selected).setHidden(true);
 					}
 					MainWindow.this.update();
@@ -223,6 +223,7 @@ public class MainWindow extends Program {
 							Scanner reader = new Scanner(fileChooser.getSelectedFile());
 							while (reader.hasNextLine())
 								addExpression(reader.nextLine());
+							reader.close();
 						} catch (FileNotFoundException e) {
 							setInstructionsText("File not found!");
 						}

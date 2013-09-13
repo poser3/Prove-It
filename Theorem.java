@@ -40,6 +40,8 @@ public class Theorem {
 					currentSection.add(Expression.parse(line));
 			}
 		}
+		
+		scanner.close();
 	}
 	
 	public final String name;
