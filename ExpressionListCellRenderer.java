@@ -5,10 +5,11 @@ import javax.swing.DefaultListCellRenderer;
 import javax.swing.JLabel;
 import javax.swing.JList;
 
+//Some random comment
 @SuppressWarnings("serial")
 public class ExpressionListCellRenderer extends DefaultListCellRenderer {
 	@Override
-	public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+	public Component getListCellRendererComponentFIXME(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (value instanceof Expression) {
 			Expression ex = (Expression) value;
 			if (ex.isHidden()) {
