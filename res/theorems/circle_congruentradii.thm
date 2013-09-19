@@ -1,0 +1,12 @@
+Radii of same circle are equal
+variables
+c
+O
+A
+B
+hypotheses
+circle-center O c
+circle-on A c
+circle-on B c
+conclusions
+congruent (segment O A) (segment O B)

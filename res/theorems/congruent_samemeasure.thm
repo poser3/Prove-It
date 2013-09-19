@@ -1,0 +1,10 @@
+Congruent segments have same measure
+variables
+A
+B
+C
+D
+hypotheses
+congruent (segment A B) (segment C D)
+conclusions
+= (m (segment A B)) (m (segment C D))

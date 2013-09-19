@@ -1,0 +1,10 @@
+Transitive property of =
+variables
+A
+B
+C
+hypotheses
+= A B
+= B C
+conclusions
+= A C

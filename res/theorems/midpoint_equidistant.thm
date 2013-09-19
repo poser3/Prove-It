@@ -1,0 +1,9 @@
+Distances to midpoint are equal
+variables
+A
+B
+C
+hypotheses
+midpoint C A B
+conclusions
+congruent (segment A C) (segment C B)

@@ -1,0 +1,16 @@
+Side-side-side Triangle Congruence
+variables
+A
+B
+C
+D
+E
+F
+hypotheses
+congruent (segment A B) (segment D E)
+congruent (segment A C) (segment D F)
+congruent (segment B C) (segment E F)
+conclusions
+= (m (angle A B C)) (m (angle D E F))
+= (m (angle C A B)) (m (angle F D E))
+= (m (angle B C A)) (m (angle E F D))

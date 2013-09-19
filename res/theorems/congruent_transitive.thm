@@ -1,0 +1,13 @@
+Transitive property of congruence
+variables
+A
+B
+C
+D
+E
+F
+hypotheses
+congruent (segment A B) (segment C D)
+congruent (segment C D) (segment E F)
+conclusions
+congruent (segment A B) (segment E F)

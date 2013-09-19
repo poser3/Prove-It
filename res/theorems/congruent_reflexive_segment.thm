@@ -1,0 +1,6 @@
+Segment is congruent to itself
+variables
+A
+B
+conclusions
+congruent (segment A B) (segment A B)
