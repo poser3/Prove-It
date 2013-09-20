@@ -116,5 +116,9 @@ public class OperatorExpression extends Expression {
 		else
 			throw new ClassCastException();
 	}
+	
+	public Expression simplify() {
+		return op.simplify(this);
+	}
 
 }

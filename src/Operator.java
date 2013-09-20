@@ -1,21 +1,224 @@
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Operator implements Comparable<Operator> {
 	
 	// Create a few default operators. Operators can be defined anywhere, but should all exist before any expressions are parsed.
+	// This is the best place to define new operators, however.
 	static {
 		makeOperator("=", new OperatorSpec.CommutativeOperatorSpec(),
 				"commutative");
-		makeOperator("+", new OperatorSpec.CommutativeOperatorSpec(),
+		makeOperator("+", new OperatorSpec.CommutativeOperatorSpec() {
+			public Expression simplify(final OperatorExpression e) {
+				BigDecimal constant = BigDecimal.ZERO;
+				ArrayList<Expression> args = new ArrayList<Expression>();
+				
+				for(Expression arg : e.getArgs()) {
+					if (arg instanceof NumberExpression)
+						constant = constant.add(((NumberExpression) arg).getValue());
+					else if (arg instanceof OperatorExpression)
+						args.add(((OperatorExpression) arg).simplify());
+					else
+						args.add(arg);
+				}				
+				if (! constant.equals(BigDecimal.ZERO))
+					args.add(new NumberExpression(constant));
+				
+				if (args.size() == 0)
+					return new NumberExpression(BigDecimal.ZERO);
+				else if (args.size() == 1)
+					return args.get(0);
+				else
+					return new OperatorExpression(Operator.named("+"), args);
+			}
+		},
 				"associative", "commutative", "inverse -");
-		makeOperator("-", null,
-				"associative", "inverse +");
-		makeOperator("*", new OperatorSpec.CommutativeOperatorSpec(),
+		makeOperator("-", new OperatorSpec() {
+			public Expression simplify(final OperatorExpression e) {
+				if (e.getNumArgs() == 0)
+					return e;
+				else if (e.getNumArgs() == 1) {
+					Expression arg = e.getArg(0);
+					if (arg instanceof NumberExpression) {
+						BigDecimal value = ((NumberExpression) arg).getValue();
+						return new NumberExpression(value.multiply(new BigDecimal(-1)));
+					}
+					else if (arg instanceof OperatorExpression)
+						return ((OperatorExpression) arg).simplify();
+					else
+						return e;
+				}
+				else if (e.getArg(0) instanceof NumberExpression) {
+					BigDecimal constant = ((NumberExpression) e.getArg(0)).getValue();
+					ArrayList<Expression> args = new ArrayList<Expression>();
+					
+					for (int i=1; i<e.getNumArgs(); i++) {
+						if (e.getArg(i) instanceof NumberExpression)
+							constant = constant.subtract(((NumberExpression) e.getArg(i)).getValue());
+						else if (e.getArg(i) instanceof OperatorExpression)
+							args.add(((OperatorExpression) e.getArg(i)).simplify());
+						else
+							args.add(e.getArg(i));
+					}
+					args.add(0, new NumberExpression(constant));
+					
+					if (args.size() == 1)
+						return args.get(1);
+					else
+						return new OperatorExpression(Operator.named("-"), args);
+				}
+				else {
+					BigDecimal constant = BigDecimal.ZERO;
+					ArrayList<Expression> args = new ArrayList<Expression>();
+					args.add(e.getArg(0));
+					
+					for (int i=1; i<e.getNumArgs(); i++) {
+						if (e.getArg(i) instanceof NumberExpression)
+							constant = constant.subtract(((NumberExpression) e.getArg(i)).getValue());
+						else
+							args.add(e.getArg(i));
+					}
+					if (! constant.equals(BigDecimal.ZERO))
+						args.add(new NumberExpression(constant));
+					
+					if (args.size() == 1)
+						return args.get(1);
+					else
+						return new OperatorExpression(Operator.named("-"), args);
+				}
+			}
+		},
+				"inverse +");
+		makeOperator("*", new OperatorSpec.CommutativeOperatorSpec() {
+			public Expression simplify(final OperatorExpression e) {
+				BigDecimal constant = BigDecimal.ONE;
+				ArrayList<Expression> args = new ArrayList<Expression>();
+				
+				for(Expression arg : e.getArgs()) {
+					if (arg instanceof NumberExpression)
+						constant = constant.multiply(((NumberExpression) arg).getValue());
+					else if (arg instanceof OperatorExpression)
+						args.add(((OperatorExpression) arg).simplify());
+					else
+						args.add(arg);
+				}
+				if (constant.equals(BigDecimal.ZERO))
+					return new NumberExpression(BigDecimal.ZERO);
+				else if (! constant.equals(BigDecimal.ONE))
+					args.add(new NumberExpression(constant));
+				
+				if (args.size() == 0)
+					return new NumberExpression(BigDecimal.ONE);
+				else if (args.size() == 1)
+					return args.get(0);
+				else
+					return new OperatorExpression(Operator.named("*"), args);
+			}
+		},
 				"associative", "commutative", "distributes +", "inverse /");
-		makeOperator("/", null,
+		makeOperator("/", new OperatorSpec() {
+			public Expression simplify(final OperatorExpression e) {
+				if (e.getNumArgs() == 0)
+					return e;
+				else if (e.getNumArgs() == 1) {
+					Expression arg = e.getArg(0);
+					if (arg instanceof NumberExpression) {
+						BigDecimal value = ((NumberExpression) arg).getValue();
+						return new NumberExpression(BigDecimal.ONE.divide(value));
+					}
+					else if (arg instanceof OperatorExpression)
+						return ((OperatorExpression) arg).simplify();
+					else
+						return e;
+				}
+				else if (e.getArg(0) instanceof NumberExpression) {
+					BigDecimal constant = ((NumberExpression) e.getArg(0)).getValue();
+					ArrayList<Expression> args = new ArrayList<Expression>();
+					
+					for (int i=1; i<e.getNumArgs(); i++) {
+						if (e.getArg(i) instanceof NumberExpression)
+							constant = constant.divide(((NumberExpression) e.getArg(i)).getValue());
+						else if (e.getArg(i) instanceof OperatorExpression)
+							args.add(((OperatorExpression) e.getArg(i)).simplify());
+						else
+							args.add(e.getArg(i));
+					}
+					if (constant.equals(BigDecimal.ZERO))
+						return new NumberExpression(BigDecimal.ZERO);
+					else {
+						args.add(0, new NumberExpression(constant));
+						if (args.size() == 1)
+							return args.get(1);
+						else
+							return new OperatorExpression(Operator.named("/"), args);
+					}
+				}
+				else {
+					BigDecimal constant = BigDecimal.ONE;
+					ArrayList<Expression> args = new ArrayList<Expression>();
+					args.add(e.getArg(0));
+					
+					for (int i=1; i<e.getNumArgs(); i++) {
+						if (e.getArg(i) instanceof NumberExpression)
+							constant = constant.divide(((NumberExpression) e.getArg(i)).getValue());
+						else
+							args.add(e.getArg(i));
+					}
+					if (! constant.equals(BigDecimal.ONE))
+						args.add(new NumberExpression(constant));
+					
+					if (args.size() == 1)
+						return args.get(1);
+					else
+						return new OperatorExpression(Operator.named("/"), args);
+				}
+			}
+		},
 				"inverse *");
-		makeOperator("^", null,
+		makeOperator("^", new OperatorSpec() {
+			public Expression simplify(final OperatorExpression e) {
+				if (e.getNumArgs() == 2) {
+					Expression base = e.getArg(0);
+					Expression power = e.getArg(1);
+					
+					if (base instanceof OperatorExpression)
+						base = ((OperatorExpression) base).simplify();
+					if (power instanceof OperatorExpression)
+						power = ((OperatorExpression) power).simplify();
+					
+					if (base instanceof NumberExpression && power instanceof NumberExpression) {
+						try {
+							BigDecimal value = ((NumberExpression) base).getValue().pow(((NumberExpression) power).getValue());
+							return new NumberExpression(value);
+						}
+						catch (ArithmeticException exception) {
+							// do nothing - other code handles the case where BigDecimal.pow() doesn't work
+						}
+					}
+					if (base instanceof NumberExpression && ((NumberExpression) base).getValue().equals(BigDecimal.ZERO))
+						return new NumberExpression(BigDecimal.ZERO); // If the power is negative this probably isn't the wisest course
+					else if (power instanceof NumberExpression && ((NumberExpression) power).getValue().equals(BigDecimal.ONE))
+						return base;
+					else {
+						ArrayList<Expression> args = new ArrayList<Expression>();
+						args.add(base);
+						args.add(power);
+						return new OperatorExpression(Operator.named("^", args));
+					}
+				}
+				else {
+					ArrayList<Expression> args = new ArrayList<Expression>(e.getNumArgs());
+					for (Expression arg : e.getArgs()) {
+						if (arg instanceof OperatorExpression)
+							args.add(((OperatorExpression) arg).simplify());
+						else
+							args.add(arg);
+					}
+					return new OperatorExpression(Operator.named("^", args));
+				}
+			}
+		},
 				"distributes *");
 		makeOperator("m", new OperatorSpec() {
 			public String toLatex(OperatorExpression e) {
@@ -284,6 +487,13 @@ public class Operator implements Comparable<Operator> {
 	 */
 	public int compareTo(Operator op) {
 		return name.compareTo(op.name);
+	}
+	
+	/**
+	 * Simplify an OperatorExpression using this operator
+	 */
+	public Expression simplify(OperatorExpression e) {
+		return methods.simplify(e);
 	}
 	
 }

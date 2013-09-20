@@ -83,6 +83,19 @@ public class OperatorSpec {
 	}
 	
 	/**
+	 * Performs simplifications on an OperatorExpression using this operator.
+	 * @param e an OperatorExpression using this operator
+	 * @return a simpler Expression with the same mathematical meaning
+	 */
+	public Expression simplify(final OperatorExpression e) {
+		/*
+		 * The default attitude is that no simplification is possible.
+		 * Operators which permit straightforward simplification should override this method.
+		 */
+		return e;
+	}
+	
+	/**
 	 * This OperatorSpec overwrites the areEqual method to support commutative operators.
 	 * @author Lee Vian
 	 *
