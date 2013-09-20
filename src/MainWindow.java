@@ -45,12 +45,12 @@ public class MainWindow extends Program {
 						if (e instanceof OperatorExpression) {
 							Expression simplified = ((OperatorExpression) e).simplify();
 							if (! simplified.equals(e))
-								addExpression(e);
+								addExpressionAndSelect(simplified, true);
 						}
 					}
 				}
 			});
-			add(simplifyButton);
+			add(simplifyButton, "gridwidth="+COLUMNS);
 		}
 		
 		private void addButton(final String opName, final String text) {

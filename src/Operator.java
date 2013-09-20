@@ -64,7 +64,7 @@ public class Operator implements Comparable<Operator> {
 					args.add(0, new NumberExpression(constant));
 					
 					if (args.size() == 1)
-						return args.get(1);
+						return args.get(0);
 					else
 						return new OperatorExpression(Operator.named("-"), args);
 				}
@@ -83,7 +83,7 @@ public class Operator implements Comparable<Operator> {
 						args.add(new NumberExpression(constant));
 					
 					if (args.size() == 1)
-						return args.get(1);
+						return args.get(0);
 					else
 						return new OperatorExpression(Operator.named("-"), args);
 				}
@@ -149,7 +149,7 @@ public class Operator implements Comparable<Operator> {
 					else {
 						args.add(0, new NumberExpression(constant));
 						if (args.size() == 1)
-							return args.get(1);
+							return args.get(0);
 						else
 							return new OperatorExpression(Operator.named("/"), args);
 					}
@@ -169,7 +169,7 @@ public class Operator implements Comparable<Operator> {
 						args.add(new NumberExpression(constant));
 					
 					if (args.size() == 1)
-						return args.get(1);
+						return args.get(0);
 					else
 						return new OperatorExpression(Operator.named("/"), args);
 				}
@@ -189,7 +189,7 @@ public class Operator implements Comparable<Operator> {
 					
 					if (base instanceof NumberExpression && power instanceof NumberExpression) {
 						try {
-							BigDecimal value = ((NumberExpression) base).getValue().pow(((NumberExpression) power).getValue());
+							BigDecimal value = ((NumberExpression) base).getValue().pow(((NumberExpression) power).getValue().intValueExact());
 							return new NumberExpression(value);
 						}
 						catch (ArithmeticException exception) {
@@ -198,13 +198,15 @@ public class Operator implements Comparable<Operator> {
 					}
 					if (base instanceof NumberExpression && ((NumberExpression) base).getValue().equals(BigDecimal.ZERO))
 						return new NumberExpression(BigDecimal.ZERO); // If the power is negative this probably isn't the wisest course
+					else if (power instanceof NumberExpression && ((NumberExpression) power).getValue().equals(BigDecimal.ZERO))
+						return new NumberExpression(BigDecimal.ONE);
 					else if (power instanceof NumberExpression && ((NumberExpression) power).getValue().equals(BigDecimal.ONE))
 						return base;
 					else {
 						ArrayList<Expression> args = new ArrayList<Expression>();
 						args.add(base);
 						args.add(power);
-						return new OperatorExpression(Operator.named("^", args));
+						return new OperatorExpression(Operator.named("^"), args);
 					}
 				}
 				else {
@@ -215,7 +217,7 @@ public class Operator implements Comparable<Operator> {
 						else
 							args.add(arg);
 					}
-					return new OperatorExpression(Operator.named("^", args));
+					return new OperatorExpression(Operator.named("^"), args);
 				}
 			}
 		},

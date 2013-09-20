@@ -84,15 +84,19 @@ public class OperatorSpec {
 	
 	/**
 	 * Performs simplifications on an OperatorExpression using this operator.
+	 * The default implementation just tries to simplify each argument.
 	 * @param e an OperatorExpression using this operator
 	 * @return a simpler Expression with the same mathematical meaning
 	 */
 	public Expression simplify(final OperatorExpression e) {
-		/*
-		 * The default attitude is that no simplification is possible.
-		 * Operators which permit straightforward simplification should override this method.
-		 */
-		return e;
+		ArrayList<Expression> args = new ArrayList<Expression>();
+		for (Expression arg : e.getArgs()) {
+			if (arg instanceof OperatorExpression)
+				args.add(((OperatorExpression) arg).simplify());
+			else
+				args.add(e);
+		}
+		return new OperatorExpression(e.getOp(), args);
 	}
 	
 	/**
