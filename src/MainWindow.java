@@ -35,6 +35,22 @@ public class MainWindow extends Program {
 			addButton("/");
 			
 			add(textField, "gridwidth="+COLUMNS);
+			
+			JButton simplifyButton = new JButton("Simplify");
+			simplifyButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					for (Object selected : expressionsList.getSelectedValuesList()) {
+						Expression e = (Expression) selected;
+						
+						if (e instanceof OperatorExpression) {
+							Expression simplified = ((OperatorExpression) e).simplify();
+							if (! simplified.equals(e))
+								addExpression(e);
+						}
+					}
+				}
+			});
+			add(simplifyButton);
 		}
 		
 		private void addButton(final String opName, final String text) {
