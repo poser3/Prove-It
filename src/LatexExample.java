@@ -17,12 +17,12 @@ public class LatexExample extends GraphicsProgram {
 
 		//let's define some latex strings (notice the "\" chars are escaped)
 		String[] latexStrings = new String[NUM_OF_LATEX_STRINGS];
-		latexStrings[0] = "\\bigtriangleup ABC \\cong \\bigtriangleup ABC";
-		latexStrings[1] = "ax^2 + bx + c = 0";
-		latexStrings[2] = "\\overleftrightarrow{AC} \\textrm{ contains } B";
-		latexStrings[3] = "\\frac{AB}{DE} = \\frac{AC}{DF}";
-		latexStrings[4] = "2 + {\\color{Blue}\\frac{\\sqrt{x^2+1}}{x-1}} = 7";
-		latexStrings[5] = "m \\angle ABC = m \\angle ABD + m \\angle DBC";
+		latexStrings[0] = "1.\\quad \\bigtriangleup ABC \\cong \\bigtriangleup ABC";
+		latexStrings[1] = "2.\\quad ax^2 + bx + c = 0";
+		latexStrings[2] = "3.\\quad \\overleftrightarrow{AC} \\textrm{ contains } B";
+		latexStrings[3] = "4.\\quad \\frac{AB}{DE} = \\frac{AC}{DF}";
+		latexStrings[4] = "5.\\quad 2 + {\\color{Blue}\\frac{\\sqrt{x^2+1}}{x-1}} = 7";
+		latexStrings[5] = "6.\\quad m \\angle ABC = m \\angle ABD + m \\angle DBC";
 		
 		//if we just wanted an Image, we call this...
 		Image image = LatexHandler.latexToImage(latexStrings[0]);
