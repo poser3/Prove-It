@@ -3,6 +3,7 @@ import java.awt.Image;
 import acm.graphics.GImage;
 import acm.program.GraphicsProgram;
 	
+@SuppressWarnings("serial")
 public class LatexExample extends GraphicsProgram{
 		
 	public void run() {
@@ -25,14 +26,15 @@ public class LatexExample extends GraphicsProgram{
 		latexStrings[5] = "6.\\quad m \\angle ABC = m \\angle ABD + m \\angle DBC";
 		
 		//if we just wanted an Image, we call this...
-		Image image = RemoteLatexHandler.latexToImage(latexStrings[0]);
+		@SuppressWarnings("unused")
+		Image image = LatexHandler.latexToImage(latexStrings[0]);
 		
 		//if we wanted to play with GImages, instead...
 		GImage[] gImages = new GImage[NUM_OF_LATEX_STRINGS];
 		double maxWidth = 100;
 		double y = V_OFFSET;
 		for (int i = 0; i < latexStrings.length; i++) {
-			gImages[i] = RemoteLatexHandler.latexToGImage(latexStrings[i]);
+			gImages[i] = LatexHandler.latexToGImage(latexStrings[i]);
 			this.add(gImages[i],H_OFFSET,y);
 			y += gImages[i].getHeight() + V_OFFSET;
 			maxWidth = Math.max(maxWidth, gImages[i].getWidth());

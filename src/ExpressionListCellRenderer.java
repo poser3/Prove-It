@@ -1,6 +1,5 @@
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 
 import javax.swing.ImageIcon;
@@ -12,8 +11,6 @@ public class ExpressionListCellRenderer implements ListCellRenderer<Expression> 
 	
 	public Component getListCellRendererComponent(JList<? extends Expression> list, Expression value, int index, boolean isSelected, boolean cellHasFocus) {
 		String latex = value.toLatex();
-		//if (isSelected)
-		//	latex = "\\usepackage{color} {\\color{Blue}" + latex + "}";
 		
 		BufferedImage image = (BufferedImage) LatexHandler.latexToImage(latex);
 		System.out.println("Image: "+image.getWidth()+" "+image.getHeight());
