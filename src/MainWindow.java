@@ -339,23 +339,22 @@ public class MainWindow extends Program {
 	public Expression getSelected() {
 		return (Expression) expressionsList.getSelectedValue();
 	}
-	
-	public void addExpression(final String s) {
-		expressions.addElement(Expression.parse(s));
-	}
+
 	public void addExpression(Expression e) {
 		expressions.addElement(e);
+		setInstructionsText(e.toString());
 		if (! expressions.contains(e))
 			throw new IllegalArgumentException();
 	}
-	public void addExpressionAndSelect(final String s, boolean shouldScroll) {
-		Expression e = Expression.parse(s);
-		expressions.addElement(e);
-		expressionsList.setSelectedValue(e, shouldScroll);
+	public void addExpression(final String s) {
+		addExpression(Expression.parse(s));
 	}
 	public void addExpressionAndSelect(Expression e, boolean shouldScroll) {
-		expressions.addElement(e);
+		addExpression(e);
 		expressionsList.setSelectedValue(e, shouldScroll);
+	}
+	public void addExpressionAndSelect(final String s, boolean shouldScroll) {
+		addExpressionAndSelect(Expression.parse(s), shouldScroll);
 	}
 	
 }
