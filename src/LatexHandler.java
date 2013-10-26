@@ -16,9 +16,12 @@ public class LatexHandler {
 		 * @return the image of the "pretty mathematics" described by the latex string
 		 */
 		public static Image latexToImage(String latex) {
-			TeXFormula formula = new TeXFormula(latex);
-			TeXIcon icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 40);
-			return new BufferedImage(icon.getIconWidth(), icon.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			TeXFormula fomule = new TeXFormula(latex);
+			TeXIcon ti = fomule.createTeXIcon(
+			TeXConstants.STYLE_DISPLAY, 40);
+			BufferedImage b = new BufferedImage(ti.getIconWidth(), ti
+			   .getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			return b;
 		}
 		
 		/** 
@@ -28,7 +31,9 @@ public class LatexHandler {
 		 * @return the GImage of the "pretty mathematics" described by the latex string
 		 */
 		public static GImage latexToGImage(String latex) {
-			return new GImage(latexToImage(latex));
+			Image image = latexToImage(latex);
+			GImage gImage = new GImage(image);
+			return gImage;
 		}
 
 }
