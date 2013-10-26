@@ -1,9 +1,10 @@
 import java.awt.Component;
 
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
 @SuppressWarnings("serial")
-public class SubstitutionCellRenderer extends ExpressionListCellRenderer {
+public class SubstitutionCellRenderer extends DefaultListCellRenderer {
 	public boolean reversed = false;
 	
 	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
