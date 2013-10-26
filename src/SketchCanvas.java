@@ -5,15 +5,13 @@ import javax.swing.JOptionPane;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GObject;
+import acm.program.Program;
 
 
 @SuppressWarnings("serial")
 public class SketchCanvas extends GCanvas {
 
 	    //Constants
-		private final int WIDTH = 1000;
-		private final int HEIGHT = 1000;
-		
 		public final byte SELECT_MODE = 0;
 		public final byte ADDING_POINT_MODE = 1;
 		public final byte ADDING_FIRST_POINT_MODE = 2;
@@ -421,17 +419,20 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public MadeWith2Points addWith2Points(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
+			int canvasWidth = this.mainWindow_.getRegionPanel(Program.CENTER).getWidth();
+			int canvasHeight = this.mainWindow_.getRegionPanel(Program.CENTER).getHeight();
+			
 			switch(elementBeingAdded_) {
 			case SEGMENT :	thing = new PSegment(p1, p2, p1.getLabel() + "-" + p2.getLabel());
 							break;
 			case LINE :		thing = new PLine(p1, p2, labelMaker_.nextLabel(LabelMaker.LINE),
-												0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+												0.0, (double) canvasWidth, 0.0, (double) canvasHeight);
 							addStatement("line-on %s %s", p1, thing);
 							addStatement("line-on %s %s", p2, thing);
 							break;
 							
 			case RAY :		thing = new PRay(p1, p2, labelMaker_.nextLabel(LabelMaker.RAY),
-												0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+												0.0, (double) canvasWidth, 0.0, (double) canvasHeight);
 							addStatement("ray-endpoint %s %s", p1, thing);
 							addStatement("ray-on %s %s", p2, thing);
 							break;
@@ -463,14 +464,18 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public MadeWith2Points addWith2PointsHalfBaked(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
+			
+			int canvasWidth = this.mainWindow_.getRegionPanel(Program.CENTER).getWidth();
+			int canvasHeight = this.mainWindow_.getRegionPanel(Program.CENTER).getHeight();
+			
 			switch(elementBeingAdded_) {
 			case SEGMENT :	thing = new PSegment(p1, p2, "");
 							break;
 							
-			case LINE :		thing = new PLine(p1, p2, "", 0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case LINE :		thing = new PLine(p1, p2, "", 0.0, (double) canvasWidth, 0.0, (double) canvasHeight);
 							break;
 							
-			case RAY :		thing = new PRay(p1, p2, "", 0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case RAY :		thing = new PRay(p1, p2, "", 0.0, (double) canvasWidth, 0.0, (double) canvasHeight);
 							break;
 							
 			case CIRCLE :	thing = new PCircle(p1, p2, "");
@@ -709,3 +714,4 @@ public class SketchCanvas extends GCanvas {
 		}
 	
 }
+
