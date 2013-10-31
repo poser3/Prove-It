@@ -2,10 +2,12 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import acm.graphics.GCompound;
+import acm.graphics.GLabel;
 import acm.graphics.GOval;
 
 @SuppressWarnings("serial")
-public class PPoint extends GOval implements Drawable, Selectable {
+public class PPoint extends GCompound implements Drawable, Selectable {
 
 	public static final double POINT_DIAMETER = 10;
 	public static final double EPSILON = 1;
@@ -26,29 +28,38 @@ public class PPoint extends GOval implements Drawable, Selectable {
 		return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 	}
 
+	private GOval dot_;
 	private double x_;
 	private double y_;
 	private byte constructedAs_;
 	private ArrayList<Drawable> parents_;
 	private final String label_;
 	private boolean selected_;
+	private GLabel gLabel_;
 	
 	public PPoint(double x, double y, String label) {
-		super(x - POINT_DIAMETER/2, y - POINT_DIAMETER/2, POINT_DIAMETER, POINT_DIAMETER);
+		
+		this.setLocation(x,y);
+		dot_ = new GOval(-POINT_DIAMETER / 2.0, -POINT_DIAMETER / 2.0, POINT_DIAMETER, POINT_DIAMETER);
+		dot_.setFilled(true);
+		dot_.setFillColor(Color.BLACK);
+		this.add(dot_);
+		
+		label_ = label;
+		gLabel_ = new GLabel(label_, 10, -10);
+		this.add(gLabel_);
+		
+		constructedAs_ = FREE_POINT;
+		
 		x_ = x;
 		y_ = y;
-		constructedAs_ = FREE_POINT;
-		setFilled(true);
-		setFillColor(Color.BLACK);
-		label_ = label;
 	}
 	
 	public PPoint(byte constructedAs, Collection<? extends Drawable> parents, String label) {
-		super(0, 0, POINT_DIAMETER, POINT_DIAMETER);
-		
+		dot_ = new GOval(0, 0, POINT_DIAMETER, POINT_DIAMETER);
+		dot_.setFilled(true);
+		dot_.setFillColor(Color.BLACK);
 		parents_ = new Drawables(parents);
-		setFilled(true);
-		setFillColor(Color.BLACK);
 		label_ = label;
 		constructedAs_ = constructedAs;
 		update();
@@ -87,7 +98,7 @@ public class PPoint extends GOval implements Drawable, Selectable {
 		switch (constructedAs_) {
 		
 		case FREE_POINT :
-			setLocation(x_ - POINT_DIAMETER/2, y_ - POINT_DIAMETER/2);
+			setLocation(x_, y_);
 			break;
 		                 
 		case MIDPOINT :
@@ -95,8 +106,8 @@ public class PPoint extends GOval implements Drawable, Selectable {
         	PPoint p2 = (PPoint) parents_.get(1);
         	x_ = (p1.getPointX() + p2.getPointX()) / 2.0;
         	y_ = (p1.getPointY() + p2.getPointY()) / 2.0;
-        	setLocation(x_ - POINT_DIAMETER/2, y_ - POINT_DIAMETER/2);
-			break;
+        	setLocation(x_, y_);
+        	break;
 		                  
 		case INTERSECTION_OF_LINES : 
 			pL1 = (PLine) parents_.get(0);
@@ -112,7 +123,7 @@ public class PPoint extends GOval implements Drawable, Selectable {
 			t1 = (b2*(x1-x2) + a2*(y2-y1))/(a2*b1-a1*b2);
 			x_ = x1 + a1*t1;
 			y_ = y1 + b1*t1;
-			setLocation(x_ - POINT_DIAMETER/2, y_ - POINT_DIAMETER/2);
+			setLocation(x_, y_);
 			break;
 		  				  
 		case LEFT_INTERSECTION_OF_CIRCLE_AND_LINE :
@@ -133,7 +144,7 @@ public class PPoint extends GOval implements Drawable, Selectable {
 					(f*(y0 - yj) - g*(x0-xj))*(f*(y0 - yj) - g*(x0-xj))))/(f*f+g*g);
 			x_ = x0 + f*t;
 			y_ = y0 + g*t;
-			setLocation(x_ - POINT_DIAMETER/2, y_ - POINT_DIAMETER/2);  
+			setLocation(x_, y_);
 			break;
 		  				  
 		case RIGHT_INTERSECTION_OF_CIRCLES :
@@ -168,14 +179,14 @@ public class PPoint extends GOval implements Drawable, Selectable {
 			sign = (constructedAs_ == RIGHT_INTERSECTION_OF_CIRCLES ? 1 : -1);
 			x_ = a + sign*h*xn;
 			y_ = b + sign*h*yn;
-			setLocation(x_ - POINT_DIAMETER/2, y_ - POINT_DIAMETER/2);
+			setLocation(x_, y_);
 			break;
 		}
 	}
 	
 	public void setSelected(boolean selected) {
 		selected_ = selected;
-		setFillColor(selected ? Color.MAGENTA : Color.BLACK);
+		dot_.setFillColor(selected ? Color.MAGENTA : Color.BLACK);
 	}
 	
 	public boolean isSelected() {
@@ -202,11 +213,13 @@ public class PPoint extends GOval implements Drawable, Selectable {
 	}
 	
 	public double getPointX() {
-		return x_;
+		return this.getX();
+		//return x_;
 	}
 	
 	public double getPointY() {
-		return y_;
+		return this.getY();
+		//return y_;
 	}
 	
 	public double getDistanceTo(double x, double y) {
@@ -219,3 +232,4 @@ public class PPoint extends GOval implements Drawable, Selectable {
 	}
 	
 }
+
