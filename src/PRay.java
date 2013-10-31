@@ -21,13 +21,13 @@ public class PRay extends GLine implements Drawable, Selectable, MadeWith2Points
 	
 	public GPoint getEdgePoint() {
 		
-		return AnalyticGeometryUtils.findBoundingRectIntersection(p1_.getPointX(), p1_.getPointY(), 
-																  p2_.getPointX(), p2_.getPointY(), 
+		return AnalyticGeometryUtils.findBoundingRectIntersection(p1_.getX(), p1_.getY(), 
+																  p2_.getX(), p2_.getY(), 
 																  xMin_, xMax_, yMin_, yMax_);
 	}
 	
 	public PRay(PPoint p1, PPoint p2, String label, Double xMin, Double xMax, Double yMin, Double yMax) {
-		super(p1.getPointX(), p1.getPointY(), p2.getPointX(), p2.getPointY());
+		super(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 		p1_ = p1;
 		p2_ = p2;
 		xMin_ = xMin;
@@ -42,12 +42,12 @@ public class PRay extends GLine implements Drawable, Selectable, MadeWith2Points
 	public void update() {
 		GPoint edgePoint = getEdgePoint();
 		
-		setStartPoint(p1_.getPointX(), p1_.getPointY());
+		setStartPoint(p1_.getX(), p1_.getY());
 		if (edgePoint != null) {
 			setEndPoint(edgePoint.getX(),edgePoint.getY());
 		}
 		else {
-			setEndPoint(p1_.getPointX(), p1_.getPointY());
+			setEndPoint(p1_.getX(), p1_.getY());
 		}
 	}
 	
@@ -87,10 +87,10 @@ public class PRay extends GLine implements Drawable, Selectable, MadeWith2Points
 		//if BAX > 90 use distance to A
 		//otherwise use distance to line AB
 		
-		double ax = p1_.getPointX();
-		double ay = p1_.getPointY();
-		double bx = p2_.getPointX();
-		double by = p2_.getPointY();
+		double ax = p1_.getX();
+		double ay = p1_.getY();
+		double bx = p2_.getX();
+		double by = p2_.getY();
 		
 		double sideABsquared = (ax-bx)*(ax-bx)+(ay-by)*(ay-by);
 		double sideAXsquared = (ax-x)*(ax-x)+(ay-y)*(ay-y);
@@ -119,8 +119,9 @@ public class PRay extends GLine implements Drawable, Selectable, MadeWith2Points
 	public String toString() {
 		return String.format("%s from (%f.1, %f.1) towards (%f.1, %f.1)",
 				getLabel(),
-				p1_.getPointX(), p1_.getPointY(),
-				p2_.getPointX(), p2_.getPointY());
+				p1_.getX(), p1_.getY(),
+				p2_.getX(), p2_.getY());
 	}
 	
 }
+

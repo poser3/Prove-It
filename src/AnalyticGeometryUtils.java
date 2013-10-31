@@ -4,8 +4,8 @@ import acm.graphics.GPoint;
 public class AnalyticGeometryUtils {
 
 	public static GPoint findBoundingRectIntersection(double p1x, double p1y, 
-							  double p2x, double p2y, 
-							  double xMin, double xMax, double yMin, double yMax) {
+													  double p2x, double p2y, 
+													  double xMin, double xMax, double yMin, double yMax) {
 		
 		ArrayList<GPoint> points = new ArrayList<GPoint>();
 		

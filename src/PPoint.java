@@ -21,10 +21,10 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	public static final byte RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE = 6;
 
 	public static double distance(PPoint p1, PPoint p2) {
-		double x1 = p1.getPointX();
-		double y1 = p1.getPointY();
-		double x2 = p2.getPointX();
-		double y2 = p2.getPointY();
+		double x1 = p1.getX();
+		double y1 = p1.getY();
+		double x2 = p2.getX();
+		double y2 = p2.getY();
 		return Math.sqrt((x1-x2)*(x1-x2)+(y1-y2)*(y1-y2));
 	}
 
@@ -56,11 +56,14 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	}
 	
 	public PPoint(byte constructedAs, Collection<? extends Drawable> parents, String label) {
-		dot_ = new GOval(0, 0, POINT_DIAMETER, POINT_DIAMETER);
+		dot_ = new GOval(-POINT_DIAMETER / 2.0, -POINT_DIAMETER / 2.0, POINT_DIAMETER, POINT_DIAMETER);
 		dot_.setFilled(true);
 		dot_.setFillColor(Color.BLACK);
+		this.add(dot_);
 		parents_ = new Drawables(parents);
 		label_ = label;
+		gLabel_ = new GLabel(label_, 10, -10);
+		this.add(gLabel_);
 		constructedAs_ = constructedAs;
 		update();
 	}
@@ -104,22 +107,22 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		case MIDPOINT :
 			PPoint p1 = (PPoint) parents_.get(0);
         	PPoint p2 = (PPoint) parents_.get(1);
-        	x_ = (p1.getPointX() + p2.getPointX()) / 2.0;
-        	y_ = (p1.getPointY() + p2.getPointY()) / 2.0;
+        	x_ = (p1.getX() + p2.getX()) / 2.0;
+        	y_ = (p1.getY() + p2.getY()) / 2.0;
         	setLocation(x_, y_);
         	break;
 		                  
 		case INTERSECTION_OF_LINES : 
 			pL1 = (PLine) parents_.get(0);
 			pL2 = (PLine) parents_.get(1);
-			x1 = pL1.get1stPoint().getPointX();
-			y1 = pL1.get1stPoint().getPointY();
-			x2 = pL2.get1stPoint().getPointX();
-			y2 = pL2.get1stPoint().getPointY();
-			a1 = pL1.get2ndPoint().getPointX() - x1;
-			a2 = pL2.get2ndPoint().getPointX() - x2;
-			b1 = pL1.get2ndPoint().getPointY() - y1;
-			b2 = pL2.get2ndPoint().getPointY() - y2;
+			x1 = pL1.get1stPoint().getX();
+			y1 = pL1.get1stPoint().getY();
+			x2 = pL2.get1stPoint().getX();
+			y2 = pL2.get1stPoint().getY();
+			a1 = pL1.get2ndPoint().getX() - x1;
+			a2 = pL2.get2ndPoint().getX() - x2;
+			b1 = pL1.get2ndPoint().getY() - y1;
+			b2 = pL2.get2ndPoint().getY() - y2;
 			t1 = (b2*(x1-x2) + a2*(y2-y1))/(a2*b1-a1*b2);
 			x_ = x1 + a1*t1;
 			y_ = y1 + b1*t1;
@@ -131,12 +134,12 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 			c1 = (PCircle) parents_.get(0);
 			pL2 = (PLine) parents_.get(1);
 			rj = c1.getRadius();
-			xj = c1.getCenter().getPointX();
-			yj = c1.getCenter().getPointY();
-			x0 = pL2.get1stPoint().getPointX();
-			y0 = pL2.get1stPoint().getPointY();
-			x1 = pL2.get2ndPoint().getPointX();
-			y1 = pL2.get2ndPoint().getPointY();
+			xj = c1.getCenter().getX();
+			yj = c1.getCenter().getY();
+			x0 = pL2.get1stPoint().getX();
+			y0 = pL2.get1stPoint().getY();
+			x1 = pL2.get2ndPoint().getX();
+			y1 = pL2.get2ndPoint().getY();
 			f = x1-x0;
 			g = y1-y0;
 			sign = (constructedAs_ == RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE ? 1 : -1);
@@ -153,10 +156,10 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 			c2 = (PCircle) parents_.get(1);
 			r1 = c1.getRadius();
 			r2 = c2.getRadius();
-			x1 = c1.getCenter().getPointX();
-			y1 = c1.getCenter().getPointY();
-			x2 = c2.getCenter().getPointX();
-			y2 = c2.getCenter().getPointY();
+			x1 = c1.getCenter().getX();
+			y1 = c1.getCenter().getY();
+			x2 = c2.getCenter().getX();
+			y2 = c2.getCenter().getY();
 			p1 = c1.getCenter();
 			p2 = c2.getCenter();
 			
@@ -198,8 +201,8 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	}
 	
 	public double distanceTo(double x, double y) {
-		return Math.sqrt( (x-this.getPointX())*(x-this.getPointX()) +
-				          (y-this.getPointY())*(y-this.getPointY())   );
+		return Math.sqrt( (x-this.getX())*(x-this.getX()) +
+				          (y-this.getY())*(y-this.getY())   );
 	}
 	
 	@Override
@@ -212,6 +215,7 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		}
 	}
 	
+	/*
 	public double getPointX() {
 		return this.getX();
 		//return x_;
@@ -221,14 +225,14 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		return this.getY();
 		//return y_;
 	}
-	
+	*/
 	public double getDistanceTo(double x, double y) {
 		return Math.sqrt((x-x_)*(x-x_) + (y-y_)*(y-y_));
 	}
 	
 	@Override
 	public String toString() {
-		return "Point " + this.getLabel() + " at (" + getPointX() + ", " + getPointY() + ")";
+		return "Point " + this.getLabel() + " at (" + getX() + ", " + getY() + ")";
 	}
 	
 }

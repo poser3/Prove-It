@@ -161,8 +161,8 @@ public class SketchCanvas extends GCanvas {
 						double x = e.getX();
 						double y = e.getY();
 						
-						double dx = x - workingPoint_.getPointX();
-						double dy = y - workingPoint_.getPointY();
+						double dx = x - workingPoint_.getX();
+						double dy = y - workingPoint_.getY();
 						workingPoint_.move(dx, dy);
 						drawables_.update();
 					}
@@ -182,11 +182,11 @@ public class SketchCanvas extends GCanvas {
 						if (workingPoint_ != null) {
 							PPoint p = getNearestPointExcept(e, selected2PointObject_.get2ndPoint());
 							if (p != null) {
-								x = p.getPointX();
-								y = p.getPointY();
+								x = p.getX();
+								y = p.getY();
 							}
-							double dx = x - workingPoint_.getPointX();
-							double dy = y - workingPoint_.getPointY();
+							double dx = x - workingPoint_.getX();
+							double dy = y - workingPoint_.getY();
 							workingPoint_.move(dx, dy);
 							
 							//for safety, we update all of the drawable objects
