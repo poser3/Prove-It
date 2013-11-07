@@ -12,6 +12,25 @@ import acm.program.Program;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Program {
+	
+	private final int MAIN_WINDOW_WIDTH = 800;
+	private final int MAIN_WINDOW_HEIGHT = 600;
+	
+	private final int SKETCH_CANVAS_WIDTH = 265;
+	private final int SKETCH_CANVAS_HEIGHT = 600;
+	
+	private final int STATEMENT_PANEL_WIDTH = 260;
+	private final int STATEMENT_PANEL_HEIGHT = 590;
+	
+	private final int EXPRESSION_SCROLLPANE_WIDTH = 260;
+	private final int EXPRESSION_SCROLLPANE_HEIGHT = 580;
+	
+	private final int TABBED_PANE_WIDTH = 260;
+	private final int TABBED_PANE_HEIGHT = 330;
+	
+	private final int RIGHT_PANEL_WIDTH = 280;
+	private final int RIGHT_PANEL_HEIGHT = 600;
+	
 	private final static boolean PRETTY_PRINT = true;
 	private final static JFileChooser fileChooser = new JFileChooser();
 	
@@ -98,6 +117,20 @@ public class MainWindow extends Program {
 			
 			addButton("+", "+", "Add to");
 			addButton("*", "*", "Multiply");
+			
+			JButton subExpressionButton = new JButton("Select a sub-expression");
+			subExpressionButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent event) {
+					if (getSelected() instanceof OperatorExpression) {
+						ExpressionSelectionDialog dialog = new ExpressionSelectionDialog((OperatorExpression) getSelected());
+						dialog.setVisible(true);
+						Expression selected = dialog.getSelected();
+						if (selected != null)
+							addExpressionAndSelect(selected, true);
+					}
+				}
+			});
+			add(subExpressionButton, "gridwidth="+COLUMNS);
 			
 			JButton newButton = new JButton("Equation from input");
 			newButton.addActionListener(new ActionListener() {
@@ -282,33 +315,47 @@ public class MainWindow extends Program {
 	}
 	
 	public void init() {
+		
 		if (PRETTY_PRINT) {
 			expressionsList.setCellRenderer(new ExpressionListCellRenderer());
 			expressionsList.setPrototypeCellValue(null);
 			expressionsList.setFixedCellHeight(-1);
 		}
 		
-		SketchCanvas sketchCanvas = new SketchCanvas(this);
+		SketchCanvas sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
-		add(sketchCanvas);
+		this.add(sketchCanvas);
+		
+		this.getRegionPanel(EAST).setLayout(new TableLayout(1,2));
+		JPanel rightPanel = new JPanel();
+		JPanel statementPanel = new JPanel();
+		statementPanel.setLayout(new TableLayout(1,1));
+		rightPanel.setLayout(new TableLayout(2,1));
+		statementPanel.setPreferredSize(new Dimension(STATEMENT_PANEL_WIDTH,STATEMENT_PANEL_HEIGHT));
+		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH,RIGHT_PANEL_HEIGHT));
 		
 		JScrollPane expressionsScrollPane = new JScrollPane(expressionsList);
 		expressionsScrollPane.setVerticalScrollBar(expressionsScrollPane.createVerticalScrollBar());
-		add(expressionsScrollPane);
+		expressionsScrollPane.setPreferredSize(new Dimension(EXPRESSION_SCROLLPANE_WIDTH,EXPRESSION_SCROLLPANE_HEIGHT));
+		statementPanel.add(expressionsScrollPane);
 		
 		setInstructionsText("Push the button, Max!");
 		instructions.setEditable(false);
-		add(instructions, EAST);
+		rightPanel.add(instructions);
 				
 		JTabbedPane tabbedPane = new JTabbedPane();
-		tabbedPane.setPreferredSize(new Dimension(300,330));
+		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
 		tabbedPane.addTab("Operate", new OperatePanel());
 		tabbedPane.addTab("Create", new CreatePanel());
 		tabbedPane.addTab("Manipulate", new ManipulatePanel());
 		tabbedPane.addTab("Geometry", sketchPanel);
-		add(tabbedPane, EAST);
+		rightPanel.add(tabbedPane);
+		
+		add(statementPanel);
+		add(rightPanel);
+		
 				
 		//TODO: get canvas/sketch area on west side for seamless switching between algebraic and geometric contexts
 		//list in center becomes list of ALL statements
@@ -319,7 +366,11 @@ public class MainWindow extends Program {
 		add(geoCanvas, WEST);
 		this.getRegionPanel(WEST).setSize(200,200);
 		*/
-		setSize(800,600);
+		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
+		
+		this.getCentralRegionSize().getWidth();
+		//DEBUG:
+		System.out.println(this.getCentralRegionSize().getWidth() + " by " + this.getCentralRegionSize().getHeight());
 	}
 	
 	private void update() {
@@ -359,3 +410,4 @@ public class MainWindow extends Program {
 	}
 	
 }
+

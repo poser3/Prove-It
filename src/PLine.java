@@ -1,45 +1,45 @@
 import java.awt.Color;
+
+import acm.graphics.GCompound;
+import acm.graphics.GLabel;
 import acm.graphics.GLine;
 import acm.graphics.GPoint;
+import acm.graphics.GRect;
 
 @SuppressWarnings("serial")
-public class PLine extends GLine implements Drawable, Selectable, MadeWith2Points {
+public class PLine extends GCompound implements Drawable, Selectable, MadeWith2Points {
 
 	public static final double POINT_DIAMETER = 10;
 	public static final double EPSILON = 0.001;
 	public static final int FREE_LINE = 1;
 	public static final int SEGMENT_BISECTOR = 2;
+	private static final double EDGE_OFFSET = 20;
 	
+	public static ViewingRectangle viewingRectangle;
+	
+	private GLine line_;
 	private final String label_;
 	private PPoint p1_;
 	private PPoint p2_;
-	private double xMin_;
-	private double xMax_;
-	private double yMin_;
-	private double yMax_;
 	private boolean selected_;
+	private FancyLabel fancyLabel_;
 	
 	public GPoint[] getEdgePoints() {
 		
 		GPoint[] edgePts = new GPoint[2];
-		edgePts[0] = AnalyticGeometryUtils.findBoundingRectIntersection(p1_.getX(), p1_.getY(), 
-																		    p2_.getX(), p2_.getY(), 
-																		    xMin_, xMax_, yMin_, yMax_);
-		edgePts[1] = AnalyticGeometryUtils.findBoundingRectIntersection(p2_.getX(), p2_.getY(), 
-																		    p1_.getX(), p1_.getY(), 
-																		    xMin_, xMax_, yMin_, yMax_);
+		edgePts[0] = viewingRectangle.findBoundingRectIntersection(p1_, p2_);
+		edgePts[1] = viewingRectangle.findBoundingRectIntersection(p2_, p1_);
 		return edgePts;
 	}
 	
-	public PLine(PPoint p1, PPoint p2, String label, Double xMin, Double xMax, Double yMin, Double yMax) {
-		super(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+	public PLine(PPoint p1, PPoint p2, String label) {
+		line_ = new GLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		this.add(line_);
 		p1_ = p1;
 		p2_ = p2;
-		xMin_ = xMin;
-		xMax_ = xMax;
-		yMin_ = yMin;
-		yMax_ = yMax;
 		label_ = label;
+		fancyLabel_ = new FancyLabel(label_);
+		this.add(fancyLabel_);
 		setSelected(false);
 		update();
 	}
@@ -48,8 +48,18 @@ public class PLine extends GLine implements Drawable, Selectable, MadeWith2Point
 		GPoint[] edgePoints = this.getEdgePoints();
 		
 		if ((edgePoints[0] != null) && (edgePoints[1] != null)) {
-			this.setStartPoint(edgePoints[0].getX(),edgePoints[0].getY());
-			this.setEndPoint(edgePoints[1].getX(),edgePoints[1].getY());
+			line_.setStartPoint(edgePoints[0].getX(),edgePoints[0].getY());
+			line_.setEndPoint(edgePoints[1].getX(),edgePoints[1].getY());
+		}
+		
+		double rxMin = viewingRectangle.getXMin() + EDGE_OFFSET;
+		double rxMax = viewingRectangle.getXMax() - EDGE_OFFSET;
+		double ryMin = viewingRectangle.getYMin() + EDGE_OFFSET;
+		double ryMax = viewingRectangle.getYMax() - EDGE_OFFSET;
+		ViewingRectangle labelRectangle = new ViewingRectangle(rxMin, rxMax, ryMin, ryMax);
+		GPoint labelLocationPt = labelRectangle.findBoundingRectIntersection(p1_, p2_);
+		if (labelLocationPt != null) {
+			fancyLabel_.setLocation(labelLocationPt);
 		}
 	}
 	

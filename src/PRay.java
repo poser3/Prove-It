@@ -1,53 +1,64 @@
 import java.awt.Color;
+
+import acm.graphics.GCompound;
 import acm.graphics.GLine;
 import acm.graphics.GPoint;
 
 @SuppressWarnings("serial")
-public class PRay extends GLine implements Drawable, Selectable, MadeWith2Points {
+public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Points {
 
 	public static final double POINT_DIAMETER = 10;
 	public static final double EPSILON = 0.001;
 	public static final int FREE_RAY = 1;
 	public static final int ANGLE_BISECTOR = 2;
 	
+	public static ViewingRectangle viewingRectangle;
+	
+	private static final double EDGE_OFFSET = 20;
+	
+	private GLine gLine_;
 	private final String label_;
+	private FancyLabel fancyLabel_;
 	private PPoint p1_;
 	private PPoint p2_;
-	private double xMin_;
-	private double xMax_;
-	private double yMin_;
-	private double yMax_;
 	private boolean selected_;
 	
 	public GPoint getEdgePoint() {
 		
-		return AnalyticGeometryUtils.findBoundingRectIntersection(p1_.getX(), p1_.getY(), 
-																  p2_.getX(), p2_.getY(), 
-																  xMin_, xMax_, yMin_, yMax_);
+		return viewingRectangle.findBoundingRectIntersection(p1_, p2_);
 	}
 	
-	public PRay(PPoint p1, PPoint p2, String label, Double xMin, Double xMax, Double yMin, Double yMax) {
-		super(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+	public PRay(PPoint p1, PPoint p2, String label) {
+		gLine_ = new GLine(p1.getX(), p1.getY(), p2.getX(), p2.getY());
+		this.add(gLine_);
 		p1_ = p1;
 		p2_ = p2;
-		xMin_ = xMin;
-		xMax_ = xMax;
-		yMin_ = yMin;
-		yMax_ = yMax;
 		label_ = label;
+		fancyLabel_ = new FancyLabel(label_);
+		this.add(fancyLabel_);
 		setSelected(false);
 		update();
 	}
 	
 	public void update() {
-		GPoint edgePoint = getEdgePoint();
+		GPoint edgePoint = this.getEdgePoint();
 		
-		setStartPoint(p1_.getX(), p1_.getY());
+		gLine_.setStartPoint(p1_.getX(), p1_.getY());
 		if (edgePoint != null) {
-			setEndPoint(edgePoint.getX(),edgePoint.getY());
+			gLine_.setEndPoint(edgePoint.getX(),edgePoint.getY());
 		}
 		else {
-			setEndPoint(p1_.getX(), p1_.getY());
+			gLine_.setEndPoint(p1_.getX(), p1_.getY());
+		}
+		
+		double rxMin = viewingRectangle.getXMin() + EDGE_OFFSET;
+		double rxMax = viewingRectangle.getXMax() - EDGE_OFFSET;
+		double ryMin = viewingRectangle.getYMin() + EDGE_OFFSET;
+		double ryMax = viewingRectangle.getYMax() - EDGE_OFFSET;
+		ViewingRectangle labelRectangle = new ViewingRectangle(rxMin, rxMax, ryMin, ryMax);
+		GPoint labelLocationPt = labelRectangle.findBoundingRectIntersection(p1_, p2_);
+		if (labelLocationPt != null) {
+			fancyLabel_.setLocation(labelLocationPt);
 		}
 	}
 	
