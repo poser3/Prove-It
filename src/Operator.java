@@ -250,12 +250,47 @@ public class Operator implements Comparable<Operator> {
 						e.getArg(2).toLatex());
 			}
 		});
+		makeOperator("angle", new OperatorSpec() {
+            public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
+                    if (! e1.getArg(1).equals(e2.getArg(1)))
+                            return false;
+                    else
+                            return (e1.getArg(0).equals(e2.getArg(0)) && e1.getArg(2).equals(e2.getArg(2)))
+                                            || (e1.getArg(0).equals(e2.getArg(2)) && e1.getArg(2).equals(e2.getArg(0)));
+            }
+            
+            public String toLatex(final OperatorExpression e) {
+                    return String.format("angle %s-%s-%s",
+                                    e.getArg(0).toLatex(),
+                                    e.getArg(1).toLatex(),
+                                    e.getArg(2).toLatex());
+            }
+	    });
+	    makeOperator("segment", new OperatorSpec.CommutativeOperatorSpec() {
+	            public String toLatex(final OperatorExpression e) {
+	                    return String.format("segment %s-%s",
+	                                    e.getArg(0).toLatex(),
+	                                    e.getArg(1).toLatex());
+	            }
+	    });
+	    makeOperator("line", new OperatorSpec() {
+	            public String toLatex(final OperatorExpression e) {
+	                    return String.format("line %s",
+	                                    e.getArg(0).toLatex());
+	            }
+	    });
 		makeOperator("line-on", new OperatorSpec() {
 			public String toLatex(final OperatorExpression e) {
 				return String.format("point %s is on line %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
+		});
+		makeOperator("ray", new OperatorSpec() {
+            public String toLatex(final OperatorExpression e) {
+                    return String.format("ray %s",
+                                    e.getArg(0).toLatex());
+            }
 		});
 		makeOperator("ray-endpoint", new OperatorSpec() {
 			public String toLatex(final OperatorExpression e) {
@@ -270,6 +305,12 @@ public class Operator implements Comparable<Operator> {
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
+		});
+		makeOperator("circle", new OperatorSpec() {
+            public String toLatex(final OperatorExpression e) {
+                    return String.format("circle %s",
+                                    e.getArg(0).toLatex());
+            }
 		});
 		makeOperator("circle-center", new OperatorSpec() {
 			public String toLatex(final OperatorExpression e) {
