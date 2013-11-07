@@ -9,23 +9,20 @@
 public class LabelMaker {
 	
 	public static final byte POINT = 0;
-	public static final byte SEGMENT = 1;
 	public static final byte LINE = 2;
 	public static final byte CIRCLE = 3;
 	public static final byte RAY = 4;
 	
 	private String currentPointLabel_;
-	private String currentSegmentLabel_;
-	private String currentLineLabel_;
-	private String currentCircleLabel_;
-	private String currentRayLabel_;
+	private int currentLineNum_;
+	private int currentCircleNum_;
+	private int currentRayNum_;
 	
 	public LabelMaker() {
 		currentPointLabel_ = "A";
-		currentSegmentLabel_ = "a";
-		currentLineLabel_ = "a";
-		currentCircleLabel_ = "a";
-		currentRayLabel_ = "a";
+		currentLineNum_ = 1;
+		currentCircleNum_ = 1;
+		currentRayNum_ = 1;
 	}
 	
 	/**
@@ -70,17 +67,14 @@ public class LabelMaker {
 		case POINT :	label = currentPointLabel_;
 						currentPointLabel_ = next(currentPointLabel_);
 						break;
-		case SEGMENT :	label = currentSegmentLabel_;
-						currentSegmentLabel_ = next(currentSegmentLabel_);
+		case LINE :		label = "L" + currentLineNum_;
+						currentLineNum_++;
 						break;
-		case LINE :		label = currentLineLabel_;
-						currentLineLabel_ = next(currentLineLabel_);
+		case CIRCLE :	label = "C" + currentCircleNum_;
+						currentCircleNum_++;
 						break;
-		case CIRCLE :	label = currentCircleLabel_;
-						currentCircleLabel_ = next(currentCircleLabel_);
-						break;
-		case RAY :		label = currentRayLabel_;
-						currentRayLabel_ = next(currentRayLabel_);
+		case RAY :		label = "R" + currentRayNum_;
+						currentRayNum_++;
 						break;
 		default :		throw new IllegalArgumentException();
 		}
@@ -88,3 +82,4 @@ public class LabelMaker {
 	}
 
 }
+

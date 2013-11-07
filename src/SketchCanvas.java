@@ -5,15 +5,14 @@ import javax.swing.JOptionPane;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GObject;
+import acm.program.GraphicsProgram;
+import acm.program.Program;
 
 
 @SuppressWarnings("serial")
 public class SketchCanvas extends GCanvas {
 
 	    //Constants
-		private final int WIDTH = 1000;
-		private final int HEIGHT = 1000;
-		
 		public final byte SELECT_MODE = 0;
 		public final byte ADDING_POINT_MODE = 1;
 		public final byte ADDING_FIRST_POINT_MODE = 2;
@@ -31,6 +30,8 @@ public class SketchCanvas extends GCanvas {
 		//Instance Variables
 		private SketchPanel sketchPanel_;
 		private final MainWindow mainWindow_;
+		private ViewingRectangle viewingRectangle_;
+		
 		private byte mode_;
 		private byte elementBeingAdded_;
 		
@@ -48,8 +49,14 @@ public class SketchCanvas extends GCanvas {
 		private PPoint workingPoint_;
 		private MadeWith2Points selected2PointObject_;		
 		
+		public void setViewingRectangle(ViewingRectangle viewingRectangle) {
+			viewingRectangle_ = viewingRectangle;
+			PLine.viewingRectangle = viewingRectangle;
+			PRay.viewingRectangle = viewingRectangle;
+		}
+		
 		//Constructors
-		public SketchCanvas(MainWindow mainWindow) {
+		public SketchCanvas(MainWindow mainWindow, int width, int height) {
 			
 			//Initialize instance variables
 			mainWindow_ = mainWindow;
@@ -61,6 +68,9 @@ public class SketchCanvas extends GCanvas {
 			lines_ = new Drawables();
 			circles_ = new Drawables();
 			rays_ = new Drawables();
+			
+			//Initialize viewing rectangle for line and ray classes
+			setViewingRectangle(new ViewingRectangle(0,width,0,height));
 			
 			//Setup canvas mouseListener
 			this.addMouseListener(new MouseListener() {
@@ -99,7 +109,7 @@ public class SketchCanvas extends GCanvas {
 							firstPoint = pointClicked;
 						
 						//initially, add the second point at the position clicked in 
-						//MouseEvent e (this element involved be updated by the 
+						//MouseEvent e (this element involved should be updated by the 
 						//MouseMotionListener when the mouse is moved)
 						PPoint secondPoint = addPointNoLabel(e);
 						
@@ -163,8 +173,8 @@ public class SketchCanvas extends GCanvas {
 						double x = e.getX();
 						double y = e.getY();
 						
-						double dx = x - workingPoint_.getPointX();
-						double dy = y - workingPoint_.getPointY();
+						double dx = x - workingPoint_.getX();
+						double dy = y - workingPoint_.getY();
 						workingPoint_.move(dx, dy);
 						drawables_.update();
 					}
@@ -184,11 +194,11 @@ public class SketchCanvas extends GCanvas {
 						if (workingPoint_ != null) {
 							PPoint p = getNearestPointExcept(e, selected2PointObject_.get2ndPoint());
 							if (p != null) {
-								x = p.getPointX();
-								y = p.getPointY();
+								x = p.getX();
+								y = p.getY();
 							}
-							double dx = x - workingPoint_.getPointX();
-							double dy = y - workingPoint_.getPointY();
+							double dx = x - workingPoint_.getX();
+							double dy = y - workingPoint_.getY();
 							workingPoint_.move(dx, dy);
 							
 							//for safety, we update all of the drawable objects
@@ -421,17 +431,16 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public MadeWith2Points addWith2Points(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
+			
 			switch(elementBeingAdded_) {
 			case SEGMENT :	thing = new PSegment(p1, p2, p1.getLabel() + "-" + p2.getLabel());
 							break;
-			case LINE :		thing = new PLine(p1, p2, labelMaker_.nextLabel(LabelMaker.LINE),
-												0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case LINE :		thing = new PLine(p1, p2, labelMaker_.nextLabel(LabelMaker.LINE));
 							addStatement("line-on %s %s", p1, thing);
 							addStatement("line-on %s %s", p2, thing);
 							break;
 							
-			case RAY :		thing = new PRay(p1, p2, labelMaker_.nextLabel(LabelMaker.RAY),
-												0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case RAY :		thing = new PRay(p1, p2, labelMaker_.nextLabel(LabelMaker.RAY));
 							addStatement("ray-endpoint %s %s", p1, thing);
 							addStatement("ray-on %s %s", p2, thing);
 							break;
@@ -463,14 +472,21 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public MadeWith2Points addWith2PointsHalfBaked(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
+			/*
+			int canvasWidth = this.mainWindow_.getRegionPanel(Program.CENTER).getWidth();
+			int canvasHeight = this.mainWindow_.getRegionPanel(Program.CENTER).getHeight();
+			PLine.viewingRectangle = new ViewingRectangle(0,canvasWidth,0,canvasHeight);
+			PRay.viewingRectangle = PLine.viewingRectangle;
+			*/
+			
 			switch(elementBeingAdded_) {
 			case SEGMENT :	thing = new PSegment(p1, p2, "");
 							break;
 							
-			case LINE :		thing = new PLine(p1, p2, "", 0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case LINE :		thing = new PLine(p1, p2, "");
 							break;
 							
-			case RAY :		thing = new PRay(p1, p2, "", 0.0, (double) WIDTH, 0.0, (double) HEIGHT);
+			case RAY :		thing = new PRay(p1, p2, "");
 							break;
 							
 			case CIRCLE :	thing = new PCircle(p1, p2, "");
@@ -499,7 +515,7 @@ public class SketchCanvas extends GCanvas {
 					this.add(intersection);
 					
 					addStatement("intersect %s (line %s) (line %s)",
-							intersection, d1, d2);
+							intersection, d1, d2);      
 					
 					deselectEverythingInCanvas();
 					select(intersection, true);
@@ -709,3 +725,4 @@ public class SketchCanvas extends GCanvas {
 		}
 	
 }
+
