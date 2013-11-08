@@ -22,7 +22,7 @@ public class LatexExample extends GraphicsProgram{
 		latexStrings[1] = "2.\\quad ax^2 + \\fbox{bx + c} = 0";
 		latexStrings[2] = "3.\\quad \\overleftrightarrow{AC} \\textrm{ contains } B";
 		latexStrings[3] = "4.\\quad \\frac{AB}{DE} = \\frac{AC}{DF}";
-		latexStrings[4] = "5.\\quad 2 + {\\color{Blue}\\frac{\\sqrt{x^2+1}}{x-1}} = 7";
+		latexStrings[4] = "5.\\quad 2 + {\\textcolor{Blue}\\frac{\\sqrt{x^2+1}}{x-1}} = 7";
 		latexStrings[5] = "6.\\quad m \\angle ABC = m \\angle ABD + m \\angle DBC";
 		
 		//if we just wanted an Image, we call this...
