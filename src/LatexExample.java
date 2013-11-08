@@ -44,3 +44,4 @@ public class LatexExample extends GraphicsProgram{
 	}
 
 }
+

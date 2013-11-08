@@ -1,16 +1,20 @@
 import java.awt.Color;
 
+import acm.graphics.GCompound;
 import acm.graphics.GOval;
 
 @SuppressWarnings("serial")
-public class PCircle extends GOval implements Drawable, Selectable, MadeWith2Points {
+public class PCircle extends GCompound implements Drawable, Selectable, MadeWith2Points {
 	
 		public static final double POINT_DIAMETER = 10;
 		
+		private GOval gOval_;
 		private final String label_;
+		private FancyLabel fancyLabel_;
 		private PPoint c1_;
 		private PPoint p2_;
 		private boolean selected_;
+		private double labelAngle = -Math.PI/6;
 				
 		/**
 		 * Create a new circle from a center, a point on the circle, and a label.
@@ -19,15 +23,19 @@ public class PCircle extends GOval implements Drawable, Selectable, MadeWith2Poi
 		 * @param label a label for the circle
 		 */
 		public PCircle(final PPoint c1, final PPoint p2, final String label) {			
-			super(c1.getPointX(), c1.getPointY(), p2.getPointX(), p2.getPointY());
-			
+			gOval_ = new GOval(c1.getX(), c1.getY(), p2.getX(), p2.getY());
+			this.add(gOval_);
 			c1_ = c1;
 			p2_ = p2;
 
-			setLocation(c1_.getPointX() - getRadius(), c1_.getPointY() - getRadius());
-			setSize(2*getRadius(), 2*getRadius());
+			gOval_.setLocation(c1_.getX() - getRadius(), c1_.getY() - getRadius());
+			gOval_.setSize(2*getRadius(), 2*getRadius());
 			
 			label_ = label;
+			fancyLabel_ = new FancyLabel(label_);
+			this.add(fancyLabel_);
+			this.update();
+			
 			setSelected(false);
 		}
 		
@@ -43,13 +51,17 @@ public class PCircle extends GOval implements Drawable, Selectable, MadeWith2Poi
 		 * Redetermine the graphical properties of this circle based on its center and radius.
 		 */
 		public void update() {
-			setLocation(c1_.getPointX() - getRadius(), c1_.getPointY() - getRadius());
-			setSize(2*getRadius(), 2*getRadius());
+			gOval_.setLocation(c1_.getX() - getRadius(), c1_.getY() - getRadius());
+			gOval_.setSize(2*getRadius(), 2*getRadius());
+			double radius = gOval_.getWidth() / 2.0;
+			double labelX = c1_.getX() + Math.cos(labelAngle) * radius;
+			double labelY = c1_.getY() - Math.sin(labelAngle) * radius;
+			fancyLabel_.setLocation(labelX,labelY);
 		}
 		
 		public void setSelected(boolean selected) {
 			selected_ = selected;
-			setColor(selected ? Color.MAGENTA : Color.BLACK);
+			gOval_.setColor(selected ? Color.MAGENTA : Color.BLACK);
 		}
 		
 		public boolean isSelected() {
@@ -100,16 +112,16 @@ public class PCircle extends GOval implements Drawable, Selectable, MadeWith2Poi
 		public String toString() {
 			return String.format("%s with center (%f.1, %f.1) including point (%f1., %f.1)",
 					getLabel(),
-					c1_.getPointX(), c1_.getPointY(),
-					p2_.getPointX(), p2_.getPointY());
+					c1_.getX(), c1_.getY(),
+					p2_.getX(), p2_.getY());
 		}
 		
 		/**
 		 * Get the distance from the outside of this circle to the given point.
 		 */
 		public double distanceTo(double x, double y) {
-			double cx = c1_.getPointX();
-			double cy = c1_.getPointY();
+			double cx = c1_.getX();
+			double cy = c1_.getY();
 			
 			double distToCenter = Math.sqrt((x-cx)*(x-cx) + (y-cy)*(y-cy));
 			
@@ -118,3 +130,4 @@ public class PCircle extends GOval implements Drawable, Selectable, MadeWith2Poi
 		
 		
 	}
+

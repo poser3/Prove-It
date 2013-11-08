@@ -1,6 +1,8 @@
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JLabel;
+
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
@@ -16,11 +18,10 @@ public class LatexHandler {
 		 * @return the image of the "pretty mathematics" described by the latex string
 		 */
 		public static Image latexToImage(String latex) {
-			TeXFormula fomule = new TeXFormula(latex);
-			TeXIcon ti = fomule.createTeXIcon(
-			TeXConstants.STYLE_DISPLAY, 40);
-			BufferedImage b = new BufferedImage(ti.getIconWidth(), ti
-			   .getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			TeXFormula formula = new TeXFormula(latex);
+			TeXIcon ti = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, 15);
+			BufferedImage b = new BufferedImage(ti.getIconWidth(), ti.getIconHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+			ti.paintIcon(null, b.getGraphics(), 0, 0);
 			return b;
 		}
 		
@@ -37,3 +38,4 @@ public class LatexHandler {
 		}
 
 }
+
