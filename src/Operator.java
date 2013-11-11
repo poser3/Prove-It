@@ -251,7 +251,8 @@ public class Operator implements Comparable<Operator> {
 			}
 		});
 		makeOperator("angle", new OperatorSpec() {
-            public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
+		
+		public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
                     if (! e1.getArg(1).equals(e2.getArg(1)))
                             return false;
                     else
@@ -279,6 +280,7 @@ public class Operator implements Comparable<Operator> {
 	                                    e.getArg(0).toLatex());
 	            }
 	    });
+
 		makeOperator("line-on", new OperatorSpec() {
 			public String toLatex(final OperatorExpression e) {
 				return String.format("point %s is on line %s",
@@ -287,7 +289,7 @@ public class Operator implements Comparable<Operator> {
 			}
 		});
 		makeOperator("ray", new OperatorSpec() {
-            public String toLatex(final OperatorExpression e) {
+		public String toLatex(final OperatorExpression e) {
                     return String.format("ray %s",
                                     e.getArg(0).toLatex());
             }
@@ -307,7 +309,7 @@ public class Operator implements Comparable<Operator> {
 			}
 		});
 		makeOperator("circle", new OperatorSpec() {
-            public String toLatex(final OperatorExpression e) {
+		public String toLatex(final OperatorExpression e) {
                     return String.format("circle %s",
                                     e.getArg(0).toLatex());
             }
