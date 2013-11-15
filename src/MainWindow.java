@@ -118,20 +118,6 @@ public class MainWindow extends Program {
 			addButton("+", "+", "Add to");
 			addButton("*", "*", "Multiply");
 			
-			JButton subExpressionButton = new JButton("Select a sub-expression");
-			subExpressionButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent event) {
-					if (getSelected() instanceof OperatorExpression) {
-						ExpressionSelectionDialog dialog = new ExpressionSelectionDialog((OperatorExpression) getSelected());
-						dialog.setVisible(true);
-						Expression selected = dialog.getSelected();
-						if (selected != null)
-							addExpressionAndSelect(selected, true);
-					}
-				}
-			});
-			add(subExpressionButton, "gridwidth="+COLUMNS);
-			
 			JButton newButton = new JButton("Equation from input");
 			newButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent event) {
