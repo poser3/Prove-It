@@ -15,6 +15,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		private PPoint p2_;
 		private boolean selected_;
 		private double labelAngle = -Math.PI/6;
+		private boolean exists_;
 				
 		/**
 		 * Create a new circle from a center, a point on the circle, and a label.
@@ -34,9 +35,18 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			label_ = label;
 			fancyLabel_ = new FancyLabel(label_);
 			this.add(fancyLabel_);
+			exists_ = true;
 			this.update();
 			
 			setSelected(false);
+		}
+		
+		public boolean exists() {
+			return exists_;
+		}
+		
+		public void setExists(boolean exists) {
+			exists_ = exists;
 		}
 		
 		/**

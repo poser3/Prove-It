@@ -248,8 +248,8 @@ public class SketchCanvas extends GCanvas {
 			if (obj instanceof Drawable) {
 				drawables_.add((Drawable) obj);
 
-				if (obj instanceof PPoint)
-					points_.add((PPoint) obj);
+				if (obj instanceof PPoint) 
+					points_.add((PPoint) obj); 	
 				else if (obj instanceof PSegment)
 					segments_.add((PSegment) obj);
 				else if (obj instanceof PLine)
@@ -472,12 +472,6 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public MadeWith2Points addWith2PointsHalfBaked(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
-			/*
-			int canvasWidth = this.mainWindow_.getRegionPanel(Program.CENTER).getWidth();
-			int canvasHeight = this.mainWindow_.getRegionPanel(Program.CENTER).getHeight();
-			PLine.viewingRectangle = new ViewingRectangle(0,canvasWidth,0,canvasHeight);
-			PRay.viewingRectangle = PLine.viewingRectangle;
-			*/
 			
 			switch(elementBeingAdded_) {
 			case SEGMENT :	thing = new PSegment(p1, p2, "");
@@ -516,6 +510,41 @@ public class SketchCanvas extends GCanvas {
 					
 					addStatement("intersect %s (line %s) (line %s)",
 							intersection, d1, d2);      
+					
+					deselectEverythingInCanvas();
+					select(intersection, true);
+					mode_ = SELECT_MODE;
+				}
+				else if (((d1 instanceof PLine) && (d2 instanceof PRay)) || ((d1 instanceof PRay) && (d2 instanceof PLine))) {
+					Drawables selectedLineAndRay = new Drawables();
+					if (d1 instanceof PLine) {
+						selectedLineAndRay.add(selectedDrawables_.get(0));
+						selectedLineAndRay.add(selectedDrawables_.get(1));
+					}
+					else {
+						selectedLineAndRay.add(selectedDrawables_.get(1));
+						selectedLineAndRay.add(selectedDrawables_.get(0));
+					}
+					intersection = new PPoint(PPoint.INTERSECTON_OF_RAY_AND_LINE, selectedLineAndRay,
+							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					this.add(intersection);
+					
+					addStatement("intersect %s (line %s) (ray %s)", intersection, d1, d2);      
+					
+					deselectEverythingInCanvas();
+					select(intersection, true);
+					mode_ = SELECT_MODE;
+				}
+				else if ((d1 instanceof PRay) && (d2 instanceof PRay)) {
+					Drawables selectedRays = new Drawables();
+					selectedRays.add(selectedDrawables_.get(0));
+					selectedRays.add(selectedDrawables_.get(1));
+			
+					intersection = new PPoint(PPoint.INTERSECTON_OF_RAYS, selectedRays,
+							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					this.add(intersection);
+					
+					addStatement("intersect %s (ray %s) (ray %s)", intersection, d1, d2);      
 					
 					deselectEverythingInCanvas();
 					select(intersection, true);
@@ -564,6 +593,52 @@ public class SketchCanvas extends GCanvas {
 					mode_ = SELECT_MODE;
 					
 				}
+				
+				
+				else if (((d1 instanceof PCircle) && (d2 instanceof PRay)) ||
+						 ((d1 instanceof PRay) && (d2 instanceof PCircle))) {
+					
+					PCircle circle;
+					PRay ray;
+					if (d1 instanceof PCircle) {
+						circle = (PCircle) d1;
+						ray = (PRay) d2;
+					}
+					else {
+						circle = (PCircle) d2;
+						ray = (PRay) d1;
+					}
+					
+					Drawables selectedCircleAndRay = new Drawables();
+					selectedCircleAndRay.add(circle);
+					selectedCircleAndRay.add(ray);
+					
+					//now find one of the intersections and add it
+					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_RAY_AND_CIRCLE, selectedCircleAndRay,
+			                  labelMaker_.nextLabel(LabelMaker.POINT));
+					
+					add(intersection);
+					addStatement("intersect %s (circle %s) (ray %s)",
+							intersection, circle, ray);
+					addStatement("circle-on %s %s",
+							intersection, circle);
+					
+					//now find the other intersection and add it
+					intersection = new PPoint(PPoint.RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE, selectedCircleAndRay,
+			                  labelMaker_.nextLabel(LabelMaker.POINT));
+					
+					add(intersection);
+					addStatement("intersect %s (circle %s) (ray %s)",
+							intersection, circle, ray);
+					addStatement("circle-on %s %s",
+							intersection, circle);
+					
+					deselectEverythingInCanvas();
+					select(intersection, true);
+					mode_ = SELECT_MODE;
+					
+				} 
+				
 				else if ((d1 instanceof PCircle) && (d2 instanceof PCircle)) {
 					
 					//first find one of the intersections of the two circles (the left one) and add it
@@ -689,7 +764,6 @@ public class SketchCanvas extends GCanvas {
 				if (closestPoint.getDistanceTo(x, y) > Selectable.EPSILON) {
 					closestPoint = null;
 				}
-				
 				return closestPoint;
 			}
 			else { //there were no points to examine in the first place, so return null

@@ -23,6 +23,7 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 	private PPoint p2_;
 	private boolean selected_;
 	private FancyLabel fancyLabel_;
+	private boolean exists_;
 	
 	public GPoint[] getEdgePoints() {
 		
@@ -41,7 +42,16 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 		fancyLabel_ = new FancyLabel(label_);
 		this.add(fancyLabel_);
 		setSelected(false);
+		exists_ = true;
 		update();
+	}
+	
+	public boolean exists() {
+		return exists_;
+	}
+	
+	public void setExists(boolean exists) {
+		exists_ = exists;
 	}
 	
 	public void update() {
@@ -61,6 +71,7 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 		if (labelLocationPt != null) {
 			fancyLabel_.setLocation(labelLocationPt);
 		}
+		
 	}
 	
 	public void setSelected(boolean selected) {
