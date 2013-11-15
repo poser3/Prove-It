@@ -8,7 +8,7 @@ public class Theorem {
 	static ArrayList<Theorem> theorems = new ArrayList<Theorem>();
 	public static void loadTheorems() {
 		theorems = new ArrayList<Theorem>();
-		File folder = new File("../res/theorems/");
+		File folder = new File(SettingsReader.getSetting("theorem-path"));
 		for (File file : folder.listFiles()) {
 			try {
 				theorems.add(new Theorem(file));
