@@ -327,6 +327,7 @@ public class MainWindow extends Program {
 		statementPanel.setPreferredSize(new Dimension(STATEMENT_PANEL_WIDTH,STATEMENT_PANEL_HEIGHT));
 		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH,RIGHT_PANEL_HEIGHT));
 		
+		statementsList.setCellRenderer(new StatementListCellRenderer());
 		JScrollPane statementsScrollPane = new JScrollPane(statementsList);
 		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
 		statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
