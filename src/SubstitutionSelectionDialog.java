@@ -16,31 +16,31 @@ import acm.gui.TableLayout;
 @SuppressWarnings("serial")
 public class SubstitutionSelectionDialog extends JDialog {
 	
-	private final Expression substitutingIn;
+	private final Statement substitutingIn;
 	private final JLabel previewLabel;
 	private final SubstitutionCellRenderer renderer = new SubstitutionCellRenderer();
-	private final JComboBox<OperatorExpression> selectionBox;
+	private final JComboBox<Statement> selectionBox;
 	private final JCheckBox checkBox;
 	private boolean choiceMade = true;
 	
-	public SubstitutionSelectionDialog(MainWindow owner, Expression substitutingIn) {
+	public SubstitutionSelectionDialog(MainWindow owner, Statement substitutingIn) {
 		super();
 		setSize(400, 300);
 		setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
 		this.substitutingIn = substitutingIn;
 		previewLabel = new JLabel(substitutingIn.toLatex());
 		
-		Object[] expressionsFromMainWindow = owner.getExpressions();
-		Vector<OperatorExpression> expressions = new Vector<OperatorExpression>();
-		for (int i = 0; i<expressionsFromMainWindow.length; i++) {
-			Object ex = expressionsFromMainWindow[i];
+		Object[] statementsFromMainWindow = owner.getStatements();
+		Vector<Statement> statements = new Vector<Statement>();
+		for (int i = 0; i<statementsFromMainWindow.length; i++) {
+			Expression ex = ((Statement) statementsFromMainWindow[i]).getExpression();
 			if (ex instanceof OperatorExpression
 					&& ! substitutingIn.equals(ex)
 					&& ((OperatorExpression) ex).getOp().equals(Operator.named("=")))
-				expressions.add((OperatorExpression) ex);
+				statements.add((Statement) statementsFromMainWindow[i]);
 		}		
 		
-		selectionBox = new JComboBox<OperatorExpression>(expressions);
+		selectionBox = new JComboBox<Statement>(statements);
 		selectionBox.setRenderer(renderer);
 		selectionBox.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent event) {

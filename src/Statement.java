@@ -1,7 +1,8 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 
 
-public class Statement {
+public class Statement implements Comparable<Statement> {
 	
 	private final Expression expression;
 	private ArrayList<Statement> logicDependencies = new ArrayList<Statement>();
@@ -16,22 +17,6 @@ public class Statement {
 		this.expression = Expression.parse(expression);
 	}
 	
-	public Statement(final Expression expression, final ArrayList<Statement> logicDependencies) {
-		this.expression = expression;
-		this.logicDependencies = logicDependencies;
-	}
-	public Statement(final String expression, final ArrayList<Statement> logicDependencies) {
-		this.expression = Expression.parse(expression);
-		this.logicDependencies = logicDependencies;
-	}
-	public Statement(final Expression expression, final Drawables geometryDependencies) {
-		this.expression = expression;
-		this.geometryDependencies = geometryDependencies;
-	}
-	public Statement(final String expression, final Drawables geometryDependencies) {
-		this.expression = Expression.parse(expression);
-		this.geometryDependencies = geometryDependencies;
-	}
 	public Statement(final Expression expression, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
 		this.expression = expression;
 		this.logicDependencies = logicDependencies;
@@ -52,6 +37,21 @@ public class Statement {
 	}
 	public String toLatex() {
 		return expression.toLatex();
+	}
+	
+	public boolean equals(Statement s) {
+		return expression.equals(s.getExpression());
+	}
+	@Override
+	public int compareTo(Statement s) {
+		return expression.compareTo(s.getExpression());
+	}
+	
+	public Statement substitute(Expression quid, Expression quo) {
+		return new Statement(expression.substitute(quid, quo));
+	}
+	public Statement substitute(HashMap<String, String> map) {
+		return new Statement(expression.substitute(map));
 	}
 	
 	public boolean isHidden() {

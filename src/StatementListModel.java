@@ -1,7 +1,7 @@
 import javax.swing.DefaultListModel;
 
 @SuppressWarnings("serial")
-public class ExpressionListModel extends DefaultListModel<Statement> {
+public class StatementListModel extends DefaultListModel<Statement> {
 	
 	public Statement getElementAt(int index) {
 		int count = 0;

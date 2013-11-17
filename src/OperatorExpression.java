@@ -13,8 +13,7 @@ public class OperatorExpression extends Expression {
 	public OperatorExpression(Operator op, ArrayList<Expression> arguments) {
 		this.op = op;
 		this.arguments = arguments;
-	}
-	
+	}	
 	public OperatorExpression(final String op, ArrayList<Expression> arguments) {
 		this.op = Operator.named(op);
 		this.arguments = arguments;

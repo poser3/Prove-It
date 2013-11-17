@@ -330,6 +330,7 @@ public abstract class Expression implements Comparable<Expression> {
 	 * Saves memory by finding identical subexpressions within this expression and making them the same object.
 	 * This is probably deprecated, and might be downright harmful if expressions become mutable.
 	 */
+	@Deprecated
 	public Expression trim() {
 		if(this instanceof OperatorExpression)
 			Trimmer.iterate((OperatorExpression) this);

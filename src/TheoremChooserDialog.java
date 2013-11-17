@@ -17,11 +17,11 @@ import acm.gui.TableLayout;
 public class TheoremChooserDialog extends JDialog {
 	
 	private final DefaultListModel<Theorem> theorems = new DefaultListModel<Theorem>();
-	private final DefaultListModel<Expression> hypotheses = new DefaultListModel<Expression>();
-	private final DefaultListModel<Expression> conclusions = new DefaultListModel<Expression>();
+	private final DefaultListModel<Statement> hypotheses = new DefaultListModel<Statement>();
+	private final DefaultListModel<Statement> conclusions = new DefaultListModel<Statement>();
 	private final JList<Theorem> theoremsList = new JList<Theorem>(theorems);
-	private final JList<Expression> hypothesesList = new JList<Expression>(hypotheses);
-	private final JList<Expression> conclusionsList = new JList<Expression>(conclusions);
+	private final JList<Statement> hypothesesList = new JList<Statement>(hypotheses);
+	private final JList<Statement> conclusionsList = new JList<Statement>(conclusions);
 	private final JButton okButton = new JButton("OK");
 	private final JButton cancelButton = new JButton("Cancel");
 	private final TableLayout layout = new TableLayout(7, 2, 10, 10);
@@ -43,8 +43,8 @@ public class TheoremChooserDialog extends JDialog {
 				update((Theorem) theoremsList.getSelectedValue());
 			}
 		});		
-		hypothesesList.setCellRenderer(new ExpressionListCellRenderer());
-		conclusionsList.setCellRenderer(new ExpressionListCellRenderer());
+		hypothesesList.setCellRenderer(new StatementListCellRenderer());
+		conclusionsList.setCellRenderer(new StatementListCellRenderer());
 		okButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent event) {
 				clickedOK = true;
@@ -78,10 +78,10 @@ public class TheoremChooserDialog extends JDialog {
 	private void update(Theorem selected) {
 		hypotheses.clear();
 		conclusions.clear();
-		for (Expression e : selected.hypotheses)
-			hypotheses.addElement(e);
-		for (Expression e : selected.conclusions)
-			conclusions.addElement(e);
+		for (Statement s : selected.hypotheses)
+			hypotheses.addElement(s);
+		for (Statement s : selected.conclusions)
+			conclusions.addElement(s);
 	}
 	
 	public Theorem getSelected() {
