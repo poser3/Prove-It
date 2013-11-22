@@ -9,7 +9,7 @@ public class SubstitutionCellRenderer extends ExpressionListCellRenderer {
 	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (value instanceof OperatorExpression) {
 			OperatorExpression opEx = (OperatorExpression) value;
-			if (opEx.getOp().equals(Operator.named("="))) {
+			if (opEx.getOp().equals(Operators.named("="))) {
 				StringBuilder sb = new StringBuilder();
 				if (reversed) {
 					sb.append(opEx.getArg(1).toLatex());

@@ -62,7 +62,7 @@ public abstract class Expression implements Comparable<Expression> {
 		}
 		// If there are multiple words, parse this as an OperatorExpression
 		else {
-			Operator op = Operator.named(words.get(0));
+			Operator op = Operators.named(words.get(0));
 			ArrayList<Expression> args = new ArrayList<Expression>(words.size()-1);
 			
 			// Parse each argument to the operator and make a list of them

@@ -16,7 +16,7 @@ public class OperatorExpression extends Expression {
 	}
 	
 	public OperatorExpression(final String op, ArrayList<Expression> arguments) {
-		this.op = Operator.named(op);
+		this.op = Operators.named(op);
 		this.arguments = arguments;
 	}
 
