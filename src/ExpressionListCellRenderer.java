@@ -1,26 +1,26 @@
 import java.awt.Component;
-import java.awt.Dimension;
+import java.awt.image.BufferedImage;
 
-import javax.swing.DefaultListCellRenderer;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingConstants;
 
-//Some random comment (I'm harmless -- so I'll stay a while)
-@SuppressWarnings("serial")
-public class ExpressionListCellRenderer extends DefaultListCellRenderer {
-	@Override
-	public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-		if (value instanceof Expression) {
-			Expression ex = (Expression) value;
-			if (ex.isHidden()) {
-				JLabel l = new JLabel("");
-				l.setPreferredSize(new Dimension(1,30));
-				return l;
-			}
-			else
-				return super.getListCellRendererComponent(list, ((Expression) value).toLatex(), index, isSelected, cellHasFocus);
-		} else
-			return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-			
-	}
+public class ExpressionListCellRenderer implements ListCellRenderer<Expression> {
+        
+        public Component getListCellRendererComponent(JList<? extends Expression> list, Expression value, int index, boolean isSelected, boolean cellHasFocus) {
+                String statementNumberString = "\\textrm{" + (index+1) + ".} \\:";
+        		String latex = statementNumberString + value.toLatex();
+                if (isSelected)
+                        latex = "{\\bgcolor{Yellow}" + statementNumberString + latex + "}";
+                
+                BufferedImage image = (BufferedImage) LatexHandler.latexToImage(latex);
+                ImageIcon icon = new ImageIcon(image);
+                JLabel label = new JLabel(icon);
+                label.setHorizontalAlignment(SwingConstants.LEFT);
+                return label;
+        }
 }
+
+

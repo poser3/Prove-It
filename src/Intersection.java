@@ -98,5 +98,11 @@ public class Intersection {
 		return (t >= -SUPER_TINY);
 	}
 	
+	public static boolean pointOnSegment(PSegment segment, PPoint point) {
+		PRay ray1 = new PRay(segment.get1stPoint(),segment.get2ndPoint(),"");
+		PRay ray2 = new PRay(segment.get2ndPoint(),segment.get1stPoint(),"");
+		return (pointOnRay(ray1,point) && pointOnRay(ray2,point));
+	}
+	
 }
 

@@ -497,184 +497,182 @@ public class SketchCanvas extends GCanvas {
 		 */
 		public void addIntersection() {			
 			if (selectedDrawables_.size() == 2) {
-				Drawable d1 = selectedDrawables_.get(0);
-				Drawable d2 = selectedDrawables_.get(1);
-				PPoint intersection;
-				if ((d1 instanceof PLine) && (d2 instanceof PLine)) {
-					Drawables selectedLines = new Drawables();
-					selectedLines.add(selectedDrawables_.get(0));
-					selectedLines.add(selectedDrawables_.get(1));
-					intersection = new PPoint(PPoint.INTERSECTION_OF_LINES, selectedLines,
+				Drawable parent1 = selectedDrawables_.get(0);
+				Drawable parent2 = selectedDrawables_.get(1);
+				Drawables parents = new Drawables();
+				PPoint intersection = null;
+				PPoint intersection2 = null;
+				
+				if ((parent1 instanceof PLine) && (parent2 instanceof PLine)) {
+					parents.addInOrder(parent1, parent2);
+					intersection = new PPoint(PPoint.INTERSECTION_OF_LINES, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
 					this.add(intersection);
-					
-					addStatement("intersect %s (line %s) (line %s)",
-							intersection, d1, d2);      
-					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
+					addStatement("intersect %s (line %s) (line %s)", intersection, parent1, parent2);      
 				}
-				else if (((d1 instanceof PLine) && (d2 instanceof PRay)) || ((d1 instanceof PRay) && (d2 instanceof PLine))) {
-					Drawables selectedLineAndRay = new Drawables();
-					if (d1 instanceof PLine) {
-						selectedLineAndRay.add(selectedDrawables_.get(0));
-						selectedLineAndRay.add(selectedDrawables_.get(1));
-					}
-					else {
-						selectedLineAndRay.add(selectedDrawables_.get(1));
-						selectedLineAndRay.add(selectedDrawables_.get(0));
-					}
-					intersection = new PPoint(PPoint.INTERSECTON_OF_RAY_AND_LINE, selectedLineAndRay,
+				
+				else if (((parent1 instanceof PLine) && (parent2 instanceof PRay)) || ((parent1 instanceof PRay) && (parent2 instanceof PLine))) {
+					if (parent1 instanceof PLine) 
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
+					
+					intersection = new PPoint(PPoint.INTERSECTON_OF_RAY_AND_LINE, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
 					this.add(intersection);
-					
-					addStatement("intersect %s (line %s) (ray %s)", intersection, d1, d2);      
-					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
+					addStatement("intersect %s (line %s) (ray %s)", intersection, parent1, parent2);      
 				}
-				else if ((d1 instanceof PRay) && (d2 instanceof PRay)) {
-					Drawables selectedRays = new Drawables();
-					selectedRays.add(selectedDrawables_.get(0));
-					selectedRays.add(selectedDrawables_.get(1));
+				
+				else if (((parent1 instanceof PLine) && (parent2 instanceof PSegment)) || ((parent1 instanceof PSegment) && (parent2 instanceof PLine))) {
+					if (parent1 instanceof PLine)
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
+					
+					intersection = new PPoint(PPoint.INTERSECTION_OF_SEGMENT_AND_LINE, parents,
+							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					this.add(intersection);
+					addStatement("intersect %s (line %s) (segment %s)", intersection, parent1, parent2);    
+				}
+				
+				else if (((parent1 instanceof PRay) && (parent2 instanceof PSegment)) || ((parent1 instanceof PSegment) && (parent2 instanceof PRay))) {
+					if (parent1 instanceof PRay)
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
+					
+					intersection = new PPoint(PPoint.INTERSECTION_OF_SEGMENT_AND_RAY, parents,
+							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					this.add(intersection);
+					addStatement("intersect %s (ray %s) (segment %s)", intersection, parent1, parent2); 
+				}
+				
+				else if ((parent1 instanceof PRay) && (parent2 instanceof PRay)) {
+					parents.addInOrder(parent1, parent2);
 			
-					intersection = new PPoint(PPoint.INTERSECTON_OF_RAYS, selectedRays,
+					intersection = new PPoint(PPoint.INTERSECTON_OF_RAYS, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
 					this.add(intersection);
-					
-					addStatement("intersect %s (ray %s) (ray %s)", intersection, d1, d2);      
-					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
-				}
-				else if (((d1 instanceof PCircle) && (d2 instanceof PLine)) ||
-						 ((d1 instanceof PLine) && (d2 instanceof PCircle))) {
-					
-					PCircle circle;
-					PLine line;
-					if (d1 instanceof PCircle) {
-						circle = (PCircle) d1;
-						line = (PLine) d2;
-					}
-					else {
-						circle = (PCircle) d2;
-						line = (PLine) d1;
-					}
-					
-					Drawables selectedCircleAndLine = new Drawables();
-					selectedCircleAndLine.add(circle);
-					selectedCircleAndLine.add(line);
-					
-					//now find one of the intersections and add it
-					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLE_AND_LINE, selectedCircleAndLine,
-			                  labelMaker_.nextLabel(LabelMaker.POINT));
-					
-					add(intersection);
-					addStatement("intersect %s (circle %s) (line %s)",
-							intersection, circle, line);
-					addStatement("circle-on %s %s",
-							intersection, circle);
-					
-					//now find the other intersection and add it
-					intersection = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE, selectedCircleAndLine,
-			                  labelMaker_.nextLabel(LabelMaker.POINT));
-					
-					add(intersection);
-					addStatement("intersect %s (circle %s) (line %s)",
-							intersection, circle, line);
-					addStatement("circle-on %s %s",
-							intersection, circle);
-					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
-					
+					addStatement("intersect %s (ray %s) (ray %s)", intersection, parent1, parent2);   
 				}
 				
+				else if ((parent1 instanceof PSegment) && (parent2 instanceof PSegment)) {
+					parents.addInOrder(parent1, parent2);
+					
+					intersection = new PPoint(PPoint.INTERSECTON_OF_SEGMENTS, parents,
+							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					this.add(intersection);
+					addStatement("intersect %s (segment %s) (segment %s)", intersection, parent1, parent2);    
+				}
 				
-				else if (((d1 instanceof PCircle) && (d2 instanceof PRay)) ||
-						 ((d1 instanceof PRay) && (d2 instanceof PCircle))) {
+				else if (((parent1 instanceof PCircle) && (parent2 instanceof PLine)) ||
+						 ((parent1 instanceof PLine) && (parent2 instanceof PCircle))) {
 					
-					PCircle circle;
-					PRay ray;
-					if (d1 instanceof PCircle) {
-						circle = (PCircle) d1;
-						ray = (PRay) d2;
-					}
-					else {
-						circle = (PCircle) d2;
-						ray = (PRay) d1;
-					}
-					
-					Drawables selectedCircleAndRay = new Drawables();
-					selectedCircleAndRay.add(circle);
-					selectedCircleAndRay.add(ray);
+					if (parent1 instanceof PCircle) 
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
 					
 					//now find one of the intersections and add it
-					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_RAY_AND_CIRCLE, selectedCircleAndRay,
-			                  labelMaker_.nextLabel(LabelMaker.POINT));
+					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLE_AND_LINE, parents,
+			                                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
 					add(intersection);
-					addStatement("intersect %s (circle %s) (ray %s)",
-							intersection, circle, ray);
-					addStatement("circle-on %s %s",
-							intersection, circle);
+					addStatement("intersect %s (circle %s) (line %s)",intersection, parent1, parent2);
+					addStatement("circle-on %s %s",intersection, parent1);
 					
 					//now find the other intersection and add it
-					intersection = new PPoint(PPoint.RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE, selectedCircleAndRay,
-			                  labelMaker_.nextLabel(LabelMaker.POINT));
+					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE, parents,
+			                                   labelMaker_.nextLabel(LabelMaker.POINT));
+					
+					add(intersection2);
+					addStatement("intersect %s (circle %s) (line %s)",intersection2, parent1, parent2);
+					addStatement("circle-on %s %s",intersection2, parent1);
+				}
+				
+				else if (((parent1 instanceof PCircle) && (parent2 instanceof PRay)) ||
+						 ((parent1 instanceof PRay) && (parent2 instanceof PCircle))) {
+					
+					if (parent1 instanceof PCircle) 
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
+					
+					//now find one of the intersections and add it
+					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_RAY_AND_CIRCLE, parents,
+			                                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
 					add(intersection);
-					addStatement("intersect %s (circle %s) (ray %s)",
-							intersection, circle, ray);
-					addStatement("circle-on %s %s",
-							intersection, circle);
+					addStatement("intersect %s (circle %s) (ray %s)", intersection, parent1, parent2);
+					addStatement("circle-on %s %s", intersection, parent1);
 					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
+					//now find the other intersection and add it
+					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE, parents,
+			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					add(intersection2);
+					addStatement("intersect %s (circle %s) (ray %s)", intersection2, parent1, parent2);
+					addStatement("circle-on %s %s", intersection2, parent1);
 				} 
 				
-				else if ((d1 instanceof PCircle) && (d2 instanceof PCircle)) {
+				else if (((parent1 instanceof PCircle) && (parent2 instanceof PSegment)) ||
+						 ((parent1 instanceof PSegment) && (parent2 instanceof PCircle))) {
+					
+					if (parent1 instanceof PCircle) 
+						parents.addInOrder(parent1, parent2);
+					else 
+						parents.addInOrder(parent2, parent1);
+					
+					//now find one of the intersections and add it
+					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_SEGMENT_AND_CIRCLE, parents,
+			                                  labelMaker_.nextLabel(LabelMaker.POINT));
+					
+					add(intersection);
+					addStatement("circle-on %s %s", intersection, parent1);
+					
+					//now find the other intersection and add it
+					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_SEGMENT_AND_CIRCLE, parents,
+			                                   labelMaker_.nextLabel(LabelMaker.POINT));
+					
+					add(intersection2);
+					addStatement("circle-on %s %s", intersection2, parent1);
+				} 
+				
+				else if ((parent1 instanceof PCircle) && (parent2 instanceof PCircle)) {
+					parents.addInOrder(parent1, parent2);
 					
 					//first find one of the intersections of the two circles (the left one) and add it
-					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLES, selectedDrawables_,
+					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLES, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
 					add(intersection);
-					addStatement("intersect %s (circle %s) (circle %s)",
-							intersection, d1, d2);
-					addStatement("circle-on %s %s",
-							intersection, d1);
-					addStatement("circle-on %s %s",
-							intersection, d2);
+					addStatement("intersect %s (circle %s) (circle %s)", intersection, parent1, parent2);
+					addStatement("circle-on %s %s", intersection, parent1);
+					addStatement("circle-on %s %s", intersection, parent2);
 					
 					//now find the other intersection of the two circles (the right one) and add it
-					intersection = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLES, selectedDrawables_,
-			                  labelMaker_.nextLabel(LabelMaker.POINT));
+					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLES, parents,
+			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
-					add(intersection);
-					addStatement("intersect %s (circle %s) (circle %s)",
-							intersection, d1, d2);
-					addStatement("circle-on %s %s",
-							intersection, d1);
-					addStatement("circle-on %s %s",
-							intersection, d2);
-					
-					deselectEverythingInCanvas();
-					select(intersection, true);
-					mode_ = SELECT_MODE;
-							    
+					add(intersection2);
+					addStatement("intersect %s (circle %s) (circle %s)", intersection2, parent1, parent2);
+					addStatement("circle-on %s %s", intersection2, parent1);
+					addStatement("circle-on %s %s", intersection2, parent2);
 				}
 				else {
 					JOptionPane.showMessageDialog(null,
-							"The wrong type of items were selected.",
+							"Unable to find intersection of the selected items.",
 							"I don't know what to do...",
 							JOptionPane.ERROR_MESSAGE);
+				}
+				
+				deselectEverythingInCanvas();
+				mode_ = SELECT_MODE;
+				if (intersection != null) {
+					select(intersection, true);
+				}
+				if (intersection2 != null) {
+					select(intersection2, true);
 				}
 			}
 			else {
@@ -700,12 +698,10 @@ public class SketchCanvas extends GCanvas {
 			
 			if (selectedPoints.size() == 2) {
 				
-				PPoint midpoint = new PPoint(PPoint.MIDPOINT, selectedPoints,
-			               labelMaker_.nextLabel(LabelMaker.POINT));
+				PPoint midpoint = new PPoint(PPoint.MIDPOINT, selectedPoints, labelMaker_.nextLabel(LabelMaker.POINT));
 				
 				add(midpoint);
-				addStatement("midpoint %s %s %s",
-						midpoint, selectedPoints.get(0), selectedPoints.get(1));
+				addStatement("midpoint %s %s %s", midpoint, selectedPoints.get(0), selectedPoints.get(1));
 				
 				deselectEverythingInCanvas();				
 				select(midpoint, true);

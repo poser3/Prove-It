@@ -24,6 +24,11 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	public static final byte INTERSECTON_OF_RAYS = 8;
 	public static final byte LEFT_INTERSECTION_OF_RAY_AND_CIRCLE = 9;
 	public static final byte RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE = 10;
+	public static final byte INTERSECTION_OF_SEGMENT_AND_LINE = 11;
+	public static final byte INTERSECTON_OF_SEGMENTS = 12;
+	public static final byte LEFT_INTERSECTION_OF_SEGMENT_AND_CIRCLE = 13;
+	public static final byte RIGHT_INTERSECTION_OF_SEGMENT_AND_CIRCLE = 14;
+	public static final byte INTERSECTION_OF_SEGMENT_AND_RAY = 15;
 
 	public static double distance(PPoint p1, PPoint p2) {
 		double x1 = p1.getX();
@@ -103,11 +108,12 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	public void update() {
 		
 		//scratch variables to improve readability of calculations...
-		double x,y,x0,y0,x1,y1,x2,y2,xj,yj,rj,r1,r2,d,h,xm,xn,yn,a,b,f,g,t,sign;
-		PLine line, pL1, pL2;
+		double x,y;
+		PLine line, line1, line2, pL1, pL2;
 		PRay ray, ray1, ray2;
-		PCircle circle, circle1, circle2, c1,c2;
+		PCircle circle, circle1, circle2;
 		PPoint intersectionPt, p1, p2;
+		PSegment segment, segment1, segment2;
 		int whichPt;
 		
 		switch (constructedAs_) {
@@ -132,9 +138,9 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		                  
 		case INTERSECTION_OF_LINES : 
 			if (parents_.get(0).exists() && parents_.get(1).exists()) {
-				pL1 = (PLine) parents_.get(0);
-				pL2 = (PLine) parents_.get(1);
-				intersectionPt = Intersection.ofTwoLines(pL1, pL2);
+				line1 = (PLine) parents_.get(0);
+				line2 = (PLine) parents_.get(1);
+				intersectionPt = Intersection.ofTwoLines(line1, line2);
 				if (intersectionPt != null) {
 					setLocation(intersectionPt.getX(), intersectionPt.getY());
 					this.setExists(true);
@@ -170,6 +176,74 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 			}
 			break;
 			
+		case INTERSECTION_OF_SEGMENT_AND_LINE :
+			if (parents_.get(0).exists() && parents_.get(1).exists()) {
+				int segmentIndex = ((parents_.get(0) instanceof PSegment) ? 0 : 1);
+				int lineIndex = ((parents_.get(0) instanceof PLine) ? 0 : 1);
+				segment = (PSegment) parents_.get(segmentIndex);
+				line1 = (PLine) parents_.get(lineIndex);
+				line2 = new PLine(segment.get1stPoint(),segment.get2ndPoint(),"");
+				intersectionPt = Intersection.ofTwoLines(line1, line2);
+				if ((intersectionPt != null) && Intersection.pointOnSegment(segment,intersectionPt)) {
+					setLocation(intersectionPt.getX(), intersectionPt.getY());
+					this.setExists(true);
+				}
+				else {
+					this.setExists(false); //either intersection of related lines didn't exist or
+										   //intersection of related lines is not on the segment
+				}
+			}
+			else {
+				this.setExists(false);  //either the parent line or segment (or both) didn't exist
+			}
+			break;
+			
+		case INTERSECTION_OF_SEGMENT_AND_RAY :
+			if (parents_.get(0).exists() && parents_.get(1).exists()) {
+				int segmentIndex = ((parents_.get(0) instanceof PSegment) ? 0 : 1);
+				int rayIndex = ((parents_.get(0) instanceof PRay) ? 0 : 1);
+				segment = (PSegment) parents_.get(segmentIndex);
+				ray = (PRay) parents_.get(rayIndex);
+				line1 = new PLine(ray.get1stPoint(),ray.get2ndPoint(),"");
+				line2 = new PLine(segment.get1stPoint(),segment.get2ndPoint(),"");
+				intersectionPt = Intersection.ofTwoLines(line1, line2);
+				if ((intersectionPt != null) && Intersection.pointOnSegment(segment,intersectionPt) && Intersection.pointOnRay(ray, intersectionPt)) {
+					setLocation(intersectionPt.getX(), intersectionPt.getY());
+					this.setExists(true);
+				}
+				else {
+					this.setExists(false); //either intersection of related lines didn't exist or
+										   //intersection of related lines is not on the segment or not on the ray
+				}
+			}
+			else {
+				this.setExists(false);  //either the parent line or segment (or both) didn't exist
+			}
+			break;
+			
+		
+		case INTERSECTON_OF_SEGMENTS :
+			if (parents_.get(0).exists() && parents_.get(1).exists()) {
+				segment1 = (PSegment) parents_.get(0);
+				segment2 = (PSegment) parents_.get(1);
+				line1 = new PLine(segment1.get1stPoint(),segment1.get2ndPoint(),"");
+				line2 = new PLine(segment2.get1stPoint(),segment2.get2ndPoint(),"");
+				intersectionPt = Intersection.ofTwoLines(line1, line2);
+				if ((intersectionPt != null) && Intersection.pointOnSegment(segment1,intersectionPt) && 
+												Intersection.pointOnSegment(segment2, intersectionPt)) {
+					setLocation(intersectionPt.getX(), intersectionPt.getY());
+					this.setExists(true);
+				}
+				else {
+					this.setExists(false);  //either intersection of related lines didn't exist or
+					   				        //intersection of related lines is not on one (or both) of the segments
+				}
+			}
+			else {
+				this.setExists(false);  //one or more of the parent segments didn't exist
+			}
+			break;
+			
 		case INTERSECTON_OF_RAYS :
 			if (parents_.get(0).exists() && parents_.get(1).exists()) {
 				ray1 = (PRay) parents_.get(0);
@@ -194,8 +268,10 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		case LEFT_INTERSECTION_OF_CIRCLE_AND_LINE :
 		case RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE :
 			if (parents_.get(0).exists() && parents_.get(1).exists()) {
-				circle = (PCircle) parents_.get(0);
-				line = (PLine) parents_.get(1);
+				int circleIndex = ((parents_.get(0) instanceof PCircle) ? 0 : 1);
+				int lineIndex = ((parents_.get(1) instanceof PLine) ? 1 : 0);
+				circle = (PCircle) parents_.get(circleIndex);
+				line = (PLine) parents_.get(lineIndex);
 				whichPt = (constructedAs_ == RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE ? Intersection.RIGHT : Intersection.LEFT);
 				intersectionPt = Intersection.ofLineAndCircle(line, circle, whichPt);
 				if (intersectionPt != null) {
@@ -214,8 +290,10 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		case LEFT_INTERSECTION_OF_RAY_AND_CIRCLE :
 		case RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE :
 			if (parents_.get(0).exists() && parents_.get(1).exists()) {
-				circle = (PCircle) parents_.get(0);
-				ray = (PRay) parents_.get(1);
+				int circleIndex = ((parents_.get(0) instanceof PCircle) ? 0 : 1);
+				int rayIndex = ((parents_.get(1) instanceof PRay) ? 1 : 0);
+				circle = (PCircle) parents_.get(circleIndex);
+				ray = (PRay) parents_.get(rayIndex);
 				line = new PLine(ray.get1stPoint(),ray.get2ndPoint(),"");
 				whichPt = (constructedAs_ == RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE ? Intersection.RIGHT : Intersection.LEFT);
 				intersectionPt = Intersection.ofLineAndCircle(line, circle, whichPt);
@@ -229,6 +307,29 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 			}
 			else {
 				this.setExists(false); //one or more of the circles fails to exist
+			}
+			break;
+			
+		case LEFT_INTERSECTION_OF_SEGMENT_AND_CIRCLE :
+		case RIGHT_INTERSECTION_OF_SEGMENT_AND_CIRCLE :
+			if (parents_.get(0).exists() && parents_.get(1).exists()) {
+				int circleIndex = ((parents_.get(0) instanceof PCircle) ? 0 : 1);
+				int segmentIndex = ((parents_.get(1) instanceof PSegment) ? 1 : 0);
+				circle = (PCircle) parents_.get(circleIndex);
+				segment = (PSegment) parents_.get(segmentIndex);
+				line = new PLine(segment.get1stPoint(),segment.get2ndPoint(),"");
+				whichPt = (constructedAs_ == RIGHT_INTERSECTION_OF_SEGMENT_AND_CIRCLE ? Intersection.RIGHT : Intersection.LEFT);
+				intersectionPt = Intersection.ofLineAndCircle(line, circle, whichPt);
+				if ((intersectionPt != null) && Intersection.pointOnSegment(segment,intersectionPt)) {
+					setLocation(intersectionPt.getX(),intersectionPt.getY());
+					this.setExists(true);
+				}
+				else {
+					this.setExists(false);  //circle and segment fail to intersect
+				}
+			}
+			else {
+				this.setExists(false); //either the segment or the circle involved fails to exist
 			}
 			break;
 		  				  
@@ -253,9 +354,11 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 			break;
 		}
 		
+		//set visibility (and maybe other things?) as appropriate when 
+		//point in question exists, and when it doesn't...
 		if (this.exists()) {
-			this.dot_.setVisible(true);
-			this.gLabel_.setVisible(true);
+			this.dot_.setVisible(this.exists());
+			this.gLabel_.setVisible(this.exists());
 		}
 		else {
 			this.dot_.setVisible(false);
@@ -291,17 +394,6 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		}
 	}
 	
-	/*
-	public double getPointX() {
-		return this.getX();
-		//return x_;
-	}
-	
-	public double getPointY() {
-		return this.getY();
-		//return y_;
-	}
-	*/
 	public double getDistanceTo(double x, double y) {
 		return Math.sqrt((x-this.getX())*(x-this.getX()) + (y-this.getY())*(y-this.getY()));
 	}

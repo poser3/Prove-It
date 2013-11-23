@@ -13,16 +13,16 @@ import acm.program.Program;
 @SuppressWarnings("serial")
 public class MainWindow extends Program {
 	
-	private final int MAIN_WINDOW_WIDTH = 800;
+	private final int MAIN_WINDOW_WIDTH = 1200;
 	private final int MAIN_WINDOW_HEIGHT = 600;
 	
-	private final int SKETCH_CANVAS_WIDTH = 265;
+	private final int SKETCH_CANVAS_WIDTH = 450;
 	private final int SKETCH_CANVAS_HEIGHT = 600;
 	
-	private final int STATEMENT_PANEL_WIDTH = 260;
+	private final int STATEMENT_PANEL_WIDTH = 460;
 	private final int STATEMENT_PANEL_HEIGHT = 590;
 	
-	private final int EXPRESSION_SCROLLPANE_WIDTH = 260;
+	private final int EXPRESSION_SCROLLPANE_WIDTH = 360;
 	private final int EXPRESSION_SCROLLPANE_HEIGHT = 580;
 	
 	private final int TABBED_PANE_WIDTH = 260;
@@ -328,7 +328,7 @@ public class MainWindow extends Program {
 		sketchCanvas.setSketchPanel(sketchPanel);
 		this.add(sketchCanvas);
 		
-		this.getRegionPanel(EAST).setLayout(new TableLayout(1,2));
+		//this.getRegionPanel(EAST).setLayout(new TableLayout(1,1));
 		JPanel rightPanel = new JPanel();
 		JPanel statementPanel = new JPanel();
 		statementPanel.setLayout(new TableLayout(1,1));
@@ -353,24 +353,12 @@ public class MainWindow extends Program {
 		tabbedPane.addTab("Geometry", sketchPanel);
 		rightPanel.add(tabbedPane);
 		
-		add(statementPanel);
-		add(rightPanel);
+		this.add(statementPanel, EAST);
+		this.add(rightPanel, WEST);
 		
-				
-		//TODO: get canvas/sketch area on west side for seamless switching between algebraic and geometric contexts
-		//list in center becomes list of ALL statements
-		/*
-		GCanvas geoCanvas = new GCanvas();
-		geoCanvas.setSize(200, 200);
-		geoCanvas.add(new GRect(0,0,10,10));
-		add(geoCanvas, WEST);
-		this.getRegionPanel(WEST).setSize(200,200);
-		*/
 		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
 		
 		this.getCentralRegionSize().getWidth();
-		//DEBUG:
-		System.out.println(this.getCentralRegionSize().getWidth() + " by " + this.getCentralRegionSize().getHeight());
 	}
 	
 	private void update() {
