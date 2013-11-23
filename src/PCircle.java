@@ -71,7 +71,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		
 		public void setSelected(boolean selected) {
 			selected_ = selected;
-			setColor(selected ? Color.MAGENTA : Color.BLACK);
+			gOval_.setColor(selected ? Color.MAGENTA : Color.BLACK);
 		}
 		
 		public boolean isSelected() {

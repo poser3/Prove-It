@@ -22,20 +22,19 @@ public class MainWindow extends Program {
 	private final int STATEMENT_PANEL_WIDTH = 460;
 	private final int STATEMENT_PANEL_HEIGHT = 590;
 	
-	private final int EXPRESSION_SCROLLPANE_WIDTH = 360;
+    private final int EXPRESSION_SCROLLPANE_WIDTH = 360;
 	private final int EXPRESSION_SCROLLPANE_HEIGHT = 580;
-	
+
 	private final int TABBED_PANE_WIDTH = 260;
 	private final int TABBED_PANE_HEIGHT = 330;
 	
 	private final int RIGHT_PANEL_WIDTH = 280;
 	private final int RIGHT_PANEL_HEIGHT = 600;
 	
-	private final static boolean PRETTY_PRINT = true;
 	private final static JFileChooser fileChooser = new JFileChooser();
 	
-	private final ExpressionListModel expressions = new ExpressionListModel();
-	private final JList<Expression> expressionsList = new JList<Expression>(expressions);
+	private final StatementListModel statements = new StatementListModel();
+	private final JList<Statement> statementsList = new JList<Statement>(statements);
 	private final JTextArea instructions = new JTextArea(10, 10);
 	
 	private class OperatePanel extends JPanel {
@@ -57,9 +56,10 @@ public class MainWindow extends Program {
 			
 			JButton simplifyButton = new JButton("Simplify");
 			simplifyButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					for (Object selected : expressionsList.getSelectedValuesList()) {
-						Expression e = (Expression) selected;
+					for (Object selected : statementsList.getSelectedValuesList()) {
+						Expression e = ((Statement) selected).getExpression();
 						
 						if (e instanceof OperatorExpression) {
 							Expression simplified = ((OperatorExpression) e).simplify();
@@ -76,10 +76,11 @@ public class MainWindow extends Program {
 			final Operator op = Operator.named(opName);
 			final JButton button = new JButton(text);
 			button.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					final Expression selected = getSelected();
+					final Expression selected = getSelectedExpression();
 					if (selected == null) {
-						setInstructionsText("Select an expression from the list.");
+						setInstructionsText("Select a statement from the list.");
 						return;
 					}
 					final Expression fromField = Expression.parse(textField.getText());
@@ -120,6 +121,7 @@ public class MainWindow extends Program {
 			
 			JButton newButton = new JButton("Equation from input");
 			newButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					addExpressionAndSelect(textField.getText(), true);
 				}
@@ -137,8 +139,9 @@ public class MainWindow extends Program {
 			final Operator op = Operator.named(opName);
 			final JButton button = new JButton(buttonText);
 			button.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					final Expression selected = getSelected();
+					final Expression selected = getSelectedExpression();
 					if (selected == null) {
 						setInstructionsText("Select an expression from the list.");
 						return;
@@ -175,9 +178,10 @@ public class MainWindow extends Program {
 			
 			JButton hideButton = new JButton("Hide selected statements");
 			hideButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					for (Object selected : expressionsList.getSelectedValuesList()) {
-						((Expression) selected).setHidden(true);
+					for (Object selected : statementsList.getSelectedValuesList()) {
+						((Statement) selected).setHidden(true);
 					}
 					MainWindow.this.update();
 				}
@@ -186,9 +190,10 @@ public class MainWindow extends Program {
 			
 			JButton unhideButton = new JButton("Show all hidden statements");
 			unhideButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					for (Object ex : expressions.toArray()) {
-						((Expression) ex).setHidden(false);
+					for (Object s : statements.toArray()) {
+						((Statement) s).setHidden(false);
 					}
 					MainWindow.this.update();
 				}
@@ -197,6 +202,7 @@ public class MainWindow extends Program {
 			
 			JButton theoremButton = new JButton("Apply theorem");
 			theoremButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					TheoremChooserDialog chooser = new TheoremChooserDialog(MainWindow.this);
 					chooser.setVisible(true);
@@ -219,30 +225,32 @@ public class MainWindow extends Program {
 						substitutions.put(replace, with);
 					}
 					
-					for (Expression h : theorem.hypotheses) {
-						Expression postReplacement = h.substitute(substitutions);
+					for (Statement h : theorem.hypotheses) {
+						Expression postReplacement = h.getExpression().substitute(substitutions);
 						boolean found = false;
-						for (Object e : expressions.toArray()) {
-							if (((Expression) e).equals(postReplacement)) {
+						for (Object s : statements.toArray()) {
+							Expression e = ((Statement) s).getExpression();
+							if (e.equals(postReplacement)) {
 								found = true;
 								break;
 							}
 						}
 						if (! found) {
 							setInstructionsText("Hypothesis \"" + 
-									postReplacement.toLatex() +
+									postReplacement.toString() +
 									"\" not found.");
 							return;
 						}
 					}
-					for (Expression c : theorem.conclusions)
-						addExpression(c.substitute(substitutions));
+					for (Statement c : theorem.conclusions)
+						addExpression(c.getExpression().substitute(substitutions));
 				}
 			});
 			add(theoremButton);
 			
 			JButton reloadTheoremsButton = new JButton("Reload theorems");
 			reloadTheoremsButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					Theorem.loadTheorems();
 				}
@@ -251,6 +259,7 @@ public class MainWindow extends Program {
 			
 			JButton loadButton = new JButton("Load statements...");
 			loadButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
 					int choice = fileChooser.showOpenDialog(MainWindow.this);
 					if (choice == JFileChooser.APPROVE_OPTION) {
@@ -269,14 +278,15 @@ public class MainWindow extends Program {
 			
 			JButton substituteButton = new JButton("Substitute");
 			substituteButton.addActionListener(new ActionListener() {
+				@Override
 				public void actionPerformed(ActionEvent event) {
-					final Expression selected = getSelected();
+					final Statement selected = getSelected();
 					if (selected == null) {
-						setInstructionsText("Select an expression to substitute into.");
+						setInstructionsText("Select a statement to substitute into.");
 						return;
 					}
-					if (expressions.size() < 2) {
-						setInstructionsText("You can't substitute with only one expression.");
+					if (statements.size() < 2) {
+						setInstructionsText("You can't substitute with only one statement.");
 						return;
 					}
 					
@@ -286,27 +296,22 @@ public class MainWindow extends Program {
 					Expression replace = dialog.getFrom();
 					Expression with = dialog.getTo();
 					if (replace != null && with != null) {
-						Expression after = selected.substitute(replace, with);
+						Expression after = selected.getExpression().substitute(replace, with);
 						if (! after.equals(selected))
-							addExpressionAndSelect(selected.substitute(replace, with), true);
+							addExpressionAndSelect(selected.getExpression().substitute(replace, with), true);
 						else
 							setInstructionsText("No substitution was made.");
 					}
 					else
-						setInstructionsText("You have to actually choose an expression.");
+						setInstructionsText("You have to choose a statement.");
 				}
 			});
 			add(substituteButton);
 		}
 	}
 	
+	@Override
 	public void init() {
-		
-		if (PRETTY_PRINT) {
-			expressionsList.setCellRenderer(new ExpressionListCellRenderer());
-			expressionsList.setPrototypeCellValue(null);
-			expressionsList.setFixedCellHeight(-1);
-		}
 		
 		SketchCanvas sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
 		SketchPanel sketchPanel = new SketchPanel();
@@ -322,10 +327,11 @@ public class MainWindow extends Program {
 		statementPanel.setPreferredSize(new Dimension(STATEMENT_PANEL_WIDTH,STATEMENT_PANEL_HEIGHT));
 		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH,RIGHT_PANEL_HEIGHT));
 		
-		JScrollPane expressionsScrollPane = new JScrollPane(expressionsList);
-		expressionsScrollPane.setVerticalScrollBar(expressionsScrollPane.createVerticalScrollBar());
-		expressionsScrollPane.setPreferredSize(new Dimension(EXPRESSION_SCROLLPANE_WIDTH,EXPRESSION_SCROLLPANE_HEIGHT));
-		statementPanel.add(expressionsScrollPane);
+		statementsList.setCellRenderer(new StatementListCellRenderer());
+		JScrollPane statementsScrollPane = new JScrollPane(statementsList);
+		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
+		statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
+		statementPanel.add(statementsScrollPane);
 		
 		setInstructionsText("Push the button, Max!");
 		instructions.setEditable(false);
@@ -348,39 +354,57 @@ public class MainWindow extends Program {
 	}
 	
 	private void update() {
-		expressionsList.update(expressionsList.getGraphics());
+		statementsList.update(statementsList.getGraphics());
 	}
 	
 	public void setInstructionsText(String s) {
 		instructions.setText(s);
 	}
 	
-	public Object[] getExpressions() {
-		return expressions.toArray();
+	public Object[] getStatements() {
+		return statements.toArray();
 	}
 	public boolean isSelectionEmpty() {
-		return expressionsList.isSelectionEmpty();
+		return statementsList.isSelectionEmpty();
 	}
-	public Expression getSelected() {
-		return (Expression) expressionsList.getSelectedValue();
+	public Statement getSelected() {
+		return (Statement) statementsList.getSelectedValue();
 	}
-	
-	public void addExpression(final String s) {
-		expressions.addElement(Expression.parse(s));
+	public Expression getSelectedExpression() {
+		if (getSelected() == null)
+			return null;
+		else
+			return getSelected().getExpression();
 	}
+
+	public void addStatement(Statement s) {
+		statements.addElement(s);
+		setInstructionsText(s.toString());
+	}
+	public void addStatement(final String s) {
+		addStatement(new Statement(s));
+	}
+	public void addStatementAndSelect(Statement s, boolean shouldScroll) {
+		addStatement(s);
+		statementsList.setSelectedValue(s, shouldScroll);
+	}
+	public void addStatementAndSelect(final String s, boolean shouldScroll) {
+		addStatementAndSelect(new Statement(s), shouldScroll);
+	}
+
 	public void addExpression(Expression e) {
-		expressions.addElement(e);
-		if (! expressions.contains(e))
-			throw new IllegalArgumentException();
+		statements.addElement(new Statement(e));
+		setInstructionsText(e.toString());
 	}
-	public void addExpressionAndSelect(final String s, boolean shouldScroll) {
-		Expression e = Expression.parse(s);
-		expressions.addElement(e);
-		expressionsList.setSelectedValue(e, shouldScroll);
+	public void addExpression(final String s) {
+		addStatement(new Statement(s));
 	}
 	public void addExpressionAndSelect(Expression e, boolean shouldScroll) {
-		expressions.addElement(e);
-		expressionsList.setSelectedValue(e, shouldScroll);
+		addExpression(e);
+		statementsList.setSelectedValue(e, shouldScroll);
+	}
+	public void addExpressionAndSelect(final String s, boolean shouldScroll) {
+		addStatementAndSelect(new Statement(s), shouldScroll);
 	}
 	
 }

@@ -1,14 +1,14 @@
 import javax.swing.DefaultListModel;
 
 @SuppressWarnings("serial")
-public class ExpressionListModel extends DefaultListModel<Expression> {
+public class StatementListModel extends DefaultListModel<Statement> {
 	
-	public Expression getElementAt(int index) {
+	public Statement getElementAt(int index) {
 		int count = 0;
 		for (Object o : toArray())
-			if (! ((Expression) o).isHidden()) {
+			if (! ((Statement) o).isHidden()) {
 				if (count == index)
-					return (Expression) o;
+					return (Statement) o;
 				count++;
 			}
 		
@@ -18,7 +18,7 @@ public class ExpressionListModel extends DefaultListModel<Expression> {
 	public int getSize() {
 		int count = 0;
 		for (Object o : toArray())
-			if (! ((Expression) o).isHidden())
+			if (! ((Statement) o).isHidden())
 				count++;
 		
 		return count;

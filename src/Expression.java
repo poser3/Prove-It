@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Expression implements Comparable<Expression> {
-        
+       
         private boolean hidden = false;
         private final ArrayList<Expression> dependencies = new ArrayList<Expression>();
         
@@ -380,6 +380,4 @@ public abstract class Expression implements Comparable<Expression> {
                         }
                 }
         }
-        
 }
-

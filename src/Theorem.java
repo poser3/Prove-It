@@ -5,6 +5,10 @@ import java.util.Scanner;
 
 public class Theorem {
 	
+	private static final byte VARIABLES = 0;
+	private static final byte HYPOTHESES = 1;
+	private static final byte CONCLUSIONS = 2;
+	
 	static ArrayList<Theorem> theorems = new ArrayList<Theorem>();
 	public static void loadTheorems() {
 		theorems = new ArrayList<Theorem>();
@@ -23,21 +27,31 @@ public class Theorem {
 				
 		name = scanner.nextLine();
 		variables = new ArrayList<Expression>();
-		hypotheses = new ArrayList<Expression>();
-		conclusions = new ArrayList<Expression>();
-		ArrayList<Expression> currentSection = variables;
+		hypotheses = new ArrayList<Statement>();
+		conclusions = new ArrayList<Statement>();
+		byte currentSection = VARIABLES;
 		
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			if (line.length() > 0) {
 				if (line.contains("variables"))
-					currentSection = variables;
+					currentSection = VARIABLES;
 				else if (line.contains("hypotheses"))
-					currentSection = hypotheses;
+					currentSection = HYPOTHESES;
 				else if (line.contains("conclusions"))
-					currentSection = conclusions;
+					currentSection = CONCLUSIONS;
 				else
-					currentSection.add(Expression.parse(line));
+					switch(currentSection) {
+					case VARIABLES:
+						variables.add(Expression.parse(line));
+						break;
+					case HYPOTHESES:
+						hypotheses.add(new Statement(line));
+						break;
+					case CONCLUSIONS:
+						conclusions.add(new Statement(line));
+						break;
+					}
 			}
 		}
 		
@@ -46,8 +60,8 @@ public class Theorem {
 	
 	public final String name;
 	public final ArrayList<Expression> variables;
-	public final ArrayList<Expression> hypotheses;
-	public final ArrayList<Expression> conclusions;
+	public final ArrayList<Statement> hypotheses;
+	public final ArrayList<Statement> conclusions;
 	
 	public String toString() {
 		return name;

@@ -1,24 +1,24 @@
 import java.util.ArrayList;
 
 public class OperatorExpression extends Expression {
-        
-        private Operator op;
-        private ArrayList<Expression> arguments;
-        
-        /**
-         * Construct an OperatorExpression with the given operator and arguments.
-         * @param op the operator for the expression
-         * @param arguments an ArrayList of expressions to which the operator will be applied
-         */
-        public OperatorExpression(Operator op, ArrayList<Expression> arguments) {
-                this.op = op;
-                this.arguments = arguments;
-        }
-        
-        public OperatorExpression(final String op, ArrayList<Expression> arguments) {
-                this.op = Operator.named(op);
-                this.arguments = arguments;
-        }
+
+		private Operator op;
+		private ArrayList<Expression> arguments;
+	
+		/**
+		 * Construct an OperatorExpression with the given operator and arguments.
+		 * @param op the operator for the expression
+		 * @param arguments an ArrayList of expressions to which the operator will be applied
+		 */
+		public OperatorExpression(Operator op, ArrayList<Expression> arguments) {
+			this.op = op;
+			this.arguments = arguments;
+		}	
+		
+		public OperatorExpression(final String op, ArrayList<Expression> arguments) {
+			this.op = Operator.named(op);
+			this.arguments = arguments;
+		}
 
         public Operator getOp() {
                 return op;

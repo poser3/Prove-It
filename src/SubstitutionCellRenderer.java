@@ -1,33 +1,31 @@
 import java.awt.Component;
+import java.util.ArrayList;
 
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JList;
 
-@SuppressWarnings("serial")
-public class SubstitutionCellRenderer extends DefaultListCellRenderer {
-        public boolean reversed = false;
-        
-        public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
-                if (value instanceof OperatorExpression) {
-                        OperatorExpression opEx = (OperatorExpression) value;
-                        if (opEx.getOp().equals(Operator.named("="))) {
-                                StringBuilder sb = new StringBuilder();
-                                if (reversed) {
-                                        sb.append(opEx.getArg(1).toLatex());
-                                        sb.append(" = ");
-                                        sb.append(opEx.getArg(0).toLatex());
-                                }
-                                else {
-                                        sb.append(opEx.getArg(0).toLatex());
-                                        sb.append(" = ");
-                                        sb.append(opEx.getArg(1).toLatex());
-                                }
-                                return super.getListCellRendererComponent(list, sb.toString(), index, isSelected, cellHasFocus);
-                        }
-                }
-                
-                return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
-                        
-        }
+public class SubstitutionCellRenderer extends StatementListCellRenderer {
+	public boolean reversed = false;
+	
+	@Override
+	public Component getListCellRendererComponent(JList<? extends Statement> list, Statement value, int index, boolean isSelected, boolean cellHasFocus) {
+		if (value.getExpression() instanceof OperatorExpression) {
+			OperatorExpression opEx = (OperatorExpression) value.getExpression();
+			if (opEx.getOp().equals(Operator.named("="))) {
+				if (reversed) {
+					ArrayList<Expression> args = new ArrayList<Expression>();
+					args.add(opEx.getArg(1));
+					args.add(opEx.getArg(0));
+					Expression result = new OperatorExpression(Operator.named("="), args);
+					return super.getListCellRendererComponent(list, new Statement(result), index, isSelected, cellHasFocus);
+				} else {
+					return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+				}
+			}
+		}
+		
+		return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			
+	}
 }
 
