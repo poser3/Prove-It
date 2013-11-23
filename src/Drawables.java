@@ -30,4 +30,10 @@ public class Drawables extends ArrayList<Drawable> {
 		for (Drawable d : this)
 			d.update();
 	}
+	
+	public void addInOrder(Drawable drawable1, Drawable drawable2) {
+		this.add(drawable1);
+		this.add(drawable2);
+	}
 }
+

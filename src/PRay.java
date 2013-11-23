@@ -22,6 +22,7 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 	private PPoint p1_;
 	private PPoint p2_;
 	private boolean selected_;
+	private boolean exists_;
 	
 	public GPoint getEdgePoint() {
 		
@@ -37,7 +38,16 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 		fancyLabel_ = new FancyLabel(label_);
 		this.add(fancyLabel_);
 		setSelected(false);
+		exists_ = true;
 		update();
+	}
+	
+	public boolean exists() {
+		return exists_;
+	}
+	
+	public void setExists(boolean exists) {
+		exists_ = exists;
 	}
 	
 	public void update() {

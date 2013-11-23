@@ -89,3 +89,4 @@ public class TheoremChooserDialog extends JDialog {
 	}
 
 }
+

@@ -11,6 +11,7 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	private PPoint p1_;
 	private PPoint p2_;
 	private boolean selected_;
+	private boolean exists_;
 	
 	
 	public PSegment(PPoint p1, PPoint p2, String label) {
@@ -19,6 +20,15 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 		p2_ = p2;
 		label_ = label;
 		setSelected(false);
+		exists_ = true;
+	}
+	
+	public boolean exists() {
+		return exists_;
+	}
+	
+	public void setExists(boolean exists) {
+		exists_ = exists;
 	}
 	
 	public void update() {

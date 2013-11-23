@@ -25,3 +25,4 @@ public class ExpressionListModel extends DefaultListModel<Expression> {
 	}
 
 }
+
