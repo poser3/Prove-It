@@ -36,7 +36,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 			Expression ex = ((Statement) statementsFromMainWindow[i]).getExpression();
 			if (ex instanceof OperatorExpression
 					&& ! substitutingIn.equals(ex)
-					&& ((OperatorExpression) ex).getOp().equals(Operator.named("=")))
+					&& ((OperatorExpression) ex).getOp().equals(Operators.named("=")))
 				statements.add((Statement) statementsFromMainWindow[i]);
 		}		
 		

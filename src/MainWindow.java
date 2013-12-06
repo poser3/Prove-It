@@ -73,7 +73,7 @@ public class MainWindow extends Program {
 		}
 		
 		private void addButton(final String opName, final String text) {
-			final Operator op = Operator.named(opName);
+			final Operator op = Operators.named(opName);
 			final JButton button = new JButton(text);
 			button.addActionListener(new ActionListener() {
 				@Override
@@ -89,7 +89,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					Expression changed;
-					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operator.named("=")) {
+					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operators.named("=")) {
 						final ArrayList<Expression> args = ((OperatorExpression) selected).getArgs();
 						ArrayList<Expression> newArgs = new ArrayList<Expression>();
 						for (Expression arg : args)
@@ -136,7 +136,7 @@ public class MainWindow extends Program {
 			final JComboBox<String> comboBox = new JComboBox<String>(comboItems);
 			add(comboBox);
 			
-			final Operator op = Operator.named(opName);
+			final Operator op = Operators.named(opName);
 			final JButton button = new JButton(buttonText);
 			button.addActionListener(new ActionListener() {
 				@Override
@@ -152,7 +152,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					String mode = (String) comboBox.getSelectedItem();
-					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operator.named("=")) {
+					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operators.named("=")) {
 						final ArrayList<Expression> args = ((OperatorExpression) selected).getArgs();
 						ArrayList<Expression> newArgs = new ArrayList<Expression>();
 						for (int i=0; i<args.size(); i++) {

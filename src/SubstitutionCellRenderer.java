@@ -10,8 +10,7 @@ public class SubstitutionCellRenderer extends StatementListCellRenderer {
 	@Override
 	public Component getListCellRendererComponent(JList<? extends Statement> list, Statement value, int index, boolean isSelected, boolean cellHasFocus) {
 		if (value.getExpression() instanceof OperatorExpression) {
-			OperatorExpression opEx = (OperatorExpression) value.getExpression();
-			if (opEx.getOp().equals(Operator.named("="))) {
+			if (opEx.getOp().equals(Operators.named("="))) {
 				if (reversed) {
 					ArrayList<Expression> args = new ArrayList<Expression>();
 					args.add(opEx.getArg(1));
