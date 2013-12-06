@@ -59,12 +59,15 @@ public class MainWindow extends Program {
 				@Override
 				public void actionPerformed(ActionEvent event) {
 					for (Object selected : statementsList.getSelectedValuesList()) {
-						Expression e = ((Statement) selected).getExpression();
+						Statement s = (Statement) selected;
+						Expression e = s.getExpression();
 						
 						if (e instanceof OperatorExpression) {
 							Expression simplified = ((OperatorExpression) e).simplify();
-							if (! simplified.equals(e))
-								addExpressionAndSelect(simplified, true);
+							if (! simplified.equals(e)) {
+								Statement result = new Statement(simplified, s.logicParents(), s.geometryParents());
+								addStatementAndSelect(result, true);
+							}
 						}
 					}
 				}
@@ -78,11 +81,12 @@ public class MainWindow extends Program {
 			button.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
-					final Expression selected = getSelectedExpression();
-					if (selected == null) {
+					Statement statement = getSelected();
+					if (statement == null) {
 						setInstructionsText("Select a statement from the list.");
 						return;
 					}
+					Expression selected = statement.getExpression();
 					final Expression fromField = Expression.parse(textField.getText());
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
@@ -98,7 +102,9 @@ public class MainWindow extends Program {
 						
 					} else
 						changed = selected.applyRight(op, fromField);
-					addExpressionAndSelect(changed, true);
+					
+					Statement result = new Statement(changed, statement.logicParents(), statement.geometryParents());
+					addStatementAndSelect(result, true);
 				}
 			});
 			add(button);
@@ -123,7 +129,7 @@ public class MainWindow extends Program {
 			newButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
-					addExpressionAndSelect(textField.getText(), true);
+					addStatementAndSelect(textField.getText(), true);
 				}
 			});
 			add(newButton, "gridwidth="+COLUMNS);
@@ -141,12 +147,13 @@ public class MainWindow extends Program {
 			button.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
-					final Expression selected = getSelectedExpression();
-					if (selected == null) {
+					Statement statement = getSelected();
+					if (statement == null) {
 						setInstructionsText("Select an expression from the list.");
 						return;
 					}
-					final Expression fromField = Expression.parse(textField.getText());
+					Expression selected = statement.getExpression();
+					Expression fromField = Expression.parse(textField.getText());
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
 						return;
@@ -165,7 +172,8 @@ public class MainWindow extends Program {
 							else
 								newArgs.add(args.get(i));
 						}
-						addExpressionAndSelect(new OperatorExpression("=", newArgs), true);
+						Statement result = new Statement(new OperatorExpression("=", newArgs), statement.logicParents(), statement.geometryParents());
+						addStatementAndSelect(result, true);
 					}
 				}
 			});
@@ -225,6 +233,7 @@ public class MainWindow extends Program {
 						substitutions.put(replace, with);
 					}
 					
+					ArrayList<Statement> parents = new ArrayList<Statement>();
 					for (Statement h : theorem.hypotheses) {
 						Expression postReplacement = h.getExpression().substitute(substitutions);
 						boolean found = false;
@@ -232,6 +241,7 @@ public class MainWindow extends Program {
 							Expression e = ((Statement) s).getExpression();
 							if (e.equals(postReplacement)) {
 								found = true;
+								parents.add((Statement) s);
 								break;
 							}
 						}
@@ -242,8 +252,12 @@ public class MainWindow extends Program {
 							return;
 						}
 					}
-					for (Statement c : theorem.conclusions)
-						addExpression(c.getExpression().substitute(substitutions));
+					for (Statement c : theorem.conclusions) {
+						Statement result = new Statement(c.getExpression().substitute(substitutions),
+								parents,
+								null);
+						addStatement(result);
+					}
 				}
 			});
 			add(theoremButton);
@@ -266,7 +280,7 @@ public class MainWindow extends Program {
 						try {
 							Scanner reader = new Scanner(fileChooser.getSelectedFile());
 							while (reader.hasNextLine())
-								addExpression(reader.nextLine());
+								addStatement(reader.nextLine());
 							reader.close();
 						} catch (FileNotFoundException e) {
 							setInstructionsText("File not found!");
@@ -297,8 +311,12 @@ public class MainWindow extends Program {
 					Expression with = dialog.getTo();
 					if (replace != null && with != null) {
 						Expression after = selected.getExpression().substitute(replace, with);
-						if (! after.equals(selected))
-							addExpressionAndSelect(selected.getExpression().substitute(replace, with), true);
+						if (! after.equals(selected)) {
+							Statement result = new Statement(selected.getExpression().substitute(replace, with),
+									ListUtils.listOf(selected, dialog.getChoice()),
+									null);
+							addStatementAndSelect(result, true);
+						}
 						else
 							setInstructionsText("No substitution was made.");
 					}
@@ -370,12 +388,6 @@ public class MainWindow extends Program {
 	public Statement getSelected() {
 		return (Statement) statementsList.getSelectedValue();
 	}
-	public Expression getSelectedExpression() {
-		if (getSelected() == null)
-			return null;
-		else
-			return getSelected().getExpression();
-	}
 
 	public void addStatement(Statement s) {
 		statements.addElement(s);
@@ -389,21 +401,6 @@ public class MainWindow extends Program {
 		statementsList.setSelectedValue(s, shouldScroll);
 	}
 	public void addStatementAndSelect(final String s, boolean shouldScroll) {
-		addStatementAndSelect(new Statement(s), shouldScroll);
-	}
-
-	public void addExpression(Expression e) {
-		statements.addElement(new Statement(e));
-		setInstructionsText(e.toString());
-	}
-	public void addExpression(final String s) {
-		addStatement(new Statement(s));
-	}
-	public void addExpressionAndSelect(Expression e, boolean shouldScroll) {
-		addExpression(e);
-		statementsList.setSelectedValue(e, shouldScroll);
-	}
-	public void addExpressionAndSelect(final String s, boolean shouldScroll) {
 		addStatementAndSelect(new Statement(s), shouldScroll);
 	}
 	

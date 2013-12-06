@@ -2,10 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Expression implements Comparable<Expression> {
-	
-	private boolean hidden = false;
-	private final ArrayList<Expression> dependencies = new ArrayList<Expression>();
-	
+		
 	/**
 	 * Turn an prefix LISP-like expression template into an Expression.
 	 * @param template a String containing a prefix LISP-like expression
@@ -77,17 +74,6 @@ public abstract class Expression implements Comparable<Expression> {
 			// Make and return the expression
 			return new OperatorExpression(op, args);
 		}
-	}
-	
-	public boolean isHidden() {
-		return hidden;
-	}
-	public void setHidden(boolean hidden) {
-		this.hidden = hidden;
-	}
-	
-	public ArrayList<Expression> getDependencies() {
-		return dependencies;
 	}
 	
 	/**

@@ -84,9 +84,16 @@ public class SubstitutionSelectionDialog extends JDialog {
 		
 	}
 	
+	public Statement getChoice() {
+		if (choiceMade) {
+			return (Statement) selectionBox.getSelectedItem();
+		}
+		
+		return null;
+	}
 	public Expression getFrom() {
 		if (choiceMade) {
-			OperatorExpression ex = (OperatorExpression) selectionBox.getSelectedItem();
+			OperatorExpression ex = (OperatorExpression) getChoice().getExpression();
 			return renderer.reversed ? ex.getArg(1) : ex.getArg(0);
 		}
 		
@@ -94,7 +101,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 	}
 	public Expression getTo() {
 		if (choiceMade) {
-			OperatorExpression ex = (OperatorExpression) selectionBox.getSelectedItem();
+			OperatorExpression ex = (OperatorExpression) getChoice().getExpression();
 			return renderer.reversed ? ex.getArg(0) : ex.getArg(1);
 		}
 		
