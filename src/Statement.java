@@ -6,7 +6,6 @@ public class Statement implements Comparable<Statement> {
 	
 	private final Expression expression;
 	private ArrayList<Statement> logicDependencies = new ArrayList<Statement>();
-	@SuppressWarnings("unused")
 	private Drawables geometryDependencies = new Drawables();
 	private boolean hidden = false;
 	private boolean valid = false;
@@ -72,12 +71,9 @@ public class Statement implements Comparable<Statement> {
 			for (Statement s : logicDependencies)
 				if (! s.isValid())
 					return false;
-			// TODO Uncomment when this file and the rays-and-intersections branch are brought together.
-			/*
 			for (Drawable d : geometryDependencies)
 				if (! d.exists())
 					return false;
-			 */
 			// If this.valid and all of the dependencies are also valid, return true.
 			return true;
 		}
