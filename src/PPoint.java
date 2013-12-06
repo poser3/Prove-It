@@ -40,7 +40,8 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 
 	private GOval dot_;
 	private byte constructedAs_;
-	private ArrayList<Drawable> parents_;
+	private Drawables parents_;
+	private Drawables dependents_;
 	private final String label_;
 	private boolean selected_;
 	private GLabel gLabel_;
@@ -51,7 +52,7 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		this.setLocation(x,y);
 		dot_ = new GOval(-POINT_DIAMETER / 2.0, -POINT_DIAMETER / 2.0, POINT_DIAMETER, POINT_DIAMETER);
 		dot_.setFilled(true);
-		dot_.setFillColor(Color.BLACK);
+		dot_.setFillColor(Color.GREEN);
 		this.add(dot_);
 		
 		label_ = label;
@@ -60,6 +61,8 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		
 		constructedAs_ = FREE_POINT;
 		exists_ = true;
+		
+		dependents_ = new Drawables();
 	}
 	
 	public PPoint(byte constructedAs, Collection<? extends Drawable> parents, String label) {
@@ -68,6 +71,8 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		dot_.setFillColor(Color.BLACK);
 		this.add(dot_);
 		parents_ = new Drawables(parents);
+		System.out.println(parents);
+		dependents_ = new Drawables();
 		label_ = label;
 		gLabel_ = new GLabel(label_, 10, -10);
 		this.add(gLabel_);
@@ -76,8 +81,17 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		update();
 	}
 	
+	public Drawables getParents() {
+		return parents_;
+	}
+
+	public Drawables getDependents() {
+		return dependents_;
+	}
+	
 	@Override
 	public void move(double dx, double dy) {
+		
 		
 		switch (constructedAs_) {
 		
@@ -368,7 +382,7 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	
 	public void setSelected(boolean selected) {
 		selected_ = selected;
-		dot_.setFillColor(selected ? Color.MAGENTA : Color.BLACK);
+		dot_.setFillColor(selected ? Color.MAGENTA : (this.constructedAs_ == FREE_POINT ? Color.green : Color.BLACK));
 	}
 	
 	public boolean isSelected() {

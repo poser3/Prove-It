@@ -1,4 +1,8 @@
 import java.awt.Dimension;
+import java.awt.LayoutManager;
+import java.awt.Menu;
+import java.awt.MenuBar;
+import java.awt.MenuItem;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -9,6 +13,7 @@ import javax.swing.*;
 
 import acm.gui.TableLayout;
 import acm.program.Program;
+import acm.program.ProgramMenuBar;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Program {
@@ -22,8 +27,8 @@ public class MainWindow extends Program {
 	private final int STATEMENT_PANEL_WIDTH = 460;
 	private final int STATEMENT_PANEL_HEIGHT = 590;
 	
-    private final int EXPRESSION_SCROLLPANE_WIDTH = 360;
-	private final int EXPRESSION_SCROLLPANE_HEIGHT = 580;
+    private final int STATEMENT_SCROLLPANE_WIDTH = 360;
+	private final int STATEMENT_SCROLLPANE_HEIGHT = 580;
 
 	private final int TABBED_PANE_WIDTH = 260;
 	private final int TABBED_PANE_HEIGHT = 330;
@@ -36,6 +41,10 @@ public class MainWindow extends Program {
 	private final StatementListModel statements = new StatementListModel();
 	private final JList<Statement> statementsList = new JList<Statement>(statements);
 	private final JTextArea instructions = new JTextArea(10, 10);
+	public static JTextArea log;
+	
+	private MainMenuBar menuBar = new MainMenuBar(this); 
+	
 	
 	private class OperatePanel extends JPanel {
 		final private short COLUMNS = 2;
@@ -172,142 +181,107 @@ public class MainWindow extends Program {
 			add(button);
 		}
 	}
-	private class ManipulatePanel extends JPanel {
-		ManipulatePanel() {
-			setLayout(new TableLayout(0, 1));
-			
-			JButton hideButton = new JButton("Hide selected statements");
-			hideButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					for (Object selected : statementsList.getSelectedValuesList()) {
-						((Statement) selected).setHidden(true);
-					}
-					MainWindow.this.update();
-				}
-			});
-			add(hideButton);
-			
-			JButton unhideButton = new JButton("Show all hidden statements");
-			unhideButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					for (Object s : statements.toArray()) {
-						((Statement) s).setHidden(false);
-					}
-					MainWindow.this.update();
-				}
-			});
-			add(unhideButton);
-			
-			JButton theoremButton = new JButton("Apply theorem");
-			theoremButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					TheoremChooserDialog chooser = new TheoremChooserDialog(MainWindow.this);
-					chooser.setVisible(true);
-					Theorem theorem = chooser.getSelected();
-					if (theorem == null) {
-						setInstructionsText("You have to choose a theorem.");
-						return;
-					}
-					
-					HashMap<String, String> substitutions = new HashMap<String, String>();
-					for (Expression v : theorem.variables) {
-						String replace = v.toString();
-						String with = JOptionPane.showInputDialog(
-								MainWindow.this,
-								"What does "+ replace +" stand for?",
-								"Substitute",
-								JOptionPane.PLAIN_MESSAGE);
-						if (with == null)
-							return;
-						substitutions.put(replace, with);
-					}
-					
-					for (Statement h : theorem.hypotheses) {
-						Expression postReplacement = h.getExpression().substitute(substitutions);
-						boolean found = false;
-						for (Object s : statements.toArray()) {
-							Expression e = ((Statement) s).getExpression();
-							if (e.equals(postReplacement)) {
-								found = true;
-								break;
-							}
-						}
-						if (! found) {
-							setInstructionsText("Hypothesis \"" + 
-									postReplacement.toString() +
-									"\" not found.");
-							return;
-						}
-					}
-					for (Statement c : theorem.conclusions)
-						addExpression(c.getExpression().substitute(substitutions));
-				}
-			});
-			add(theoremButton);
-			
-			JButton reloadTheoremsButton = new JButton("Reload theorems");
-			reloadTheoremsButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					Theorem.loadTheorems();
-				}
-			});
-			add(reloadTheoremsButton);
-			
-			JButton loadButton = new JButton("Load statements...");
-			loadButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					int choice = fileChooser.showOpenDialog(MainWindow.this);
-					if (choice == JFileChooser.APPROVE_OPTION) {
-						try {
-							Scanner reader = new Scanner(fileChooser.getSelectedFile());
-							while (reader.hasNextLine())
-								addExpression(reader.nextLine());
-							reader.close();
-						} catch (FileNotFoundException e) {
-							setInstructionsText("File not found!");
-						}
-					}
-				}
-			});
-			add(loadButton);
-			
-			JButton substituteButton = new JButton("Substitute");
-			substituteButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					final Statement selected = getSelected();
-					if (selected == null) {
-						setInstructionsText("Select a statement to substitute into.");
-						return;
-					}
-					if (statements.size() < 2) {
-						setInstructionsText("You can't substitute with only one statement.");
-						return;
-					}
-					
-					SubstitutionSelectionDialog dialog = new SubstitutionSelectionDialog(MainWindow.this, selected);
-					dialog.setVisible(true);
-					
-					Expression replace = dialog.getFrom();
-					Expression with = dialog.getTo();
-					if (replace != null && with != null) {
-						Expression after = selected.getExpression().substitute(replace, with);
-						if (! after.equals(selected))
-							addExpressionAndSelect(selected.getExpression().substitute(replace, with), true);
-						else
-							setInstructionsText("No substitution was made.");
-					}
-					else
-						setInstructionsText("You have to choose a statement.");
-				}
-			});
-			add(substituteButton);
+	
+	public void hideSelectedStatements() {
+		for (Object selected : statementsList.getSelectedValuesList()) {
+			((Statement) selected).setHidden(true);
 		}
+		MainWindow.this.update();
+	}
+	
+	public void showHiddenStatements() {
+		for (Object s : statements.toArray()) {
+			((Statement) s).setHidden(false);
+		}
+		MainWindow.this.update();
+	}
+	
+	public void applyTheorem() {
+		TheoremChooserDialog chooser = new TheoremChooserDialog(MainWindow.this);
+		chooser.setVisible(true);
+		Theorem theorem = chooser.getSelected();
+		if (theorem == null) {
+			setInstructionsText("You have to choose a theorem.");
+			return;
+		}
+		
+		HashMap<String, String> substitutions = new HashMap<String, String>();
+		for (Expression v : theorem.variables) {
+			String replace = v.toString();
+			String with = JOptionPane.showInputDialog(
+					MainWindow.this,
+					"What does "+ replace +" stand for?",
+					"Substitute",
+					JOptionPane.PLAIN_MESSAGE);
+			if (with == null)
+				return;
+			substitutions.put(replace, with);
+		}
+		
+		for (Statement h : theorem.hypotheses) {
+			Expression postReplacement = h.getExpression().substitute(substitutions);
+			boolean found = false;
+			for (Object s : statements.toArray()) {
+				Expression e = ((Statement) s).getExpression();
+				if (e.equals(postReplacement)) {
+					found = true;
+					break;
+				}
+			}
+			if (! found) {
+				setInstructionsText("Hypothesis \"" + 
+						postReplacement.toString() +
+						"\" not found.");
+				return;
+			}
+		}
+		for (Statement c : theorem.conclusions)
+			addExpression(c.getExpression().substitute(substitutions));
+	}
+	
+	public void reloadTheorems() {
+		Theorem.loadTheorems();
+	}
+	
+	public void loadStatements() {
+		int choice = fileChooser.showOpenDialog(MainWindow.this);
+		if (choice == JFileChooser.APPROVE_OPTION) {
+			try {
+				Scanner reader = new Scanner(fileChooser.getSelectedFile());
+				while (reader.hasNextLine())
+					addExpression(reader.nextLine());
+				reader.close();
+			} catch (FileNotFoundException e) {
+				setInstructionsText("File not found!");
+			}
+		}
+	}
+	
+	public void substitute() {
+		final Statement selected = getSelected();
+		if (selected == null) {
+			setInstructionsText("Select a statement to substitute into.");
+			return;
+		}
+		if (statements.size() < 2) {
+			setInstructionsText("You can't substitute with only one statement.");
+			return;
+		}
+		
+		SubstitutionSelectionDialog dialog = new SubstitutionSelectionDialog(MainWindow.this, selected);
+		dialog.setVisible(true);
+		
+		Expression replace = dialog.getFrom();
+		Expression with = dialog.getTo();
+		if (replace != null && with != null) {
+			Expression after = selected.getExpression().substitute(replace, with);
+			if (! after.equals(selected))
+				addExpressionAndSelect(selected.getExpression().substitute(replace, with), true);
+			else
+				setInstructionsText("No substitution was made.");
+		}
+		else
+			setInstructionsText("You have to choose a statement.");
 	}
 	
 	@Override
@@ -318,8 +292,8 @@ public class MainWindow extends Program {
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
 		this.add(sketchCanvas);
+		this.add(sketchPanel,SOUTH);
 		
-		//this.getRegionPanel(EAST).setLayout(new TableLayout(1,1));
 		JPanel rightPanel = new JPanel();
 		JPanel statementPanel = new JPanel();
 		statementPanel.setLayout(new TableLayout(1,1));
@@ -341,8 +315,6 @@ public class MainWindow extends Program {
 		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
 		tabbedPane.addTab("Operate", new OperatePanel());
 		tabbedPane.addTab("Create", new CreatePanel());
-		tabbedPane.addTab("Manipulate", new ManipulatePanel());
-		tabbedPane.addTab("Geometry", sketchPanel);
 		rightPanel.add(tabbedPane);
 		
 		this.add(statementPanel, EAST);
@@ -350,7 +322,11 @@ public class MainWindow extends Program {
 		
 		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
 		
+		this.setJMenuBar(menuBar);
+		
 		this.getCentralRegionSize().getWidth();
+		
+		log = instructions;
 	}
 	
 	private void update() {

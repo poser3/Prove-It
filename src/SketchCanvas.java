@@ -16,11 +16,7 @@ public class SketchCanvas extends GCanvas {
 		public final byte SELECT_MODE = 0;
 		public final byte ADDING_POINT_MODE = 1;
 		public final byte ADDING_FIRST_POINT_MODE = 2;
-		public final byte ADDING_MIDPOINT_MODE = 3;
-		public final byte ADDING_LINE_MODE = 4;
-		public final byte ADDING_CIRCLE_MODE = 5;
-		public final byte ADDING_SECOND_POINT_MODE = 6;
-		public final byte INTERSECTION_MODE = 7;
+		public final byte ADDING_SECOND_POINT_MODE = 3;
 		
 		public final byte SEGMENT = 0;
 		public final byte LINE = 1;
@@ -175,8 +171,13 @@ public class SketchCanvas extends GCanvas {
 						
 						double dx = x - workingPoint_.getX();
 						double dy = y - workingPoint_.getY();
+
 						workingPoint_.move(dx, dy);
 						drawables_.update();
+						if (! Drawables.allDependentsExist(workingPoint_.getDependents())) {
+							workingPoint_.move(-dx, -dy);
+							drawables_.update();
+						}
 					}
 				}
 
@@ -200,15 +201,17 @@ public class SketchCanvas extends GCanvas {
 							double dx = x - workingPoint_.getX();
 							double dy = y - workingPoint_.getY();
 							workingPoint_.move(dx, dy);
-							
-							//for safety, we update all of the drawable objects
 							drawables_.update();
+							if (! Drawables.allDependentsExist(workingPoint_.getDependents())) {
+								workingPoint_.move(-dx, -dy);
+								drawables_.update();
+							}
+							//for safety above, we update all of the drawable objects
 						}
 						break;
-					case INTERSECTION_MODE :
-						drawables_.update();
-						break;
+						
 					}
+					drawables_.update();  
 				}
 				
 			});
@@ -452,6 +455,12 @@ public class SketchCanvas extends GCanvas {
 							
 			default :		throw new IllegalArgumentException();
 			}
+			if (thing instanceof Drawable) {
+				Drawables.registerWithParents((Drawable) thing);
+			}
+			else {
+				System.out.print("There was a problem casting thing to a Drawable");
+			}
 			add((GObject) thing);
 			return thing;
 		}
@@ -470,6 +479,7 @@ public class SketchCanvas extends GCanvas {
 		 * * A point on a ray
 		 * @return the constructed object
 		 */
+		
 		public MadeWith2Points addWith2PointsHalfBaked(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
 			
@@ -507,8 +517,9 @@ public class SketchCanvas extends GCanvas {
 					parents.addInOrder(parent1, parent2);
 					intersection = new PPoint(PPoint.INTERSECTION_OF_LINES, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
-					addStatement("intersect %s (line %s) (line %s)", intersection, parent1, parent2);      
+					addStatement("intersect %s (line %s) (line %s)", intersection, parent1, parent2); 
 				}
 				
 				else if (((parent1 instanceof PLine) && (parent2 instanceof PRay)) || ((parent1 instanceof PRay) && (parent2 instanceof PLine))) {
@@ -519,6 +530,7 @@ public class SketchCanvas extends GCanvas {
 					
 					intersection = new PPoint(PPoint.INTERSECTON_OF_RAY_AND_LINE, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
 					addStatement("intersect %s (line %s) (ray %s)", intersection, parent1, parent2);      
 				}
@@ -531,6 +543,7 @@ public class SketchCanvas extends GCanvas {
 					
 					intersection = new PPoint(PPoint.INTERSECTION_OF_SEGMENT_AND_LINE, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
 					addStatement("intersect %s (line %s) (segment %s)", intersection, parent1, parent2);    
 				}
@@ -543,6 +556,7 @@ public class SketchCanvas extends GCanvas {
 					
 					intersection = new PPoint(PPoint.INTERSECTION_OF_SEGMENT_AND_RAY, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
 					addStatement("intersect %s (ray %s) (segment %s)", intersection, parent1, parent2); 
 				}
@@ -552,6 +566,7 @@ public class SketchCanvas extends GCanvas {
 			
 					intersection = new PPoint(PPoint.INTERSECTON_OF_RAYS, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
 					addStatement("intersect %s (ray %s) (ray %s)", intersection, parent1, parent2);   
 				}
@@ -561,6 +576,7 @@ public class SketchCanvas extends GCanvas {
 					
 					intersection = new PPoint(PPoint.INTERSECTON_OF_SEGMENTS, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
+					Drawables.registerWithParents(intersection);
 					this.add(intersection);
 					addStatement("intersect %s (segment %s) (segment %s)", intersection, parent1, parent2);    
 				}
@@ -577,6 +593,7 @@ public class SketchCanvas extends GCanvas {
 					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLE_AND_LINE, parents,
 			                                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection);
 					add(intersection);
 					addStatement("intersect %s (circle %s) (line %s)",intersection, parent1, parent2);
 					addStatement("circle-on %s %s",intersection, parent1);
@@ -585,6 +602,7 @@ public class SketchCanvas extends GCanvas {
 					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLE_AND_LINE, parents,
 			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection2);
 					add(intersection2);
 					addStatement("intersect %s (circle %s) (line %s)",intersection2, parent1, parent2);
 					addStatement("circle-on %s %s",intersection2, parent1);
@@ -602,6 +620,7 @@ public class SketchCanvas extends GCanvas {
 					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_RAY_AND_CIRCLE, parents,
 			                                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection);
 					add(intersection);
 					addStatement("intersect %s (circle %s) (ray %s)", intersection, parent1, parent2);
 					addStatement("circle-on %s %s", intersection, parent1);
@@ -610,6 +629,7 @@ public class SketchCanvas extends GCanvas {
 					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_RAY_AND_CIRCLE, parents,
 			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection2);
 					add(intersection2);
 					addStatement("intersect %s (circle %s) (ray %s)", intersection2, parent1, parent2);
 					addStatement("circle-on %s %s", intersection2, parent1);
@@ -627,6 +647,7 @@ public class SketchCanvas extends GCanvas {
 					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_SEGMENT_AND_CIRCLE, parents,
 			                                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection);
 					add(intersection);
 					addStatement("circle-on %s %s", intersection, parent1);
 					
@@ -634,6 +655,7 @@ public class SketchCanvas extends GCanvas {
 					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_SEGMENT_AND_CIRCLE, parents,
 			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection2);
 					add(intersection2);
 					addStatement("circle-on %s %s", intersection2, parent1);
 				} 
@@ -645,6 +667,7 @@ public class SketchCanvas extends GCanvas {
 					intersection = new PPoint(PPoint.LEFT_INTERSECTION_OF_CIRCLES, parents,
 							                  labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection);
 					add(intersection);
 					addStatement("intersect %s (circle %s) (circle %s)", intersection, parent1, parent2);
 					addStatement("circle-on %s %s", intersection, parent1);
@@ -654,6 +677,7 @@ public class SketchCanvas extends GCanvas {
 					intersection2 = new PPoint(PPoint.RIGHT_INTERSECTION_OF_CIRCLES, parents,
 			                                   labelMaker_.nextLabel(LabelMaker.POINT));
 					
+					Drawables.registerWithParents(intersection2);
 					add(intersection2);
 					addStatement("intersect %s (circle %s) (circle %s)", intersection2, parent1, parent2);
 					addStatement("circle-on %s %s", intersection2, parent1);
@@ -699,7 +723,7 @@ public class SketchCanvas extends GCanvas {
 			if (selectedPoints.size() == 2) {
 				
 				PPoint midpoint = new PPoint(PPoint.MIDPOINT, selectedPoints, labelMaker_.nextLabel(LabelMaker.POINT));
-				
+				Drawables.registerWithParents(midpoint);
 				add(midpoint);
 				addStatement("midpoint %s %s %s", midpoint, selectedPoints.get(0), selectedPoints.get(1));
 				
@@ -785,14 +809,15 @@ public class SketchCanvas extends GCanvas {
 			
 			if (d != null) {
 				System.out.println("object selected: " + d);
+				System.out.println("  parents = " + d.getParents());
+				System.out.println("  dependents = " + d.getDependents());
 				if (d instanceof PPoint) {
 					workingPoint_ = (PPoint) d;    
 				}				
 				select(d, !(isCtrlDown && d.isSelected()));				
 			}
-			
-			
+		
 		}
-	
+
 }
 

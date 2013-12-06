@@ -22,5 +22,3 @@ public class ExpressionListCellRenderer implements ListCellRenderer<Expression> 
                 return label;
         }
 }
-
-

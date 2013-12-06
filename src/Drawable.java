@@ -13,6 +13,7 @@ public interface Drawable {
 	public String getLabel();
 	public boolean exists();
 	public void setExists(boolean exists);
-
+	public Drawables getParents();
+	public Drawables getDependents();
 }
 
