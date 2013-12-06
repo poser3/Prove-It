@@ -1,8 +1,6 @@
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
-import javax.swing.JLabel;
-
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;

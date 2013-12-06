@@ -22,8 +22,8 @@ public class MainWindow extends Program {
 	private final int STATEMENT_PANEL_WIDTH = 460;
 	private final int STATEMENT_PANEL_HEIGHT = 590;
 	
-    private final int EXPRESSION_SCROLLPANE_WIDTH = 360;
-	private final int EXPRESSION_SCROLLPANE_HEIGHT = 580;
+    private final int STATEMENT_SCROLLPANE_WIDTH = 360;
+	private final int STATEMENT_SCROLLPANE_HEIGHT = 580;
 
 	private final int TABBED_PANE_WIDTH = 260;
 	private final int TABBED_PANE_HEIGHT = 330;
