@@ -6,6 +6,7 @@ public class Statement implements Comparable<Statement> {
 	
 	private final Expression expression;
 	private ArrayList<Statement> logicDependencies = new ArrayList<Statement>();
+	@SuppressWarnings("unused")
 	private Drawables geometryDependencies = new Drawables();
 	private boolean hidden = false;
 	private boolean valid = false;

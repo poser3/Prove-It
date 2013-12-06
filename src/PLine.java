@@ -1,10 +1,8 @@
 import java.awt.Color;
 
 import acm.graphics.GCompound;
-import acm.graphics.GLabel;
 import acm.graphics.GLine;
 import acm.graphics.GPoint;
-import acm.graphics.GRect;
 
 @SuppressWarnings("serial")
 public class PLine extends GCompound implements Drawable, Selectable, MadeWith2Points {

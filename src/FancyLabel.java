@@ -5,6 +5,7 @@ import acm.graphics.GLabel;
 import acm.graphics.GRect;
 
 
+@SuppressWarnings("serial")
 public class FancyLabel extends GCompound {
 	
 	private double PADDING = 4;

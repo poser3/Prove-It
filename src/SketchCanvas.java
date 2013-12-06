@@ -5,8 +5,6 @@ import javax.swing.JOptionPane;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GObject;
-import acm.program.GraphicsProgram;
-import acm.program.Program;
 
 
 @SuppressWarnings("serial")
@@ -30,8 +28,6 @@ public class SketchCanvas extends GCanvas {
 		//Instance Variables
 		private SketchPanel sketchPanel_;
 		private final MainWindow mainWindow_;
-		private ViewingRectangle viewingRectangle_;
-		
 		private byte mode_;
 		private byte elementBeingAdded_;
 		
@@ -50,7 +46,6 @@ public class SketchCanvas extends GCanvas {
 		private MadeWith2Points selected2PointObject_;		
 		
 		public void setViewingRectangle(ViewingRectangle viewingRectangle) {
-			viewingRectangle_ = viewingRectangle;
 			PLine.viewingRectangle = viewingRectangle;
 			PRay.viewingRectangle = viewingRectangle;
 		}
