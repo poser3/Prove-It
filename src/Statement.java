@@ -19,13 +19,15 @@ public class Statement implements Comparable<Statement> {
 	
 	public Statement(final Expression expression, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
 		this.expression = expression;
-		this.logicDependencies = logicDependencies;
-		this.geometryDependencies = geometryDependencies;
+		
+		this.logicDependencies = (logicDependencies == null) ? new ArrayList<Statement>() : logicDependencies;
+		this.geometryDependencies = (geometryDependencies == null) ? new Drawables() : geometryDependencies;
 	}
 	public Statement(final String expression, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
 		this.expression = Expression.parse(expression);
-		this.logicDependencies = logicDependencies;
-		this.geometryDependencies = geometryDependencies;
+		
+		this.logicDependencies = (logicDependencies == null) ? new ArrayList<Statement>() : logicDependencies;
+		this.geometryDependencies = (geometryDependencies == null) ? new Drawables() : geometryDependencies;
 	}
 	
 	public Expression getExpression() {
@@ -48,7 +50,7 @@ public class Statement implements Comparable<Statement> {
 	}
 	
 	public Statement substitute(Expression quid, Expression quo) {
-		return new Statement(expression.substitute(quid, quo));
+		return new Statement(expression.substitute(quid, quo), logicDependencies, geometryDependencies);
 	}
 	public Statement substitute(HashMap<String, String> map) {
 		return new Statement(expression.substitute(map));
@@ -71,18 +73,22 @@ public class Statement implements Comparable<Statement> {
 			for (Statement s : logicDependencies)
 				if (! s.isValid())
 					return false;
-			// TODO Uncomment when this file and the rays-and-intersections branch are brought together.
-			/*
 			for (Drawable d : geometryDependencies)
 				if (! d.exists())
 					return false;
-			 */
 			// If this.valid and all of the dependencies are also valid, return true.
 			return true;
 		}
 	}
 	public void setValid(boolean valid) {
 		this.valid = valid;
+	}
+	
+	public ArrayList<Statement> logicParents() {
+		return logicDependencies;
+	}
+	public Drawables geometryParents() {
+		return geometryDependencies;
 	}
 	
 }

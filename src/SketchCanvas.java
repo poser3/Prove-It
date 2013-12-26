@@ -1,12 +1,11 @@
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JOptionPane;
 
 import acm.graphics.GCanvas;
 import acm.graphics.GObject;
-import acm.program.GraphicsProgram;
-import acm.program.Program;
 
 
 @SuppressWarnings("serial")
@@ -378,14 +377,21 @@ public class SketchCanvas extends GCanvas {
 		}
 		
 		private void addStatement(String s, Object... args) {
-			for (int i=0; i<args.length; i++) {
-				if (args[i] instanceof Drawable)
-					args[i] = ((Drawable) args[i]).getLabel();
-				if (args[i] instanceof MadeWith2Points)
-					args[i] = ((MadeWith2Points) args[i]).getLabel();
-			}
-			
-			mainWindow_.addExpression(Expression.parse(String.format(s, args)));
+			Drawables parents = new Drawables();
+            for (int i=0; i<args.length; i++) {
+                    if (args[i] instanceof Drawable) {
+                            parents.add((Drawable) args[i]);
+                            args[i] = ((Drawable) args[i]).getLabel();
+                    }
+            }
+            /////////////////////////////////////////////////////////////
+            /////// BUG BUG BUG BUG /////////////////////////////////////
+            //parents = (Drawables) ListUtils.removeDuplicates(parents);
+            parents = new Drawables();
+            //TODO: above line is a kludge to get things running again
+            /////////////////////////////////////////////////////////////
+            Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
+            mainWindow_.addStatement(result);
 		}
 		
 		/**

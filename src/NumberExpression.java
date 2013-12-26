@@ -38,7 +38,11 @@ public class NumberExpression extends Expression {
 	 * @return a LaTex representation of this expression.
 	 */
 	public String toLatex() {
-		return value.toString();
+		String result = value.toString();
+		if (this.isSelected()) {
+			result = "\\bgcolor{Yellow}{" + result + "}";
+		}
+		return result;
 	}
 	
 	/**

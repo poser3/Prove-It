@@ -5,24 +5,40 @@ import java.util.Scanner;
 
 public class Theorem {
 	
+	///////////////
+	// Constants //
+	///////////////
+	
 	private static final byte VARIABLES = 0;
 	private static final byte HYPOTHESES = 1;
 	private static final byte CONCLUSIONS = 2;
 	
+	
+    ////////////////////////
+	// Instance Variables //
+	////////////////////////
+	
+	public final String name;
+	public final ArrayList<Expression> variables;
+	public final ArrayList<Statement> hypotheses;
+	public final ArrayList<Statement> conclusions;
+	
 	static ArrayList<Theorem> theorems = new ArrayList<Theorem>();
-	public static void loadTheorems() {
-		theorems = new ArrayList<Theorem>();
-		File folder = new File(SettingsReader.getSetting("theorem-path"));
-		for (File file : folder.listFiles()) {
-			try {
-				theorems.add(new Theorem(file));
-			}
-			catch (FileNotFoundException e) {}
-		}
-	}
+	
+	
+	//////////////////////////
+	// Class Initialization //
+	//////////////////////////
+	
 	static { loadTheorems(); }
 	
+	
+	/////////////////
+	// Constructor //
+	/////////////////
+	
 	private Theorem(File file) throws FileNotFoundException {
+		
 		Scanner scanner = new Scanner(file);
 				
 		name = scanner.nextLine();
@@ -58,10 +74,20 @@ public class Theorem {
 		scanner.close();
 	}
 	
-	public final String name;
-	public final ArrayList<Expression> variables;
-	public final ArrayList<Statement> hypotheses;
-	public final ArrayList<Statement> conclusions;
+	///////////////////
+	// Other Methods //
+	///////////////////
+	
+	public static void loadTheorems() {
+		theorems = new ArrayList<Theorem>();
+		File folder = new File(SettingsReader.getSetting("theorem-path"));
+		for (File file : folder.listFiles()) {
+			try {
+				theorems.add(new Theorem(file));
+			}
+			catch (FileNotFoundException e) {}
+		}
+	}
 	
 	public String toString() {
 		return name;

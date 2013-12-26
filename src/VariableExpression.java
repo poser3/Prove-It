@@ -1,20 +1,49 @@
-public class VariableExpression extends Expression {
+ public class VariableExpression extends Expression {
 	
-	private final String name;
+	////////////////////////
+	// Instance Variables //
+	////////////////////////
+
+	private final String name_;
+	private final String latex_;
+
+
+	//////////////////
+	// Constructors //
+	//////////////////
 
 	public VariableExpression(final String name) {
-		this.name = name;
+		this.name_ = name;
+		this.latex_ = "";
 	}
 	
-	public String toString() {
-		return name;
+	public VariableExpression(final String name, final String latex) {
+		this.name_ = name;
+		this.latex_ = latex;
 	}
+
+
+	///////////////////
+	// Other Methods //
+	///////////////////
+	
+	public String toString() {
+		return name_;
+	}
+	
 	public String toLatex() {
-		return name;
+		String result = "";
+		result = ( (latex_.equals("")) ? name_ : latex_ );
+		
+		if (this.isSelected()) {
+			result = "\\bgcolor{Green}{" + result + "}";
+		}
+		
+		return result;
 	}
 	
 	public boolean equals(final Expression e) {
-		return e instanceof VariableExpression && e.toString().equals(name);
+		return e instanceof VariableExpression && e.toString().equals(name_);
 	}
 	
 	/**
@@ -28,7 +57,7 @@ public class VariableExpression extends Expression {
 		if(e instanceof OperatorExpression)
 			return Integer.MAX_VALUE;
 		else if(e instanceof VariableExpression)
-			return name.compareTo(e.toString());
+			return name_.compareTo(e.toString());
 		else if(e instanceof NumberExpression)
 			return Integer.MIN_VALUE;
 		else
