@@ -14,6 +14,44 @@ public class Operators extends HashMap<String, Operator> {
 	@SuppressWarnings("unused")
 	private Operators() {
 		put("=", new Operator.CommutativeOperator("="));
+		put("!=", new Operator.CommutativeOperator("!=") {
+			@Override
+			public String toLatex(OperatorExpression e) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(e.getArg(0).toLatex());
+				for(int i=1; i<e.getNumArgs(); i++) {
+					sb.append(" \\neq ");
+					sb.append(e.getArg(i));
+				}
+				return sb.toString();
+			}
+		});
+		put("<", new Operator("<"));
+		put(">", new Operator(">"));
+		put("<=", new Operator("<=") {
+			@Override
+			public String toLatex(OperatorExpression e) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(e.getArg(0).toLatex());
+				for(int i=1; i<e.getNumArgs(); i++) {
+					sb.append(" \\leq ");
+					sb.append(e.getArg(i));
+				}
+				return sb.toString();
+			}
+		});
+		put(">=", new Operator(">=") {
+			@Override
+			public String toLatex(OperatorExpression e) {
+				StringBuilder sb = new StringBuilder();
+				sb.append(e.getArg(0).toLatex());
+				for(int i=1; i<e.getNumArgs(); i++) {
+					sb.append(" \\geq ");
+					sb.append(e.getArg(i));
+				}
+				return sb.toString();
+			}
+		});
 		put("+", new Operator.CommutativeOperator("+") {
 			public final boolean isAssociative = true;
 			private final String inverse = "-";
