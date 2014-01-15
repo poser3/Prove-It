@@ -281,14 +281,14 @@ public class Operators extends HashMap<String, Operator> {
 		put("m", new Operator("m") {
 			@Override
 			public String toLatex(OperatorExpression e) {
-				return String.format("m %s",
+				return String.format("\\text{m } %s",
 						e.getArg(0).toLatex());
 			}
 		});
 		put("congruent", new Operator.CommutativeOperator("congruent") {
 			@Override
 			public String toLatex(OperatorExpression e) {
-				return String.format("%s is congruent to %s",
+				return String.format("%s \\text{ is congruent to } %s",
 						e.getArg(0).toLatex(), e.getArg(1).toLatex());
 			}
 		});
@@ -304,7 +304,7 @@ public class Operators extends HashMap<String, Operator> {
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("%s is between %s and %s",
+				return String.format("%s \\text{ is between } %s \\text{ and } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex(),
 						e.getArg(2).toLatex());
@@ -322,7 +322,7 @@ public class Operators extends HashMap<String, Operator> {
             
 			@Override
             public String toLatex(final OperatorExpression e) {
-                    return String.format("angle %s-%s-%s",
+                    return String.format("\\angle %s %s %s",
                                     e.getArg(0).toLatex(),
                                     e.getArg(1).toLatex(),
                                     e.getArg(2).toLatex());
@@ -331,7 +331,7 @@ public class Operators extends HashMap<String, Operator> {
 	    put("segment", new Operator.CommutativeOperator("segment") {
 	    	@Override
             public String toLatex(final OperatorExpression e) {
-                    return String.format("segment %s-%s",
+                    return String.format("\\text{segment } \\overline{%s %s}",
                                     e.getArg(0).toLatex(),
                                     e.getArg(1).toLatex());
             }
@@ -339,14 +339,14 @@ public class Operators extends HashMap<String, Operator> {
 	    put("line", new Operator("line") {
 	    	@Override
             public String toLatex(final OperatorExpression e) {
-                    return String.format("line %s",
+                    return String.format("\\text{line } %s",
                                     e.getArg(0).toLatex());
             }
 	    });
 	    put("line-on", new Operator("line-on") {
 	    	@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("point %s is on line %s",
+				return String.format("\\text{point } %s \\text{ is on line } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
@@ -354,14 +354,14 @@ public class Operators extends HashMap<String, Operator> {
 		put("ray", new Operator("ray") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-                    return String.format("ray %s",
+                    return String.format("\\text{ray } %s",
                                     e.getArg(0).toLatex());
             }
 		});
 		put("ray-endpoint", new Operator("ray-endpoint") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("%s is the endpoint of ray %s",
+				return String.format("\\text{point } %s \\text{ is the endpoint of ray } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
@@ -369,7 +369,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("ray-on", new Operator("ray-on") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("point %s is on ray %s",
+				return String.format("\\text{point } %s \\text{ is on ray } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
@@ -377,14 +377,14 @@ public class Operators extends HashMap<String, Operator> {
 		put("circle", new Operator("circle") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-                    return String.format("circle %s",
+                    return String.format("\\text{circle } %s",
                                     e.getArg(0).toLatex());
             }
 		});
 		put("circle-center", new Operator("circle-center") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("point %s is the center of circle %s",
+				return String.format("\\text{point } %s \\text{ is the center of circle } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
@@ -392,7 +392,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("circle-on", new Operator("circle-on") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("point %s is on circle %s",
+				return String.format("\\text{point } %s \\text{ is on circle } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
 			}
@@ -408,16 +408,16 @@ public class Operators extends HashMap<String, Operator> {
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("%s is the intersection of %s and %s",
-						e.getArg(0).toLatex(),
+				return String.format("%s \\text{ and } %s \\text{ intersect at } %s",
 						e.getArg(1).toLatex(),
-						e.getArg(2).toLatex());
+						e.getArg(2).toLatex(),
+						e.getArg(0).toLatex());
 			}
 		});
 		put("midpoint", new Operator("midpoint") {
 			@Override
 			public String toLatex(final OperatorExpression e) {
-				return String.format("%s is the midpoint of %s and %s",
+				return String.format("\\text{point } %s \\text{ is the midpoint of } %s \\text{ and } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex(),
 						e.getArg(2).toLatex());
