@@ -134,4 +134,3 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	}
 	
 }
-

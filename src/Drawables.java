@@ -57,4 +57,3 @@ public class Drawables extends ArrayList<Drawable> {
 	}
 	
 }
-

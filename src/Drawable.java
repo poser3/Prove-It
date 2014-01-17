@@ -16,4 +16,3 @@ public interface Drawable {
 	public Drawables getParents();
 	public Drawables getDependents();
 }
-

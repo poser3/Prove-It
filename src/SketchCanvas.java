@@ -391,6 +391,7 @@ public class SketchCanvas extends GCanvas {
             //TODO: above line is a kludge to get things running again
             /////////////////////////////////////////////////////////////
             Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
+            System.out.println("trying to add statement: " + result);
             mainWindow_.addStatement(result);
 		}
 		
@@ -826,4 +827,3 @@ public class SketchCanvas extends GCanvas {
 		}
 
 }
-

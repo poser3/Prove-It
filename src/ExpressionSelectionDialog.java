@@ -162,4 +162,3 @@ public class ExpressionSelectionDialog extends JDialog {
 	}
 	
 }
-

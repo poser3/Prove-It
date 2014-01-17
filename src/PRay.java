@@ -159,4 +159,3 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 	}
 	
 }
-

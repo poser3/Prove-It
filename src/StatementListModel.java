@@ -25,4 +25,3 @@ public class StatementListModel extends DefaultListModel<Statement> {
 	}
 
 }
-

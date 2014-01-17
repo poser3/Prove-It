@@ -13,7 +13,7 @@ public class ExpressionListCellRenderer implements ListCellRenderer<Expression> 
                 String statementNumberString = "\\textrm{" + (index+1) + ".} \\:";
         		String latex = statementNumberString + value.toLatex();
                 if (isSelected)
-                        latex = "{\\bgcolor{Yellow}" + statementNumberString + latex + "}";
+                        latex = "{\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}" + statementNumberString + latex + "}";
                 
                 BufferedImage image = (BufferedImage) LatexHandler.latexToImage(latex);
                 ImageIcon icon = new ImageIcon(image);
@@ -22,3 +22,4 @@ public class ExpressionListCellRenderer implements ListCellRenderer<Expression> 
                 return label;
         }
 }
+

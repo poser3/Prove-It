@@ -32,10 +32,13 @@ public class Tester {
 		System.out.println(e6);
 		System.out.println(e6.matchesTemplate("= (+ (* x2 (+ x2 y2)) (- y2 z2)) z2"));
 		printHashMapOfStrings(e5.findPairings(e6));
+		Expression e7 = Expression.parse("= x (+ y z)");
+		Expression e8 = Expression.parse("= x (+ y z)");
+		System.out.println("expressions are equal is " + e7.equals(e8));
+		
 		
 		//VariableExpression ve = (VariableExpression) (Expression.parse("z"));
 		//oe.applyLeft(new Operator("*"), ve);
 	}
 
 }
-

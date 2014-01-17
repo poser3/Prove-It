@@ -1,4 +1,11 @@
  public class VariableExpression extends Expression {
+	 
+	///////////////
+	// Constants //
+	///////////////
+	
+	//--none--
+	
 	
 	////////////////////////
 	// Instance Variables //
@@ -12,12 +19,14 @@
 	// Constructors //
 	//////////////////
 
-	public VariableExpression(final String name) {
+	public VariableExpression(final String type, final String name) {
+		this.setType(type);
 		this.name_ = name;
 		this.latex_ = "";
 	}
 	
-	public VariableExpression(final String name, final String latex) {
+	public VariableExpression(final String type, final String name, final String latex) {
+		this.setType(type);
 		this.name_ = name;
 		this.latex_ = latex;
 	}
@@ -26,6 +35,41 @@
 	///////////////////
 	// Other Methods //
 	///////////////////
+	
+	public static String getVarTypeFromString(String s) {
+		int posOfUnderscore = s.indexOf("_");
+		String varType = "unknown";
+		if (posOfUnderscore != -1) {
+			varType = s.substring(0, posOfUnderscore);
+			s = s.substring(posOfUnderscore + 1);
+		}
+		
+		return varType;
+	}
+	
+	public static String getVarNameFromString(String s) {
+		String varName = s;
+		int posOfUnderscore = s.indexOf("_");
+		if (posOfUnderscore != -1) {
+			varName = s.substring(posOfUnderscore + 1);
+		}
+		
+		return varName;
+	}
+	
+	public String getTypeInLatex() {
+		switch (this.getType()) {
+			case "unknown" : return "\\textrm{unknown }";
+			case "realValue" : return "\\textrm{real value }";
+			case "point" : return "\\textrm{point }";
+			case "line" : return "\\textrm{line }";
+			case "ray" : return "\\textrm{ray }";
+			case "segment" : return "\\textrm{segment }";
+			case "circle" : return "\\textrm{circle }";
+			case "statement" : return "\\textrm{statement }";
+			default : return "\\textrm{unknown }";
+		}
+	}
 	
 	public String toString() {
 		return name_;
@@ -36,7 +80,7 @@
 		result = ( (latex_.equals("")) ? name_ : latex_ );
 		
 		if (this.isSelected()) {
-			result = "\\bgcolor{Green}{" + result + "}";
+			result = "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + result + "}";
 		}
 		
 		return result;
@@ -65,4 +109,3 @@
 	}
 
 }
-

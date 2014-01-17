@@ -137,7 +137,7 @@ public class OperatorExpression extends Expression {
 	 */
 	public String toLatex() {
 		if (this.isSelected()) {
-			return "\\bgcolor{Green}{" + op.toLatex(this) + "}";
+			return "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + op.toLatex(this) + "}";
 		}
 		else {
 			return op.toLatex(this);

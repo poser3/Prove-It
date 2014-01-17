@@ -418,4 +418,3 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	}
 	
 }
-

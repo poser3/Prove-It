@@ -35,13 +35,13 @@ public class MainMenuBar extends JMenuBar{
 		menuItem = new JMenuItem("Hide Selected Statements");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainWindow_.hideSelectedStatements();	
+				mainWindow_.getStatementPanel().hideSelectedStatements();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Show All Hidden Statements");
 		menuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				mainWindow_.showHiddenStatements();	
+				mainWindow_.getStatementPanel().showHiddenStatements();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Apply Theorem");
@@ -70,8 +70,44 @@ public class MainMenuBar extends JMenuBar{
 		menu.add(menuItem);
 		this.add(menu);
 		
-		//Create the menu bar.
-		//Build the first menu.
+		//////////////////////////////////////////////////////////
+		
+		//Build the Select menu in the menu bar.
+		menu = new JMenu("Select");
+		menu.setMnemonic(KeyEvent.VK_S);
+		menu.getAccessibleContext().setAccessibleDescription(
+				"Select or deselect items...");
+		
+		menuItem = new JMenuItem("Deselect All");
+		menuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainWindow_.deselectAll();
+			}});
+		
+		menu.add(menuItem);
+		this.add(menu);
+		
+		//////////////////////////////////////////////////////////
+		
+		//Build the theorems menu in the menu bar.
+		menu = new JMenu("Theorems");
+		menu.setMnemonic(KeyEvent.VK_T);
+		menu.getAccessibleContext().setAccessibleDescription(
+		        "Select a theorem to apply...");
+		
+		Theorem.loadTheorems();
+		for (Theorem t : Theorem.theorems) {
+			menuItem = new JMenuItem(t.toString());
+			menuItem.addActionListener(new TheoremMenuActionListener(mainWindow_.getTheoremPanel(), t));
+			menu.add(menuItem);
+		}
+		this.add(menu);
+		
+		///////////////////////////////////////////////////////////
+		
+		//Build an example menu.
 		menu = new JMenu("Example Menu");
 		menu.setMnemonic(KeyEvent.VK_A);
 		menu.getAccessibleContext().setAccessibleDescription(
@@ -135,14 +171,17 @@ public class MainMenuBar extends JMenuBar{
 		submenu.add(menuItem);
 		menu.add(submenu);
 		
-		//Build second menu in the menu bar.
+		//////////////////////////////////////////////////////////
+		
+		//Build another menu in the menu bar.
 		menu = new JMenu("Another Menu");
 		menu.setMnemonic(KeyEvent.VK_N);
 		menu.getAccessibleContext().setAccessibleDescription(
 		        "This menu does nothing");
 		//menuBar.add(menu);
 		this.add(menu);
+		
+
 	}
 
 }
-

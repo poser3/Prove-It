@@ -59,7 +59,27 @@ public class Theorem {
 				else
 					switch(currentSection) {
 					case VARIABLES:
-						variables.add(Expression.parse(line));
+						//Format for variable line should be: "type_name latex"
+						//Examples:
+						//  realNumber_x x
+						//  realNumber_mu /mu
+						//  point_P P
+						int posOfFirstSpace = line.indexOf(" ");
+						String varType;
+						String varName;
+						String varLatex;
+						if (posOfFirstSpace != -1) {
+							String varTypeAndName = line.substring(0, posOfFirstSpace);
+							varType = VariableExpression.getVarTypeFromString(varTypeAndName);
+							varName = VariableExpression.getVarNameFromString(varTypeAndName);
+							varLatex = line.substring(posOfFirstSpace+1);
+							variables.add(new VariableExpression(varType, varName, varLatex));
+						}
+						else {
+							varType = VariableExpression.getVarTypeFromString(line);
+							varName = VariableExpression.getVarNameFromString(line);
+							variables.add(new VariableExpression(varType, varName));
+						}
 						break;
 					case HYPOTHESES:
 						hypotheses.add(new Statement(line));
@@ -94,4 +114,3 @@ public class Theorem {
 	}
 
 }
-

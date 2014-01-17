@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public abstract class Expression implements Comparable<Expression> {
+public abstract class Expression implements Comparable<Expression>, Selectable {
 		
 	////////////////////////
 	// Instance Variables //
 	////////////////////////
 	
 	private boolean isSelected_ = false;
-	
+	private String type_ = "unknown";
 	
 	////////////////////
 	// Static Methods //
@@ -93,7 +93,15 @@ public abstract class Expression implements Comparable<Expression> {
 			}
 			catch(NumberFormatException e) {
 				// Just take it as a string
-				return new VariableExpression(words.get(0));
+				
+				// The variable name should take the form "type_name"
+				// so we need to separate it into the type and name to use the constructor
+				String varString = words.get(0);
+				String varType = VariableExpression.getVarTypeFromString(varString);
+				String varName = VariableExpression.getVarNameFromString(varString);
+				
+				return new VariableExpression(varType, varName);
+				//return new VariableExpression(words.get(0));
 			}
 		}
 		
@@ -163,12 +171,40 @@ public abstract class Expression implements Comparable<Expression> {
 	// Getters and Setters //
 	/////////////////////////
 	
+	public String getType() {
+		return type_;
+	}
+	
+	public void setType(String type) {
+		type_ = type;
+	}
+	
 	public boolean isSelected() {
 		return isSelected_;
 	}
 	
 	public void setSelected(boolean isSelected) {
 		isSelected_ = isSelected;
+	}
+	
+	public Expression getSelectedSubExpression() {
+		if (this.isSelected_) {
+			return this;
+		}
+		else if (this instanceof OperatorExpression) {
+			OperatorExpression oe = (OperatorExpression) this;
+			ArrayList<Expression> args = oe.getArgs();
+			for (int i = 0; i < args.size(); i++) {
+				if (args.get(i).isSelected()) {
+					return args.get(i);
+				}
+				Expression e = args.get(i).getSelectedSubExpression();
+				if (e != null) {
+					return e;
+				}
+			}
+		}
+		return null;
 	}
 	
 	public void deselectRecursive() {
@@ -192,12 +228,18 @@ public abstract class Expression implements Comparable<Expression> {
 				if ((args.get(i).isSelected()) && (i+1 < args.size())) {
 					args.get(i).setSelected(false);
 					args.get(i+1).setSelected(true);
-					break;
+					break; // i.e., don't look for another selected expression to shift
+				}
+				else if ((args.get(i).isSelected()) && (i+1 == args.size())) {
+					args.get(i).setSelected(false);
+					this.setSelected(true);
+					break; 
 				}
 				else {
 					args.get(i).shiftSelectionRight();
 				}
 			}
+			
 		}
 	}
 	
@@ -209,6 +251,11 @@ public abstract class Expression implements Comparable<Expression> {
 				if ((args.get(i).isSelected()) && (i-1 >= 0)) {
 					args.get(i).setSelected(false);
 					args.get(i-1).setSelected(true);
+					break;
+				}
+				else if ((args.get(i).isSelected()) && (i-1 < 0)) {
+					args.get(i).setSelected(false);
+					this.setSelected(true);
 					break;
 				}
 				else {
@@ -427,6 +474,39 @@ public abstract class Expression implements Comparable<Expression> {
 		return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
 	}
 	
+	/**
+	 * Create a new expression that is identical to this expression
+	 * @return
+	 */
+    public Expression duplicate() {
+		
+		if (this instanceof OperatorExpression) {
+			OperatorExpression oeThis = (OperatorExpression) this;
+			ArrayList<Expression> args = new ArrayList<Expression>(oeThis.getNumArgs());
+			for (int i=0; i < oeThis.getNumArgs(); i++) {
+				args.add(oeThis.getArg(i).duplicate());
+			}
+			return new OperatorExpression(oeThis.getOp(), args).trim();
+		}
+		else if (this instanceof VariableExpression) {
+			String varType = ((VariableExpression) this).getType();
+			
+			String variableLatex;
+			if (this.isSelected()) {
+				this.setSelected(false);
+				variableLatex = this.toLatex();
+				this.setSelected(true);
+			}
+			else {
+				variableLatex = this.toLatex();
+			}
+			return new VariableExpression(varType, this.toString(), variableLatex);
+		}
+		else { // i.e., this is an instance of NumberExpression 
+			return new NumberExpression(this.toString());
+		}
+	}
+	
 	
 	/**
 	 * Create a new expression that is identical to this expression, except that
@@ -459,6 +539,7 @@ public abstract class Expression implements Comparable<Expression> {
 			return this;
 	}
 	
+	
 	/**
 	 * Perform a given set of variable substitutions simultaneously.
 	 * Example: Suppose 
@@ -478,7 +559,10 @@ public abstract class Expression implements Comparable<Expression> {
 		else if (this instanceof VariableExpression) {
 			String name = ((VariableExpression) this).toString();
 			if (map.containsKey(name)) {
-				return new VariableExpression(map.get(name));
+				//added below to account for when map.get(name) was not a variable expression
+				//i.e., a simple name, but instead a subexpression
+				return Expression.parse(map.get(name));
+				//return new VariableExpression(map.get(name));
 			}
 			return this;
 		}

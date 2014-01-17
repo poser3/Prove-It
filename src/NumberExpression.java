@@ -10,6 +10,7 @@ public class NumberExpression extends Expression {
 	 */
 	public NumberExpression(BigDecimal value) {
 		this.value = value;
+		this.setType("realValue");
 	}
 	/**
 	 * Make a NumberExpression from an int
@@ -17,6 +18,7 @@ public class NumberExpression extends Expression {
 	 */
 	public NumberExpression(int value) {
 		this.value = BigDecimal.valueOf(value);
+		this.setType("realValue");
 	}
 	/**
 	 * Make a NumberExpression from a String
@@ -24,6 +26,7 @@ public class NumberExpression extends Expression {
 	 */
 	public NumberExpression(String value) {
 		this.value = new BigDecimal(value);
+		this.setType("realValue");
 	}
 	
 	public BigDecimal getValue() {
@@ -40,7 +43,7 @@ public class NumberExpression extends Expression {
 	public String toLatex() {
 		String result = value.toString();
 		if (this.isSelected()) {
-			result = "\\bgcolor{Yellow}{" + result + "}";
+			result = "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + result + "}";
 		}
 		return result;
 	}
@@ -72,4 +75,3 @@ public class NumberExpression extends Expression {
 	}
 
 }
-
