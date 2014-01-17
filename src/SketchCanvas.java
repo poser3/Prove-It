@@ -370,14 +370,17 @@ public class SketchCanvas extends GCanvas {
 		}
 		
 		private void addStatement(String s, Object... args) {
+			Drawables parents = new Drawables();
 			for (int i=0; i<args.length; i++) {
-				if (args[i] instanceof Drawable)
+				if (args[i] instanceof Drawable) {
+					parents.add((Drawable) args[i]);
 					args[i] = ((Drawable) args[i]).getLabel();
-				if (args[i] instanceof MadeWith2Points)
-					args[i] = ((MadeWith2Points) args[i]).getLabel();
+				}
 			}
+			parents = (Drawables) ListUtils.removeDuplicates(parents);
 			
-			mainWindow_.addExpression(Expression.parse(String.format(s, args)));
+			Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
+			mainWindow_.addStatement(result);
 		}
 		
 		/**

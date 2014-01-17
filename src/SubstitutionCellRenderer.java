@@ -17,7 +17,9 @@ public class SubstitutionCellRenderer extends StatementListCellRenderer {
 					args.add(opEx.getArg(1));
 					args.add(opEx.getArg(0));
 					Expression result = new OperatorExpression(Operators.named("="), args);
-					return super.getListCellRendererComponent(list, new Statement(result), index, isSelected, cellHasFocus);
+					return super.getListCellRendererComponent(list,
+							new Statement(result, value.logicParents(), value.geometryParents()),
+							index, isSelected, cellHasFocus);
 				} else {
 					return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
 				}
