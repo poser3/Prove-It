@@ -386,7 +386,7 @@ public class MainWindow extends Program {
 		return statementsList.isSelectionEmpty();
 	}
 	public Statement getSelected() {
-		return (Statement) statementsList.getSelectedValue();
+		return statementsList.getSelectedValue();
 	}
 
 	public void addStatement(Statement s) {

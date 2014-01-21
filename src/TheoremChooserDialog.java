@@ -41,7 +41,7 @@ public class TheoremChooserDialog extends JDialog {
 		theoremsList.addListSelectionListener(new ListSelectionListener() {
 			@Override
 			public void valueChanged(ListSelectionEvent event) {
-				update((Theorem) theoremsList.getSelectedValue());
+				update(theoremsList.getSelectedValue());
 			}
 		});		
 		hypothesesList.setCellRenderer(new StatementListCellRenderer());
@@ -75,7 +75,7 @@ public class TheoremChooserDialog extends JDialog {
 		add(cancelButton, "weightx=1");
 		
 		theoremsList.setSelectedIndex(0);
-		update((Theorem) theoremsList.getSelectedValue());
+		update(theoremsList.getSelectedValue());
 	}
 	
 	private void update(Theorem selected) {
