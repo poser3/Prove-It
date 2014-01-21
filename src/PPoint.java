@@ -379,6 +379,10 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		return label_;
 	}
 	
+	public String expression() {
+		return getLabel();
+	}
+	
 	public double distanceTo(double x, double y) {
 		return Math.sqrt( (x-this.getX())*(x-this.getX()) +
 				          (y-this.getY())*(y-this.getY())   );
