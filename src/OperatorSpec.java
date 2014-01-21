@@ -40,7 +40,7 @@ public class OperatorSpec {
 	 */
 	public String toLatex(final OperatorExpression e) {
 		if (e.getNumArgs() == 0)
-			return e.getOp().name;
+			return e.getOp().toString();
 		else if (e.getNumArgs() == 1) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(e.getOp());
