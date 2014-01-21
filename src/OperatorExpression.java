@@ -41,6 +41,7 @@ public class OperatorExpression extends Expression {
 		return arguments.get(i);
 	}
 	
+	@Override
 	public String toString() {
 		StringBuilder sb = new StringBuilder();
 		
@@ -59,10 +60,12 @@ public class OperatorExpression extends Expression {
 		
 		return sb.toString();
 	}
+	@Override
 	public String toLatex() {
 		return op.toLatex(this);
 	}
 	
+	@Override
 	public boolean equals(final Expression e) {
 		// OperatorExpressions are equal if the operator is equal and each argument is equal
 		if (e instanceof OperatorExpression) {
@@ -82,6 +85,7 @@ public class OperatorExpression extends Expression {
 	 * @param e another expression
 	 * @return a negative number if this goes before e, or a positive number if this goes after e
 	 */
+	@Override
 	public int compareTo(final Expression e) {
 		if(e instanceof OperatorExpression) {
 			OperatorExpression oe = (OperatorExpression) e;

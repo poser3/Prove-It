@@ -6,13 +6,16 @@ public class VariableExpression extends Expression {
 		this.name = name;
 	}
 	
+	@Override
 	public String toString() {
 		return name;
 	}
+	@Override
 	public String toLatex() {
 		return name;
 	}
 	
+	@Override
 	public boolean equals(final Expression e) {
 		return e instanceof VariableExpression && e.toString().equals(name);
 	}
@@ -24,6 +27,7 @@ public class VariableExpression extends Expression {
 	 * @param e another expression
 	 * @return a negative number if this goes before e, or a positive number if this goes after e
 	 */
+	@Override
 	public int compareTo(final Expression e) {
 		if(e instanceof OperatorExpression)
 			return Integer.MAX_VALUE;

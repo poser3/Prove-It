@@ -30,6 +30,7 @@ public class NumberExpression extends Expression {
 		return value;
 	}
 	
+	@Override
 	public String toString() {
 		return value.toString();
 	}
@@ -37,6 +38,7 @@ public class NumberExpression extends Expression {
 	 * Formats this expression for use in a LaTex context.
 	 * @return a LaTex representation of this expression.
 	 */
+	@Override
 	public String toLatex() {
 		return value.toString();
 	}
@@ -47,6 +49,7 @@ public class NumberExpression extends Expression {
 	 * @param e another expression
 	 * @return whether the two expressions are the equal
 	 */
+	@Override
 	public boolean equals(Expression e) {
 		return e instanceof NumberExpression && ((NumberExpression) e).getValue().equals(value);
 	}
@@ -58,6 +61,7 @@ public class NumberExpression extends Expression {
 	 * @param e another expression
 	 * @return a negative number if this goes before e, or a positive number if this goes after e
 	 */
+	@Override
 	public int compareTo(Expression e) {
 		if(e instanceof OperatorExpression || e instanceof VariableExpression)
 			return Integer.MAX_VALUE;

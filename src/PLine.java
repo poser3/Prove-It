@@ -44,14 +44,17 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 		update();
 	}
 	
+	@Override
 	public boolean exists() {
 		return exists_;
 	}
 	
+	@Override
 	public void setExists(boolean exists) {
 		exists_ = exists;
 	}
 	
+	@Override
 	public void update() {
 		GPoint[] edgePoints = this.getEdgePoints();
 		
@@ -72,39 +75,48 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 		
 	}
 	
+	@Override
 	public void setSelected(boolean selected) {
 		selected_ = selected;
 		setColor(selected ? Color.MAGENTA : Color.BLACK);
 	}
 	
+	@Override
 	public boolean isSelected() {
 		return selected_;
 	}
 	
+	@Override
 	public PPoint get1stPoint() {
 		return p1_;
 	}
 	
+	@Override
 	public PPoint get2ndPoint() {
 		return p2_;
 	}
 	
+	@Override
 	public void set1stPoint(PPoint p1) {
 		p1_ = p1;
 	}
 	
+	@Override
 	public void set2ndPoint(PPoint p2) {
 		p2_ = p2;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label_;
 	}
 	
+	@Override
 	public String expression() {
 		return String.format("(line %s)", getLabel());
 	}
 	
+	@Override
 	public double distanceTo(double x, double y) {
 		double ax = p1_.getX();
 		double ay = p1_.getY();

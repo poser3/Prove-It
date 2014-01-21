@@ -42,14 +42,17 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 		update();
 	}
 	
+	@Override
 	public boolean exists() {
 		return exists_;
 	}
 	
+	@Override
 	public void setExists(boolean exists) {
 		exists_ = exists;
 	}
 	
+	@Override
 	public void update() {
 		GPoint edgePoint = this.getEdgePoint();
 		
@@ -72,39 +75,48 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 		}
 	}
 	
+	@Override
 	public void setSelected(boolean selected) {
 		selected_ = selected;
 		setColor(selected ? Color.MAGENTA : Color.BLACK);
 	}
 	
+	@Override
 	public boolean isSelected() {
 		return selected_;
 	}
 	
+	@Override
 	public PPoint get1stPoint() {
 		return p1_;
 	}
 	
+	@Override
 	public PPoint get2ndPoint() {
 		return p2_;
 	}
 	
+	@Override
 	public void set1stPoint(PPoint p1) {
 		p1_ = p1;
 	}
 	
+	@Override
 	public void set2ndPoint(PPoint p2) {
 		p2_ = p2;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label_;
 	}
 	
+	@Override
 	public String expression() {
 		return String.format("(ray %s)", getLabel());
 	}
 	
+	@Override
 	public double distanceTo(double x, double y) {
 		//Suppose we want distance from X to segment AB
 		//Find angle BAX using law of cosines.
@@ -133,6 +145,7 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 				
 	}
 	
+	@Override
 	public boolean equals(Object o) {
 		//TODO: equals here or equals for PPoint is not working right.  Fix this.
 		if (o instanceof PRay)
@@ -141,6 +154,7 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 			return false;
 	}
 	
+	@Override
 	public String toString() {
 		return String.format("%s from (%f.1, %f.1) towards (%f.1, %f.1)",
 				getLabel(),

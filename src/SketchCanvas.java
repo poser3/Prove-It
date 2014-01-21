@@ -70,8 +70,11 @@ public class SketchCanvas extends GCanvas {
 			//Setup canvas mouseListener
 			this.addMouseListener(new MouseListener() {
 
+				@Override
 				public void mouseClicked(MouseEvent e) {}
+				@Override
 				public void mouseEntered(MouseEvent e) {}
+				@Override
 				public void mouseExited(MouseEvent e) {}
 
 				@Override

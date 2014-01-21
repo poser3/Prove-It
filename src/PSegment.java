@@ -23,48 +23,59 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 		exists_ = true;
 	}
 	
+	@Override
 	public boolean exists() {
 		return exists_;
 	}
 	
+	@Override
 	public void setExists(boolean exists) {
 		exists_ = exists;
 	}
 	
+	@Override
 	public void update() {
 		setStartPoint(p1_.getX(), p1_.getY());
 		setEndPoint(p2_.getX(), p2_.getY());
 	}
 	
+	@Override
 	public void setSelected(boolean selected) {
 		selected_ = selected;
 		setColor(selected ? Color.MAGENTA : Color.BLACK);
 	}
 	
+	@Override
 	public boolean isSelected() {
 		return selected_;
 	}
 	
+	@Override
 	public PPoint get1stPoint() {
 		return p1_;
 	}
 	
+	@Override
 	public PPoint get2ndPoint() {
 		return p2_;
 	}
 	
+	@Override
 	public void set1stPoint(PPoint p1) {
 		p1_ = p1;
 	}
 	
+	@Override
 	public void set2ndPoint(PPoint p2) {
 		p2_ = p2;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label_;
 	}
 	
+	@Override
 	public String expression() {
 		return String.format("(segment %s %s)", get1stPoint().expression(), get2ndPoint().expression());
 	}
@@ -90,6 +101,7 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	    	   "(" + p2_.getX() + ", " + p2_.getY() + ")";
 	}
 
+	@Override
 	public double distanceTo(double x, double y) {
 		//Suppose we want distance from X to segment AB
 		//Find angles ABX and BAX using law of cosines.

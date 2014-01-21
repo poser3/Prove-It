@@ -63,6 +63,7 @@ public class Theorem {
 	public final ArrayList<Statement> hypotheses;
 	public final ArrayList<Statement> conclusions;
 	
+	@Override
 	public String toString() {
 		return name;
 	}
