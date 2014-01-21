@@ -380,7 +380,7 @@ public class SketchCanvas extends GCanvas {
 					args[i] = ((Drawable) args[i]).expression();
 				}
 			}
-			parents = (Drawables) ListUtils.removeDuplicates(parents);
+			parents = new Drawables(ListUtils.removeDuplicates(parents));
 			
 			Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
 			mainWindow_.addStatement(result);
