@@ -9,6 +9,7 @@ import javax.swing.ListModel;
 
 public class StatementListCellRenderer implements ListCellRenderer<Statement> {
 	
+	@Override
 	public Component getListCellRendererComponent(JList<? extends Statement> list, Statement value, int index, boolean isSelected, boolean cellHasFocus) {
 		String latex = value.toLatex();
 		BufferedImage image = (BufferedImage) LatexHandler.latexToImage(latex);

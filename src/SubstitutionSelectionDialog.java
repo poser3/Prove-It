@@ -43,6 +43,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		selectionBox = new JComboBox<Statement>(statements);
 		selectionBox.setRenderer(renderer);
 		selectionBox.addItemListener(new ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent event) {
 				updatePreview();
 			}
@@ -50,6 +51,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		
 		checkBox = new JCheckBox("Reverse");
 		checkBox.addItemListener(new ItemListener() {
+			@Override
 			public void itemStateChanged(ItemEvent event) {
 				renderer.reversed = !renderer.reversed;
 				selectionBox.update(selectionBox.getGraphics());
@@ -59,6 +61,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		
 		JButton okButton = new JButton("OK");
 		okButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				choiceMade = true;
 				setVisible(false);
@@ -66,6 +69,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		});
 		JButton cancelButton = new JButton("Cancel");
 		cancelButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				choiceMade = false;
 				setVisible(false);

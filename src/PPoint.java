@@ -81,10 +81,12 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		update();
 	}
 	
+	@Override
 	public Drawables getParents() {
 		return parents_;
 	}
 
+	@Override
 	public Drawables getDependents() {
 		return dependents_;
 	}
@@ -111,14 +113,17 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		}
 	}
 	
+	@Override
 	public boolean exists() {
 		return exists_;
 	}
 	
+	@Override
 	public void setExists(boolean exists) {
 		exists_ = exists;
 	}
 	
+	@Override
 	public void update() {
 		
 		//scratch variables to improve readability of calculations...
@@ -380,19 +385,23 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 		}
 	}
 	
+	@Override
 	public void setSelected(boolean selected) {
 		selected_ = selected;
 		dot_.setFillColor(selected ? Color.MAGENTA : (this.constructedAs_ == FREE_POINT ? Color.green : Color.BLACK));
 	}
 	
+	@Override
 	public boolean isSelected() {
 		return selected_;
 	}
 	
+	@Override
 	public String getLabel() {
 		return label_;
 	}
 	
+	@Override
 	public double distanceTo(double x, double y) {
 		return Math.sqrt( (x-this.getX())*(x-this.getX()) +
 				          (y-this.getY())*(y-this.getY())   );

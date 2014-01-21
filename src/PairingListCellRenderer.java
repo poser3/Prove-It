@@ -9,6 +9,7 @@ import javax.swing.ListModel;
 
 public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 	
+	@Override
 	public Component getListCellRendererComponent(JList<? extends Pairing> list, Pairing value, int index, boolean isSelected, boolean cellHasFocus) {
 		
 		String latex = "?";

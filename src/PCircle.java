@@ -47,18 +47,22 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			setSelected(false);
 		}
 		
+		@Override
 		public Drawables getParents() {
 			return parents_;
 		}
 		
+		@Override
 		public Drawables getDependents() {
 			return dependents_;
 		}
 		
+		@Override
 		public boolean exists() {
 			return exists_;
 		}
 		
+		@Override
 		public void setExists(boolean exists) {
 			exists_ = exists;
 		}
@@ -74,6 +78,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		/**
 		 * Redetermine the graphical properties of this circle based on its center and radius.
 		 */
+		@Override
 		public void update() {
 			gOval_.setLocation(c1_.getX() - getRadius(), c1_.getY() - getRadius());
 			gOval_.setSize(2*getRadius(), 2*getRadius());
@@ -83,15 +88,18 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			fancyLabel_.setLocation(labelX,labelY);
 		}
 		
+		@Override
 		public void setSelected(boolean selected) {
 			selected_ = selected;
 			gOval_.setColor(selected ? Color.MAGENTA : Color.BLACK);
 		}
 		
+		@Override
 		public boolean isSelected() {
 			return selected_;
 		}
 		
+		@Override
 		public PPoint get1stPoint() {
 			return c1_;
 		}
@@ -100,18 +108,22 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			return get1stPoint();
 		}
 		
+		@Override
 		public PPoint get2ndPoint() {
 			return p2_;
 		}
 		
+		@Override
 		public void set1stPoint(PPoint p) {
 			c1_ = p;
 		}
 		
+		@Override
 		public void set2ndPoint(PPoint p) {
 			p2_ = p;
 		}
 				
+		@Override
 		public String getLabel() {
 			return label_;
 		}
@@ -143,6 +155,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		/**
 		 * Get the distance from the outside of this circle to the given point.
 		 */
+		@Override
 		public double distanceTo(double x, double y) {
 			double cx = c1_.getX();
 			double cy = c1_.getY();

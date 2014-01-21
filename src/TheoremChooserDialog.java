@@ -39,6 +39,7 @@ public class TheoremChooserDialog extends JDialog {
 			theorems.addElement(t);
 		
 		theoremsList.addListSelectionListener(new ListSelectionListener() {
+			@Override
 			public void valueChanged(ListSelectionEvent event) {
 				update((Theorem) theoremsList.getSelectedValue());
 			}
@@ -46,12 +47,14 @@ public class TheoremChooserDialog extends JDialog {
 		hypothesesList.setCellRenderer(new StatementListCellRenderer());
 		conclusionsList.setCellRenderer(new StatementListCellRenderer());
 		okButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				clickedOK = true;
 				setVisible(false);
 			}
 		});
 		cancelButton.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent event) {
 				clickedOK = false;
 				setVisible(false);

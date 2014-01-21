@@ -29,6 +29,7 @@ public class ExpressionSelectionDialog extends JDialog {
 	private LinkedList<ExpressionButton> selected = new LinkedList<ExpressionButton>(); // treated as a stack
 	
 	private final ActionListener buttonListener = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent event) {
 			JButton source = (JButton) event.getSource();
 			ExpressionButton clickedOn = null;
@@ -72,6 +73,7 @@ public class ExpressionSelectionDialog extends JDialog {
 		}
 	};
 	private final ActionListener okCancelListener = new ActionListener() {
+		@Override
 		public void actionPerformed(ActionEvent event) {
 			clickedOK = event.getSource().equals(okButton);
 			setVisible(false);

@@ -18,6 +18,7 @@ import javax.swing.SwingUtilities;
 import acm.gui.TableLayout;
 
 
+@SuppressWarnings("serial")
 public class TheoremPanel extends JPanel {
 	
 		public final int PAIRINGS_SCROLLPANE_WIDTH = 200;
@@ -41,6 +42,7 @@ public class TheoremPanel extends JPanel {
 		private Theorem currentTheorem_;
 		private JLabel currentTheoremJLabel_;
 		
+		@Override
 		public String toString() {
 			return "Theorem panel has current theorem of : " + currentTheorem_;
 		}

@@ -15,6 +15,7 @@ import javax.swing.KeyStroke;
 import acm.program.GraphicsProgram;
 
 
+@SuppressWarnings("serial")
 public class MainMenuBar extends JMenuBar{
 	
 	//SETUP THE MENU SYSTEM...
@@ -34,36 +35,42 @@ public class MainMenuBar extends JMenuBar{
 		menu = new JMenu("Manipulate");
 		menuItem = new JMenuItem("Hide Selected Statements");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.getStatementPanel().hideSelectedStatements();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Show All Hidden Statements");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.getStatementPanel().showHiddenStatements();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Apply Theorem");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.applyTheorem();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Reload Theorems");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.reloadTheorems();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Load Statements...");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.loadStatements();	
 			}});
 		menu.add(menuItem);
 		menuItem = new JMenuItem("Substitute");
 		menuItem.addActionListener(new ActionListener() {
+			@Override
 			public void actionPerformed(ActionEvent e) {
 				mainWindow_.substitute();	
 			}});

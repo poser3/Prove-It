@@ -150,6 +150,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	* Return a string representation of this Expression.
 	* @return a string representation of this Expression
 	*/
+	@Override
 	public abstract String toString();
 	
 	/**
@@ -164,6 +165,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	* @param e another expression
 	* @return a negative integer if e comes before this, a positive number if e comes after this, or 0 if this and e are the same
 	*/
+	@Override
 	public abstract int compareTo(Expression e);
 
 	
@@ -179,10 +181,12 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		type_ = type;
 	}
 	
+	@Override
 	public boolean isSelected() {
 		return isSelected_;
 	}
 	
+	@Override
 	public void setSelected(boolean isSelected) {
 		isSelected_ = isSelected;
 	}

@@ -71,10 +71,12 @@
 		}
 	}
 	
+	@Override
 	public String toString() {
 		return name_;
 	}
 	
+	@Override
 	public String toLatex() {
 		String result = "";
 		result = ( (latex_.equals("")) ? name_ : latex_ );
@@ -86,6 +88,7 @@
 		return result;
 	}
 	
+	@Override
 	public boolean equals(final Expression e) {
 		return e instanceof VariableExpression && e.toString().equals(name_);
 	}
@@ -97,6 +100,7 @@
 	 * @param e another expression
 	 * @return a negative number if this goes before e, or a positive number if this goes after e
 	 */
+	@Override
 	public int compareTo(final Expression e) {
 		if(e instanceof OperatorExpression)
 			return Integer.MAX_VALUE;

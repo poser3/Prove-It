@@ -6,6 +6,7 @@ import acm.program.GraphicsProgram;
 @SuppressWarnings("serial")
 public class LatexExample extends GraphicsProgram{
 		
+	@Override
 	public void run() {
 		
 		final int NUM_OF_LATEX_STRINGS = 6;

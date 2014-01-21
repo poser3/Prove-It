@@ -9,7 +9,8 @@ import javax.swing.SwingConstants;
 
 public class ExpressionListCellRenderer implements ListCellRenderer<Expression> {
         
-        public Component getListCellRendererComponent(JList<? extends Expression> list, Expression value, int index, boolean isSelected, boolean cellHasFocus) {
+        @Override
+		public Component getListCellRendererComponent(JList<? extends Expression> list, Expression value, int index, boolean isSelected, boolean cellHasFocus) {
                 String statementNumberString = "\\textrm{" + (index+1) + ".} \\:";
         		String latex = statementNumberString + value.toLatex();
                 if (isSelected)

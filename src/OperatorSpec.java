@@ -112,6 +112,7 @@ public class OperatorSpec {
 		 * @param e2
 		 * @return true if e1 and e2 represent the same thing and false otherwise.
 		 */
+		@Override
 		public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
 			if (e1.getNumArgs() != e2.getNumArgs())
 				return false;

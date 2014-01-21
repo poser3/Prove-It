@@ -3,6 +3,7 @@ import javax.swing.DefaultListModel;
 @SuppressWarnings("serial")
 public class StatementListModel extends DefaultListModel<Statement> {
 	
+	@Override
 	public Statement getElementAt(int index) {
 		int count = 0;
 		for (Object o : toArray())
@@ -15,6 +16,7 @@ public class StatementListModel extends DefaultListModel<Statement> {
 		return null;
 	}
 	
+	@Override
 	public int getSize() {
 		int count = 0;
 		for (Object o : toArray())

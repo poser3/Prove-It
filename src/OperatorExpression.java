@@ -106,6 +106,7 @@ public class OperatorExpression extends Expression {
 	 * This is a prefix form for the operatorExpression, so the operator comes first followed by each of its arguments.
 	 * @return the string version of this operatorExpression
 	 */
+	@Override
 	public String toString() {
 		
 		StringBuilder sb = new StringBuilder();
@@ -135,6 +136,7 @@ public class OperatorExpression extends Expression {
 	 * is selected 
 	 * @return a LaTeX version of this expression
 	 */
+	@Override
 	public String toLatex() {
 		if (this.isSelected()) {
 			return "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + op.toLatex(this) + "}";
@@ -149,6 +151,7 @@ public class OperatorExpression extends Expression {
 	 * they have the same operator and the same arguments.  The areEqual() method 
 	 * of the Operator class does most of the heavy lifting here.
 	 */
+	@Override
 	public boolean equals(final Expression e) {
 		// operatorExpressions are equal if the operators are equal and 
 		// the corresponding arguments are equal (possibly in either order,
@@ -179,6 +182,7 @@ public class OperatorExpression extends Expression {
 	 * @param e another expression
 	 * @return a negative number if this goes before e, or a positive number if this goes after e
 	 */
+	@Override
 	public int compareTo(final Expression e) {
 		
 		if(e instanceof OperatorExpression) {

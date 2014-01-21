@@ -33,6 +33,7 @@ public class Pairing {
 		isPaired_ = (e != null);
 	}
 	
+	@Override
 	public String toString() {
 		return (isPaired_ ? variableExpression_ + " <- " + pairedExpression_ : variableExpression_ + " unpaired");
 	}

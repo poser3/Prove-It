@@ -17,6 +17,7 @@ import javax.swing.event.ListSelectionListener;
 import acm.gui.TableLayout;
 
 
+@SuppressWarnings("serial")
 public class StatementPanel extends JPanel{
 	
 	private final int STATEMENT_PANEL_WIDTH = 460;
