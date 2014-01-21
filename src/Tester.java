@@ -1,6 +1,7 @@
 import java.util.HashMap;
 
 
+@SuppressWarnings("unused")
 public class Tester {
 	
 	public void printHashMapOfStrings(HashMap<String, String> map) {

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 import javax.swing.*;
+
 import acm.gui.TableLayout;
 import acm.program.Program;
 
@@ -337,6 +338,7 @@ public class MainWindow extends Program {
 		log = instructions;
 		
 		//For Debugging...
+		@SuppressWarnings("unused")
 		Tester tester = new Tester(this);
 
 	}

@@ -22,14 +22,12 @@ public class StatementPanel extends JPanel{
     private final int STATEMENT_SCROLLPANE_WIDTH = 360;
 	private final int STATEMENT_SCROLLPANE_HEIGHT = 580;
 
-	private MainWindow mainWindow_;
 	private StatementListModel statements_;
 	private JList<Statement> statementList_;
 	
 	
 	public StatementPanel(MainWindow mainWindow) {
 		
-		mainWindow_ = mainWindow_;
 		statements_ = new StatementListModel();
 		statementList_ = new JList<Statement>(statements_);
 		
