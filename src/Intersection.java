@@ -1,6 +1,3 @@
-import java.util.ArrayList;
-
-
 public class Intersection {
 	
 	public static final int LEFT = -1;

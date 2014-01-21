@@ -5,7 +5,6 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
-import javax.swing.ListModel;
 
 public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 	
