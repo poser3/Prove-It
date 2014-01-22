@@ -92,6 +92,11 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	}
 	
 	@Override
+	public String expression() {
+		return String.format("(segment %s %s)", get1stPoint().expression(), get2ndPoint().expression());
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof PSegment) {
 			return (get1stPoint().equals(((PSegment) o).get1stPoint())

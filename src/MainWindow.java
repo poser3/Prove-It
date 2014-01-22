@@ -368,7 +368,6 @@ public class MainWindow extends Program {
 		for (int i=0; i<statementPanel.getStatementList().getModel().getSize(); i++) {
 			System.out.println(statementPanel.getStatementList().getModel().getElementAt(i));
 		}
-	}
 	
 	public void addStatement(Statement s) {
 		statementPanel.addStatement(s);
@@ -388,8 +387,6 @@ public class MainWindow extends Program {
 	
 	public void addStatementAndSelect(final String s, boolean shouldScroll) {
 		statementPanel.deselectAllStatements();
-		addStatementAndSelect(new Statement(s), shouldScroll);
-	}
 	
 	public TheoremPanel getTheoremPanel() {
 		System.out.println("getTheoremPanel() returns : " + theoremPanel);

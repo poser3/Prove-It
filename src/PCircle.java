@@ -127,6 +127,11 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		public String getLabel() {
 			return label_;
 		}
+		
+		@Override
+		public String expression() {
+			return String.format("(circle %s)", getLabel());
+		}
 
 		/**
 		 * Determine whether this is the same as another object. A circle is not the same as anything

@@ -79,7 +79,7 @@
 	@Override
 	public String toLatex() {
 		String result = "";
-		result = ( (latex_.equals("")) ? name_ : latex_ );
+		result = latex_.equals("") ? name_ : latex_;
 		
 		if (this.isSelected()) {
 			result = "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + result + "}";

@@ -128,6 +128,11 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 	}
 	
 	@Override
+	public String expression() {
+		return String.format("(line %s)", getLabel());
+	}
+	
+	@Override
 	public double distanceTo(double x, double y) {
 		double ax = p1_.getX();
 		double ay = p1_.getY();

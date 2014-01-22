@@ -91,4 +91,11 @@ public class Statement implements Comparable<Statement> {
 		return geometryDependencies;
 	}
 	
+	public ArrayList<Statement> logicParents() {
+		return logicDependencies;
+	}
+	public Drawables geometryParents() {
+		return geometryDependencies;
+	}
+	
 }

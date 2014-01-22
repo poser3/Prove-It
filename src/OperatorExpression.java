@@ -215,6 +215,7 @@ public class OperatorExpression extends Expression {
 			// at this point all the arguments were the same, so give up
 			// (this should be covered by the equality check up top)
 			return 0;
+                        
 		}
 		// OperatorExpressions come before other types of expression
 		else if(e instanceof VariableExpression || e instanceof NumberExpression) {

@@ -14,7 +14,6 @@ public class Operator implements Comparable<Operator> {
 	public final boolean isCommutative = false;
 	private final String distributes = null;
 	private final String inverse = null;
-	
 
 	//////////////////
 	// Constructors //
@@ -87,7 +86,7 @@ public class Operator implements Comparable<Operator> {
 	public final String toString() {
 		return name;
 	}
-	
+	            
 	/**
 	 * A default way to convert an OperatorExpression using this operator into to LaTeX form.
 	 * This method returns a single-line, parentheses heavy, and often non-ideal, infix notation for the expression.  
@@ -99,7 +98,7 @@ public class Operator implements Comparable<Operator> {
 	 */
 	public String toLatex(final OperatorExpression e) {
 		
-		//If the operator has no arguments, just use the operators name...
+		//If the operator has no arguments, just use the operator's name...
 		//TODO: Does an operator ever have zero arguments?  Doesn't it need something to operate on?
 		if (e.getNumArgs() == 0)
 			return e.getOp().name;
@@ -151,8 +150,6 @@ public class Operator implements Comparable<Operator> {
 			return sb.toString();
 		}
     }
-        
-	
 	
     /**
 	 * Determines whether two operators are the same, based on their names.
@@ -237,7 +234,6 @@ public class Operator implements Comparable<Operator> {
 		 */
 		@Override
 		public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-			
 			//TODO: Shouldn't  we be checking that e1 and e2 use this "commutative" operator first?
 			
 			if (e1.getNumArgs() != e2.getNumArgs()) {

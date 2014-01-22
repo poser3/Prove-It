@@ -123,7 +123,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for(int i=1; i<words.size(); i++) {
 				String word = words.get(i);
 				// Save ourselves some stack space for compound expressions in arguments
-				if(word.startsWith("\\(") && word.endsWith("\\)"))  //TODO: Why are there slashes here? Also, how is stack space saved?
+                                if(word.startsWith("\\(") && word.endsWith("\\)"))
 					word = word.substring(1, word.length()-1);
 				args.add(parse(word));
 			}
@@ -693,53 +693,53 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	* @author Lee Vian
 	*/
 	private static class Trimmer {
-	/**
-	* Maintains a list of references to expressions already encountered during the execution of this program
-	* (not just those seen in one expression).  
-	*/
-	private static ArrayList<Expression> expressions = new ArrayList<Expression>();
-	
-	/**
-	* Determines whether an expression has already been encountered.
-	* @param e an expression
-	* @return the index of the expression in the expression list if it has been encountered, 
-	* or -1 if it has not been encountered
-	*/
-	private static int alreadySeen(Expression e) {
-		for (int i = 0; i < expressions.size(); i++) {
-			if (expressions.get(i).equals(e)) {
-				return i;
+		/**
+		* Maintains a list of references to expressions already encountered during the execution of this program
+		* (not just those seen in one expression).  
+		*/
+		private static ArrayList<Expression> expressions = new ArrayList<Expression>();
+		
+		/**
+		* Determines whether an expression has already been encountered.
+		* @param e an expression
+		* @return the index of the expression in the expression list if it has been encountered, 
+		* or -1 if it has not been encountered
+		*/
+		private static int alreadySeen(Expression e) {
+			for (int i = 0; i < expressions.size(); i++) {
+				if (expressions.get(i).equals(e)) {
+					return i;
+				}
 			}
+			
+			return -1;
 		}
 		
-		return -1;
-	}
-	
-	/**
-	* Look through each argument to an OperatorExpression, visit those that have not been visited, 
-	* and replace those that have been visited.
-	* @param e an OperatorExpression to look through
-	*/
-	static void iterate(OperatorExpression e) {
-		// for each argument
-		for (int i = 0; i < e.getNumArgs(); i++) {
-			
-			Expression arg = e.getArg(i);
-			
-			if (alreadySeen(arg) >= 0) {
-				// If this argument has been visited, replace it with the first incarnation
-				e.getArgs().set(i, expressions.get(alreadySeen(arg)));
-			}
-			else {
-				// Visit it
-				expressions.add(arg);
-				if (arg instanceof OperatorExpression) {
-					// If it has subexpressions, visit each of them
-					iterate((OperatorExpression) arg);
+		/**
+		* Look through each argument to an OperatorExpression, visit those that have not been visited, 
+		* and replace those that have been visited.
+		* @param e an OperatorExpression to look through
+		*/
+		static void iterate(OperatorExpression e) {
+			// for each argument
+			for (int i = 0; i < e.getNumArgs(); i++) {
+				
+				Expression arg = e.getArg(i);
+				
+				if (alreadySeen(arg) >= 0) {
+					// If this argument has been visited, replace it with the first incarnation
+					e.getArgs().set(i, expressions.get(alreadySeen(arg)));
+				}
+				else {
+					// Visit it
+					expressions.add(arg);
+					if (arg instanceof OperatorExpression) {
+						// If it has subexpressions, visit each of them
+						iterate((OperatorExpression) arg);
+					}
 				}
 			}
 		}
 	}
-}
 	
 }
