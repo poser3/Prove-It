@@ -1,9 +1,8 @@
 import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -28,9 +27,9 @@ public class SketchPanel extends TablePanel {
 	private JButton intersectionButton_;
 	
 	private JButton jButtonFromResource(String pathToResource) {
-		InputStream inputStream = this.getClass().getResourceAsStream(pathToResource);
         try {
-        	Image image = ImageIO.read(inputStream);
+        	Image image = ImageIO.read(new File(
+        			SettingsReader.getSetting("image-path") + pathToResource));
         	ImageIcon imageIcon = new ImageIcon(image);
         	JButton jButton = new JButton(imageIcon);
         	jButton.setBorder( new EmptyBorder(0, 0, 0, 0) ); 
@@ -48,7 +47,7 @@ public class SketchPanel extends TablePanel {
 		super(1,15);
 		  
       //Setup select button
-		selectButton_ = jButtonFromResource("./res/select.png");
+		selectButton_ = jButtonFromResource("select.png");
 		selectButton_.addActionListener( new ActionListener() {
 
 			@Override
@@ -60,7 +59,7 @@ public class SketchPanel extends TablePanel {
 		this.add(selectButton_);
 		
 	  //Setup point button
-		pointButton_ = jButtonFromResource("./res/draw_point.png");
+		pointButton_ = jButtonFromResource("draw_point.png");
 		pointButton_.addActionListener( new ActionListener() {
 
 			@Override
@@ -72,7 +71,7 @@ public class SketchPanel extends TablePanel {
 		this.add(pointButton_);
 		
 		//Setup segment button
-		segmentButton_ = jButtonFromResource("./res/draw_segment.png");
+		segmentButton_ = jButtonFromResource("draw_segment.png");
 		segmentButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -84,7 +83,7 @@ public class SketchPanel extends TablePanel {
 		this.add(segmentButton_);
 		
 		//Setup circle button
-		circleButton_ = jButtonFromResource("./res/draw_circle.png");
+		circleButton_ = jButtonFromResource("draw_circle.png");
 		circleButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -96,7 +95,7 @@ public class SketchPanel extends TablePanel {
 		this.add(circleButton_);
 		
 		//Setup line button
-		lineButton_ = jButtonFromResource("./res/draw_line.png");
+		lineButton_ = jButtonFromResource("draw_line.png");
 		lineButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -108,7 +107,7 @@ public class SketchPanel extends TablePanel {
 		this.add(lineButton_);
 		
 		//Setup ray button
-		rayButton_ = jButtonFromResource("./res/draw_ray.png");
+		rayButton_ = jButtonFromResource("draw_ray.png");
 		rayButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -120,7 +119,7 @@ public class SketchPanel extends TablePanel {
 		this.add(rayButton_);
 		
 		//Setup constructMidpointButton
-		constructMidpointButton_ = jButtonFromResource("./res/construct_midpoint.png");
+		constructMidpointButton_ = jButtonFromResource("construct_midpoint.png");
 		constructMidpointButton_.addActionListener( new ActionListener() {
 					
 			@Override
@@ -132,7 +131,7 @@ public class SketchPanel extends TablePanel {
 		this.add(constructMidpointButton_);
 		
 		//Setup constructIntersectionButton
-		intersectionButton_ = jButtonFromResource("./res/construct_intersection.png");
+		intersectionButton_ = jButtonFromResource("construct_intersection.png");
 		intersectionButton_.addActionListener( new ActionListener() {
 					
 			@Override

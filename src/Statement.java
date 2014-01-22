@@ -5,16 +5,20 @@ import java.util.HashMap;
 public class Statement implements Comparable<Statement> {
 	
 	private final Expression expression;
-	private ArrayList<Statement> logicDependencies = new ArrayList<Statement>();
-	private Drawables geometryDependencies = new Drawables();
+	private final ArrayList<Statement> logicDependencies;
+	private final Drawables geometryDependencies;
 	private boolean hidden = false;
 	private boolean valid = false;
 	
 	public Statement(final Expression expression) {
 		this.expression = expression;
+		this.logicDependencies = new ArrayList<Statement>();
+		this.geometryDependencies = new Drawables();
 	}
 	public Statement(final String expression) {
 		this.expression = Expression.parse(expression);
+		this.logicDependencies = new ArrayList<Statement>();
+		this.geometryDependencies = new Drawables();
 	}
 	
 	public Statement(final Expression expression, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
@@ -82,13 +86,6 @@ public class Statement implements Comparable<Statement> {
 	}
 	public void setValid(boolean valid) {
 		this.valid = valid;
-	}
-	
-	public ArrayList<Statement> logicParents() {
-		return logicDependencies;
-	}
-	public Drawables geometryParents() {
-		return geometryDependencies;
 	}
 	
 	public ArrayList<Statement> logicParents() {
