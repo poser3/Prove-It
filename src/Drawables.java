@@ -46,11 +46,10 @@ public class Drawables extends ArrayList<Drawable> {
 	
 	public static boolean allDependentsExist(Drawables dependents) {
 		boolean dependentsExist = true;
-		for (int i=0; i < dependents.size(); i++) {
-			//WARNING: THE BELOW SETS UP A DOUBLE-RECURSION THAT COULD BE TIME-COSTLY IF TOO
-			//MANY PARENTS ARE INVOLVED -- THIS COULD BE DONE BETTER...
-			if ((! dependents.get(i).exists()) || (! allDependentsExist(dependents.get(i).getDependents()))) {
+		for (Drawable d : dependents) {
+			if ((! d.exists()) || (! allDependentsExist(d.getDependents()))) {
 				dependentsExist = false;
+				break;
 			}
 		}
 		return dependentsExist;
