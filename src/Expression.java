@@ -81,7 +81,8 @@ public abstract class Expression implements Comparable<Expression> {
 	 * @param e another expression
 	 * @return true if the two expressions are the same, or false if they are not
 	 */
-	public abstract boolean equals(Expression e);
+	@Override
+	public abstract boolean equals(Object obj);
 	
 	/**
 	 * Return a string representation of this Expression.

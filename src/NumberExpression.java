@@ -50,8 +50,8 @@ public class NumberExpression extends Expression {
 	 * @return whether the two expressions are the equal
 	 */
 	@Override
-	public boolean equals(Expression e) {
-		return e instanceof NumberExpression && ((NumberExpression) e).getValue().equals(value);
+	public boolean equals(Object obj) {
+		return obj instanceof NumberExpression && ((NumberExpression) obj).getValue().equals(value);
 	}
 	
 	/**

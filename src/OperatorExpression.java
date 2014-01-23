@@ -66,13 +66,13 @@ public class OperatorExpression extends Expression {
 	}
 	
 	@Override
-	public boolean equals(final Expression e) {
+	public boolean equals(final Object obj) {
 		// OperatorExpressions are equal if the operator is equal and each argument is equal
-		if (e instanceof OperatorExpression) {
-			if (! ((OperatorExpression) e).getOp().equals(op))
+		if (obj instanceof OperatorExpression) {
+			if (! ((OperatorExpression) obj).getOp().equals(op))
 				return false;
 			
-			return op.areEqual(this, (OperatorExpression) e);
+			return op.areEqual(this, (OperatorExpression) obj);
 		}
 		// An OperatorExpression is not equal to a NumberExpression or a VariableExpression
 		else return false;
