@@ -118,7 +118,7 @@ public abstract class Expression implements Comparable<Expression> {
 			if(this instanceof OperatorExpression && e instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
 				OperatorExpression oeE = (OperatorExpression) e;			
-				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.addAll(oeThis.getArgs());
@@ -128,7 +128,7 @@ public abstract class Expression implements Comparable<Expression> {
 			// catch the case where op and this.op are the same
 			else if(this instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
-				if(oeThis.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(e);
 					newArgs.addAll(oeThis.getArgs());
@@ -138,7 +138,7 @@ public abstract class Expression implements Comparable<Expression> {
 			// catch the case where op and e.op are the same
 			else if(e instanceof OperatorExpression) {
 				OperatorExpression oeE = (OperatorExpression) e;
-				if(oeE.getOp().equals(op) && op.isAssociative) {
+				if(oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.add(this);
@@ -165,7 +165,7 @@ public abstract class Expression implements Comparable<Expression> {
 			if(this instanceof OperatorExpression && e instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
 				OperatorExpression oeE = (OperatorExpression) e;			
-				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.addAll(oeE.getArgs());
