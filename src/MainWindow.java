@@ -331,6 +331,13 @@ public class MainWindow extends Program {
 	@Override
 	public void init() {
 		
+		/*
+		 * The LatexHandler takes a few seconds to initialize.
+		 * By doing this here, it looks like part of the general loading process,
+		 * instead of a problem with statement creation.
+		 */
+		LatexHandler.latexToImage("hello world");
+		
 		SketchCanvas sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
