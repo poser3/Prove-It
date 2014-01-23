@@ -121,7 +121,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.addAll(oeThis.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 			// catch the case where op and this.op are the same
@@ -131,7 +131,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(e);
 					newArgs.addAll(oeThis.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 			// catch the case where op and e.op are the same
@@ -141,7 +141,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.add(this);
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 		}
@@ -149,7 +149,7 @@ public abstract class Expression implements Comparable<Expression> {
 		ArrayList<Expression> newArgs = new ArrayList<Expression>();
 		newArgs.add(e);
 		newArgs.add(this);
-		return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+		return (OperatorExpression) new OperatorExpression(op, newArgs);
 	}
 	
 	/**
@@ -168,7 +168,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.addAll(oeE.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 			// catch the case where op and this.op are the same
@@ -178,7 +178,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.add(e);
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 			// catch the case where op and e.op are the same
@@ -188,7 +188,7 @@ public abstract class Expression implements Comparable<Expression> {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(this);
 					newArgs.addAll(oeE.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+					return (OperatorExpression) new OperatorExpression(op, newArgs);
 				}
 			}
 		}
@@ -196,7 +196,7 @@ public abstract class Expression implements Comparable<Expression> {
 		ArrayList<Expression> newArgs = new ArrayList<Expression>();
 		newArgs.add(this);
 		newArgs.add(e);
-		return (OperatorExpression) new OperatorExpression(op, newArgs).trim();
+		return (OperatorExpression) new OperatorExpression(op, newArgs);
 	}
 	
 	/**
@@ -217,7 +217,7 @@ public abstract class Expression implements Comparable<Expression> {
 			ArrayList<Expression> args = new ArrayList<Expression>(oeThis.getNumArgs());
 			for(int i=0; i<oeThis.getNumArgs(); i++)
 				args.add(oeThis.getArg(i).substitute(quid, quo));
-			return new OperatorExpression(oeThis.getOp(), args).trim();
+			return new OperatorExpression(oeThis.getOp(), args);
 		}
 		else
 			return this;
@@ -246,7 +246,7 @@ public abstract class Expression implements Comparable<Expression> {
 			for(int i=0; i<args.size(); i++) 
 				newArgs.add(args.get(i).substitute(map));
 			
-			return new OperatorExpression(op, newArgs).trim();
+			return new OperatorExpression(op, newArgs);
 		}
 	}
 	
@@ -312,61 +312,6 @@ public abstract class Expression implements Comparable<Expression> {
 		}
 		else
 			throw new ClassCastException();
-	}
-	
-	/**
-	 * Saves memory by finding identical subexpressions within this expression and making them the same object.
-	 * This is probably deprecated, and might be downright harmful if expressions become mutable.
-	 */
-	public Expression trim() {
-		if(this instanceof OperatorExpression)
-			Trimmer.iterate((OperatorExpression) this);
-		return this;
-	}
-	
-	/**
-	 * Nested class for use by the trim() method.
-	 * @author Lee Vian
-	 */
-	private static class Trimmer {
-		/**
-		 * Maintains a list of references to expressions already encountered.
-		 */
-		private static ArrayList<Expression> expressions = new ArrayList<Expression>();
-		
-		/**
-		 * Determines whether an expression has already been encountered.
-		 * @param e an expression
-		 * @return the index of the expression in the expression list if it has been encountered, or -1 if it has not been encountered
-		 */
-		private static int alreadySeen(Expression e) {
-			for(int i=0; i<expressions.size(); i++)
-				if(expressions.get(i).equals(e))
-					return i;
-			return -1;
-		}
-		
-		/**
-		 * Look through each argument to an OperatorExpression, visit those that have not been visited, and replace those that have been visited.
-		 * @param e an OperatorExpression to look through
-		 */
-		static void iterate(OperatorExpression e) {
-			// for each argument
-			for(int i=0; i<e.getNumArgs(); i++) {
-				Expression arg = e.getArg(i);
-				
-				if(alreadySeen(arg) >= 0)
-					// If this argument has been visited, replace it with the first incarnation
-					e.getArgs().set(i, expressions.get(alreadySeen(arg)));
-				else {
-					// Visit it
-					expressions.add(arg);
-					if(arg instanceof OperatorExpression)
-						// If it has subexpressions, visit each of them
-						iterate((OperatorExpression) arg);
-				}
-			}
-		}
 	}
 	
 }
