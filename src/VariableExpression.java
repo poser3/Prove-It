@@ -89,8 +89,8 @@
 	}
 	
 	@Override
-	public boolean equals(final Expression e) {
-		return e instanceof VariableExpression && e.toString().equals(name_);
+	public boolean equals(final Object obj) {
+		return obj instanceof VariableExpression && ((VariableExpression) obj).toString().equals(name_);
 	}
 	
 	/**

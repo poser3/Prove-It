@@ -13,8 +13,12 @@ public class Operators extends HashMap<String, Operator> {
 	
 	@SuppressWarnings("unused")
 	private Operators() {
-		put("=", new Operator.CommutativeOperator("="));
-		put("!=", new Operator.CommutativeOperator("!=") {
+		put("=", new Operator("=") {
+			public final boolean isCommutative = true;
+		});
+		put("!=", new Operator("!=") {
+			public final boolean isCommutative = true;
+			
 			@Override
 			public String toLatex(OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
@@ -52,7 +56,8 @@ public class Operators extends HashMap<String, Operator> {
 				return sb.toString();
 			}
 		});
-		put("+", new Operator.CommutativeOperator("+") {
+		put("+", new Operator("+") {
+			public final boolean isCommutative = true;
 			public final boolean isAssociative = true;
 			private final String inverse = "-";
 			
@@ -147,7 +152,8 @@ public class Operators extends HashMap<String, Operator> {
 				}
 			}
 		});
-		put("*", new Operator.CommutativeOperator("*") {
+		put("*", new Operator("*") {
+			public final boolean isCommutative = true;
 			public final boolean isAssociative = true;
 			private final String distributes = "+";
 			private final String inverse = "/";
@@ -326,7 +332,9 @@ public class Operators extends HashMap<String, Operator> {
                                     e.getArg(0).toLatex());
             }
 		});
-	    put("segment", new Operator.CommutativeOperator("segment") {
+	    put("segment", new Operator("segment") {
+	    	public final boolean isCommutative = true;
+	    	
 	    	@Override
             public String toLatex(final OperatorExpression e) {
                     return String.format("\\text{segment } \\overline{%s %s}",
@@ -334,7 +342,9 @@ public class Operators extends HashMap<String, Operator> {
                                     e.getArg(1).toLatex());
             }
 	    });
-		put("congruent", new Operator.CommutativeOperator("congruent") {
+		put("congruent", new Operator("congruent") {
+			public final boolean isCommutative = true;
+			
 			@Override
 			public String toLatex(OperatorExpression e) {
 				return String.format("%s \\text{ is congruent to } %s",

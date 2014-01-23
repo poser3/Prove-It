@@ -70,8 +70,19 @@ public class Operator implements Comparable<Operator> {
 		if (e1.getNumArgs() != e2.getNumArgs())
 			return false;
 		
-		for (int i=0; i<e1.getNumArgs(); i++)
-			if (! e1.getArg(i).equals(e2.getArg(i)))
+		ArrayList<Expression> args1 = e1.getArgs();
+		ArrayList<Expression> args2 = e2.getArgs();
+		
+		if (e1.getOp().isCommutative) {
+			// Clone the argument lists because sorting happens in-place
+			args1 = new ArrayList<Expression>(args1);
+			args2 = new ArrayList<Expression>(args2);
+			Collections.sort(args1);
+			Collections.sort(args2);
+		}
+			
+		for (int i=0; i<args1.size(); i++)
+			if (! args1.get(i).equals(args2.get(i)))
 				return false;
 		
 		return true;
@@ -196,67 +207,5 @@ public class Operator implements Comparable<Operator> {
 		return new OperatorExpression(e.getOp(), args);
     }
 	
-
-	///////////////////
-	// Inner Classes //
-	///////////////////
-	
-	//TODO: Is there a reason this is an inner class? Why not make it a class on its own?
-	//      Even that may not be exactly what we want -- there are a lot of combinations
-	//      here.  Are we going to need a DistributiveOperator? ..an AssociativeOperator?
-	//      ..a DistributiveAndAssociativeOperator?  Maybe using interfaces could help here?
-	
-    /**
-	 * This OperatorSpec overwrites the areEqual method to support commutative operators.
-	 * @author Lee Vian
-	 *
-     */
-	public static class CommutativeOperator extends Operator {
-
-		CommutativeOperator(String name) {
-			super(name);
-		}
-		
-		public final boolean isCommutative = true;
-		
-		/**
-		 * Check whether two OperatorExpressions using this commutative operator are equal.
-		 * For example: if this operator is a "+", the following two expressions should be
-		 * considered equal: 
-		 * "+ 2 1 x y" and 
-		 * "+ x 1 y 2"
-		 * This implementation makes sorted copies of the arguments and then compares them, so
-		 * both of the above would turn into "1 2 x y" and they would be determined to be equal
-		 * upon pair-by-pair comparison.
-		 * @param e1
-		 * @param e2
-		 * @return true if e1 and e2 represent the same thing and false otherwise.
-		 */
-		@Override
-		public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-			//TODO: Shouldn't  we be checking that e1 and e2 use this "commutative" operator first?
-			
-			if (e1.getNumArgs() != e2.getNumArgs()) {
-				System.out.println("operator expressions not equal, as different number of arguments");
-				return false;
-			}
-			
-			// Clone the argument lists because sorting happens in-place
-			ArrayList<Expression> args1 = new ArrayList<Expression>(e1.getArgs());
-			ArrayList<Expression> args2 = new ArrayList<Expression>(e2.getArgs());
-			Collections.sort(args1);
-			Collections.sort(args2);
-			
-			// Now compare each argument in e1 with the corresponding argument in e2 
-			for (int i = 0; i < args1.size(); i++) {
-				if (! args1.get(i).equals(args2.get(i))) {
-					System.out.println("operator expressioins not equal, as " + args1.get(i) + " != " + args2.get(i));
-					return false;
-				}
-			}
-			
-			return true;
-		}
-	}
 }
 

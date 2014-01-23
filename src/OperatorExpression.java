@@ -152,17 +152,17 @@ public class OperatorExpression extends Expression {
 	 * of the Operator class does most of the heavy lifting here.
 	 */
 	@Override
-	public boolean equals(final Expression e) {
+	public boolean equals(final Object obj) {
 		// operatorExpressions are equal if the operators are equal and 
 		// the corresponding arguments are equal (possibly in either order,
 		// depending on the operator)
-		if (e instanceof OperatorExpression) {
-			if (! ((OperatorExpression) e).getOp().equals(op))
+		if (obj instanceof OperatorExpression) {
+			if (! ((OperatorExpression) obj).getOp().equals(op))
 				return false;
 			
 			// as what to do with the arguments depends on which operator
 			// we have, we appeal to the areEqual() method of the Operator class...
-			return op.areEqual(this, (OperatorExpression) e);
+			return op.areEqual(this, (OperatorExpression) obj);
 		}
 		// No operatorExpression is equal to a numberExpression or a variableExpression
 		else return false;

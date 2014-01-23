@@ -140,11 +140,11 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	
 	/**
 	* Determine whether two expressions are the same.
-	* @param e another expression
-	* @return true if the two expressions are the same, or false if they are not
+	* @param obj another object
+	* @return true if the two objects are the same, or false if they are not
 	*/
-	public abstract boolean equals(Expression e);  //TODO: Shouldn't we use equals(Object o) here so that it overrides
-	                                               //the superclass method?
+	@Override
+	public abstract boolean equals(Object obj);
 	
 	/**
 	* Return a string representation of this Expression.
@@ -332,7 +332,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			if (this instanceof OperatorExpression && e instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
 				OperatorExpression oeE = (OperatorExpression) e;			
-				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.addAll(oeThis.getArgs());
@@ -351,7 +351,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			// Also note, x & y are placed as far left as they can go
 			else if (this instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
-				if(oeThis.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(e);
 					newArgs.addAll(oeThis.getArgs());
@@ -370,9 +370,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			// Also note, x & y are placed as far left as they can go
 			else if (e instanceof OperatorExpression) {
 				OperatorExpression oeE = (OperatorExpression) e;
-				if(oeE.getOp().equals(op) && op.isAssociative) {                    
-										//TODO: Does the condition op.isAssociative need to be checked? 
-										//Haven't we already checked it in the outer-most if in this method?
+				if(oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.add(this);
@@ -418,7 +416,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			if(this instanceof OperatorExpression && e instanceof OperatorExpression) {
 				OperatorExpression oeThis = (OperatorExpression) this;
 				OperatorExpression oeE = (OperatorExpression) e;			
-				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op) && op.isAssociative) {
+				if(oeThis.getOp().equals(op) && oeE.getOp().equals(op)) {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.addAll(oeE.getArgs());
