@@ -43,8 +43,19 @@ public class Operator implements Comparable<Operator> {
 		if (e1.getNumArgs() != e2.getNumArgs())
 			return false;
 		
-		for (int i=0; i<e1.getNumArgs(); i++)
-			if (! e1.getArg(i).equals(e2.getArg(i)))
+		ArrayList<Expression> args1 = e1.getArgs();
+		ArrayList<Expression> args2 = e2.getArgs();
+		
+		if (e1.getOp().isCommutative) {
+			// Clone the argument lists because sorting happens in-place
+			args1 = new ArrayList<Expression>(args1);
+			args2 = new ArrayList<Expression>(args2);
+			Collections.sort(args1);
+			Collections.sort(args2);
+		}
+			
+		for (int i=0; i<args1.size(); i++)
+			if (! args1.get(i).equals(args2.get(i)))
 				return false;
 		
 		return true;
@@ -138,46 +149,6 @@ public class Operator implements Comparable<Operator> {
 		return new OperatorExpression(e.getOp(), args);
         }
 
-        /**
-	 * This OperatorSpec overwrites the areEqual method to support commutative operators.
-	 * @author Lee Vian
-	 *
-         */
-	public static class CommutativeOperator extends Operator {
-
-		CommutativeOperator(String name) {
-			super(name);
-		}
-		
-		public final boolean isCommutative = true;
-		
-		/**
-		 * Check whether two OperatorExpressions using this operator are equal.
-		 * This implementation sorts the arguments before comparing.
-		 * @param e1
-		 * @param e2
-		 * @return true if e1 and e2 represent the same thing and false otherwise.
-		 */
-		@Override
-		public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-			if (e1.getNumArgs() != e2.getNumArgs())
-				return false;
-			
-			// Clone the argument lists because sorting happens in-place
-			ArrayList<Expression> args1 = new ArrayList<Expression>(e1.getArgs());
-			ArrayList<Expression> args2 = new ArrayList<Expression>(e2.getArgs());
-			Collections.sort(args1);
-			Collections.sort(args2);
-			
-			for (int i=0; i<args1.size(); i++)
-				if (! args1.get(i).equals(args2.get(i)))
-					return false;
-			
-			return true;
-		}
-		
-        }
-        
 }
 
 
