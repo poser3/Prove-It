@@ -1,9 +1,16 @@
 public class VariableExpression extends Expression {
 	
 	private final String name;
+	private final Type type;
 
 	public VariableExpression(final String name) {
 		this.name = name;
+		this.type = Type.NUMBER;
+	}
+	
+	public VariableExpression(final String name, Type type) {
+		this.name = name;
+		this.type = type;
 	}
 	
 	@Override
@@ -37,6 +44,11 @@ public class VariableExpression extends Expression {
 			return Integer.MIN_VALUE;
 		else
 			throw new ClassCastException();
+	}
+	
+	@Override
+	public Type getType() {
+		return type;
 	}
 
 }

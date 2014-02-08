@@ -19,7 +19,7 @@ public class Operator implements Comparable<Operator> {
 	 * @param op
 	 * @return true if this operator distributes over op, or false if it does not
 	 */
-	public boolean distributesOver(Operator op) {
+	public boolean distributesOver(final Operator op) {
 		return op.toString().equals(distributes);
 	}
 	/**
@@ -121,16 +121,16 @@ public class Operator implements Comparable<Operator> {
 	 * @param op
 	 * @return true if this has the same name as op, or false otherwise
          */
-	public final boolean equals(Operator op) {
+	public final boolean equals(final Operator op) {
 		return name.equals(op.toString());
 	}
-        /**
+	/**
 	 * Compares this operator to another. Operators are sorted ASCIIbetically by name.
-         */
+	 */
 	@Override
-	public int compareTo(Operator op) {
+	public int compareTo(final Operator op) {
 		return name.compareTo(op.toString());
-        }
+	}
 
         /**
 	 * Performs simplifications on an OperatorExpression using this operator.
@@ -145,9 +145,13 @@ public class Operator implements Comparable<Operator> {
 				args.add(((OperatorExpression) arg).simplify());
 			else
 				args.add(e);
-                }
+		}
 		return new OperatorExpression(e.getOp(), args);
-        }
+	}
+	
+	public Type getType(Type... argTypes) {
+		return Type.LOGICAL;
+	}
 
 }
 

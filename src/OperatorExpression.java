@@ -121,6 +121,15 @@ public class OperatorExpression extends Expression {
 			throw new ClassCastException();
 	}
 	
+	@Override
+	public Type getType() {
+		Type[] argTypes = new Type[getNumArgs()];
+		for (int i = 0; i < getNumArgs(); i++)
+			argTypes[i] = getArg(i).getType();
+		
+		return op.getType(argTypes);
+	}
+	
 	public Expression simplify() {
 		return op.simplify(this);
 	}

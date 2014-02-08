@@ -20,7 +20,7 @@ public class Operators extends HashMap<String, Operator> {
 			public final boolean isCommutative = true;
 			
 			@Override
-			public String toLatex(OperatorExpression e) {
+			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(e.getArg(0).toLatex());
 				for(int i=1; i<e.getNumArgs(); i++) {
@@ -34,7 +34,7 @@ public class Operators extends HashMap<String, Operator> {
 		put(">", new Operator(">"));
 		put("<=", new Operator("<=") {
 			@Override
-			public String toLatex(OperatorExpression e) {
+			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(e.getArg(0).toLatex());
 				for(int i=1; i<e.getNumArgs(); i++) {
@@ -46,7 +46,7 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put(">=", new Operator(">=") {
 			@Override
-			public String toLatex(OperatorExpression e) {
+			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
 				sb.append(e.getArg(0).toLatex());
 				for(int i=1; i<e.getNumArgs(); i++) {
@@ -83,6 +83,11 @@ public class Operators extends HashMap<String, Operator> {
 					return args.get(0);
 				else
 					return new OperatorExpression(this, args);
+			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
 			}
 		});
 		put("-", new Operator("-") {
@@ -142,6 +147,11 @@ public class Operators extends HashMap<String, Operator> {
 						return new OperatorExpression(this, args);
 				}
 			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
+			}
 		});
 		put("*", new Operator("*") {
 			public final boolean isCommutative = true;
@@ -173,6 +183,11 @@ public class Operators extends HashMap<String, Operator> {
 					return args.get(0);
 				else
 					return new OperatorExpression(this, args);
+			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
 			}
 		});
 		put("/", new Operator("/") {
@@ -235,6 +250,11 @@ public class Operators extends HashMap<String, Operator> {
 						return new OperatorExpression(this, args);
 				}
 			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
+			}
 		});
 		put("^", new Operator("^") {
 			private final String distributes = "*";
@@ -283,12 +303,22 @@ public class Operators extends HashMap<String, Operator> {
 					return new OperatorExpression(this, args);
 				}
 			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
+			}
 		});
 		put("m", new Operator("m") {
 			@Override
 			public String toLatex(OperatorExpression e) {
 				return String.format("\\text{m } %s",
 						e.getArg(0).toLatex());
+			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.NUMBER;
 			}
 		});
 		put("angle", new Operator("angle") {
@@ -308,6 +338,11 @@ public class Operators extends HashMap<String, Operator> {
                                     e.getArg(1).toLatex(),
                                     e.getArg(2).toLatex());
             }
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.ANGLE;
+			}
 	    });
 	    put("line", new Operator("line") {
 	    	@Override
@@ -315,6 +350,11 @@ public class Operators extends HashMap<String, Operator> {
                     return String.format("\\text{line } %s",
                                     e.getArg(0).toLatex());
             }
+	    	
+	    	@Override
+	    	public Type getType(Type... argTypes) {
+	    		return Type.LINE;
+	    	}
 	    });
 		put("ray", new Operator("ray") {
 			@Override
@@ -322,6 +362,11 @@ public class Operators extends HashMap<String, Operator> {
                     return String.format("\\text{ray } %s",
                                     e.getArg(0).toLatex());
             }
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.RAY;
+			}
 		});
 	    put("segment", new Operator("segment") {
 	    	public final boolean isCommutative = true;
@@ -332,6 +377,11 @@ public class Operators extends HashMap<String, Operator> {
                                     e.getArg(0).toLatex(),
                                     e.getArg(1).toLatex());
             }
+	    	
+	    	@Override
+	    	public Type getType(Type... argTypes) {
+	    		return Type.SEGMENT;
+	    	}
 	    });
 		put("congruent", new Operator("congruent") {
 			public final boolean isCommutative = true;
@@ -382,6 +432,11 @@ public class Operators extends HashMap<String, Operator> {
                     return String.format("\\text{circle } %s",
                                     e.getArg(0).toLatex());
             }
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.CIRCLE;
+			}
 		});
 		put("center", new Operator("center") {
 			@Override

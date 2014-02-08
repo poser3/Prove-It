@@ -106,6 +106,8 @@ public abstract class Expression implements Comparable<Expression> {
 	@Override
 	public abstract int compareTo(Expression e);
 	
+	public abstract Type getType();
+	
 	/**
 	 * Applies an operator to this, with another expression as its left argument
 	 * @param op the operator to apply

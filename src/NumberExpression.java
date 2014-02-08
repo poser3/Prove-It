@@ -70,6 +70,11 @@ public class NumberExpression extends Expression {
 		else
 			throw new ClassCastException();
 	}
+	
+	@Override
+	public Type getType() {
+		return Type.NUMBER;
+	}
 
 }
 
