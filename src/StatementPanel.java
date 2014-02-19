@@ -1,6 +1,8 @@
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.InputMap;
@@ -42,7 +44,9 @@ public class StatementPanel extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionDeeper();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionDown();
+				//getSelectedStatement().getExpression().shiftSelectionDeeper();
 				statementList_.repaint();
 			}
 			
@@ -52,7 +56,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionHigher();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionUp();
+				//getSelectedStatement().getExpression().shiftSelectionHigher();
 				statementList_.repaint();
 			}
 	
@@ -62,7 +68,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionLeft();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionBackward();
+				//getSelectedStatement().getExpression().shiftSelectionLeft();
 				statementList_.repaint();
 			}
 	
@@ -72,7 +80,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionRight();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionForward();
+				//getSelectedStatement().getExpression().shiftSelectionRight();
 				statementList_.repaint();
 			}
 	
@@ -89,21 +99,19 @@ public class StatementPanel extends JPanel{
 			}
 		};
 		
-		
 		KeyStroke keyStroke;
 		InputMap im = statementList_.getInputMap();
-		keyStroke = KeyStroke.getKeyStroke("shift DOWN");
-		statementList_.getActionMap().put(im.get(keyStroke), shiftDownAction);
-		keyStroke = KeyStroke.getKeyStroke("shift UP");
-		statementList_.getActionMap().put(im.get(keyStroke), shiftUpAction);
+		
 		keyStroke = KeyStroke.getKeyStroke("LEFT");
 		statementList_.getActionMap().put(im.get(keyStroke), leftAction);
 		keyStroke = KeyStroke.getKeyStroke("RIGHT");
 		statementList_.getActionMap().put(im.get(keyStroke), rightAction);
 		
-		//For DEBUGGING - Space bar activates a testAction defined above
-		//note: additional step of putting keystroke and string to the input map
-		//needed as this key binding is not present.
+		//NOTE FOR FUTURE REFERENCE - If you want to use other keystrokes, be aware some of these
+		//won't be in the InputMap yet, so you have to add them.  For example, space bar is 
+		//not automatically in the InputMap (i.e., no key binding is present), so if we want 
+		//it to activate a testAction defined above, we have one additional step/line of 
+		//code to put the keystroke and string into the input map (see below)
 		String keyStrokeAndKey = "SPACE";
 		keyStroke = KeyStroke.getKeyStroke(keyStrokeAndKey);
 		statementList_.getInputMap().put(keyStroke, keyStrokeAndKey);

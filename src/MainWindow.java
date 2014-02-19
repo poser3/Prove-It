@@ -129,6 +129,7 @@ public class MainWindow extends Program {
 			newButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
+					System.out.println("adding statement and selecting it");
 					addStatementAndSelect(textField.getText(), true);
 				}
 			});
@@ -371,6 +372,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatement(Statement s) {
+		System.out.println("adding statement" + s);
 		statementPanel.addStatement(s);
 		setInstructionsText(s.toString());
 	}
@@ -387,7 +389,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatementAndSelect(final String s, boolean shouldScroll) {
-		statementPanel.deselectAllStatements();
+		addStatementAndSelect(new Statement(s), shouldScroll);
 	}
 	
 	public TheoremPanel getTheoremPanel() {
