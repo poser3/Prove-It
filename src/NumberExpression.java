@@ -3,7 +3,7 @@ import java.math.BigDecimal;
 public class NumberExpression extends Expression {
 	
 	private BigDecimal value;
-
+	
 	/**
 	 * Make a NumberExpression from a BigDecimal
 	 * @param value a BigDecimal representing the value of the expression
@@ -77,5 +77,5 @@ public class NumberExpression extends Expression {
 		else
 			throw new ClassCastException();
 	}
-
+	
 }

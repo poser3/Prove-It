@@ -1,14 +1,14 @@
 import java.util.ArrayList;
 
 public class OperatorExpression extends Expression {
-
+	
 	////////////////////////
 	// Instance Variables //
 	////////////////////////
 	
 	private Operator op;
 	private ArrayList<Expression> arguments;
-
+	
 	//////////////////
 	// Constructors //
 	//////////////////
@@ -23,7 +23,6 @@ public class OperatorExpression extends Expression {
 		this.arguments = arguments;
 	}	
 	
-	
 	/**
 	 * Construct an OperatorExpression with the given operator (as named by some string) and arguments.
 	 * @param the name of the operator for the expression
@@ -34,11 +33,10 @@ public class OperatorExpression extends Expression {
 		this.arguments = arguments;
 	}
 	
-	
 	///////////////////////
 	// Getters & Setters //
 	///////////////////////
-
+	
 	/**
 	 * Returns the operator for this OperatorExpression
 	 * @return the operator for this OperatorExpression
@@ -46,7 +44,6 @@ public class OperatorExpression extends Expression {
 	public Operator getOp() {
 		return op;
 	}
-	
 	
 	/**
 	 * Returns the arguments for this OperatorExpression
@@ -56,11 +53,10 @@ public class OperatorExpression extends Expression {
 		return arguments;
 	}
 	
-	
 	// TODO: I added the methods replace() and replaceAll() below to help with the substituteM() 
 	//method in Expression class. Note, they increase the mutability of OperatorExpression, 
 	//which we may not wish to have... P.O.
-
+	
 	/**
 	 * Returns this operatorExpression (as an expression) with the argument at position pos replaced by replacement
 	 * @param pos - the position of the expression in arguments to be replaced
@@ -80,7 +76,6 @@ public class OperatorExpression extends Expression {
 		return arguments == null ? 0 : arguments.size();  
 	}
 	
-	
 	/**
 	 * Returns the ith argument of this expression. Throws ArrayIndexOutOfBoundsException 
 	 * if getArgs() is null, or if i does not represent a legal index.
@@ -93,7 +88,6 @@ public class OperatorExpression extends Expression {
 		
 		return arguments.get(i);
 	}
-	
 	
 	///////////////////
 	// Other Methods //
@@ -128,7 +122,6 @@ public class OperatorExpression extends Expression {
 		
 		return sb.toString();
 	}
-	
 	
 	/**
 	 * Returns a LaTeX version of this operatorExpression by appealing to the 
@@ -167,7 +160,6 @@ public class OperatorExpression extends Expression {
 		// No operatorExpression is equal to a numberExpression or a variableExpression
 		else return false;
 	}
-	
 	
 	/**
 	 * Compare this OperatorExpression to another expression, according to the following rules:
@@ -232,7 +224,6 @@ public class OperatorExpression extends Expression {
 		}
 	}
 	
-	
 	/**
 	 * Simplifies the expression according to the simplify() method for the operator in question
 	 * (i.e., it lets the simplify method of the Operator class do all the heavy lifting)
@@ -241,5 +232,5 @@ public class OperatorExpression extends Expression {
 	public Expression simplify() {
 		return op.simplify(this);
 	}
-
+	
 }

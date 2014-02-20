@@ -2,23 +2,22 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 public class Operator implements Comparable<Operator> {
-     
-
+	
 	////////////////////////
 	// Instance Variables //
 	////////////////////////
-
+	
 	private final String name;
 	public final short precedence = 0;
 	public final boolean isAssociative = false;
 	public final boolean isCommutative = false;
 	private final String distributes = null;
 	private final String inverse = null;
-
+	
 	//////////////////
 	// Constructors //
 	//////////////////
-
+	
 	/**
 	 * Constructs an operator with a given name
 	 * @param name the name of the operator in String form
@@ -45,7 +44,6 @@ public class Operator implements Comparable<Operator> {
 		return op.toString().equals(distributes);
 	}
 	
-	
 	/**
 	 * Returns this operator's inverse, if it has one.
 	 * @return this operator's inverse, or null if it doesn't have one
@@ -53,7 +51,6 @@ public class Operator implements Comparable<Operator> {
 	public Operator inverse() {
 		return inverse == null ? null : Operators.named(inverse);
 	}
-	
 	
 	/**
 	 * Check whether two OperatorExpressions using this operator are equal.
@@ -87,7 +84,6 @@ public class Operator implements Comparable<Operator> {
 		
 		return true;
 	}
-	
 	
 	/**
 	 * Returns a string giving the name of this operator
@@ -171,17 +167,16 @@ public class Operator implements Comparable<Operator> {
 		return name.equals(op.toString());
 	}
 	
-	
-    /**
+	/**
 	 * Compares this operator to another. Operators are sorted ASCIIbetically by name.
-     */
+	 */
 	@Override
 	public int compareTo(Operator op) {
 		return name.compareTo(op.toString());
-    }
-
+	}
 	
-    /**
+	
+	/**
 	 * Performs simplifications on an OperatorExpression using this operator.
 	 * The default implementation just tries to simplify each argument.
 	 * This should be overridden by some operators.  For example, if 
@@ -193,19 +188,18 @@ public class Operator implements Comparable<Operator> {
 	 * is a no-brainer, but for a pre-algebra student, this may not be the case. 
 	 * @param e an OperatorExpression using this operator
 	 * @return a simpler Expression with the same mathematical meaning
-     */
+	 */
 	public Expression simplify(final OperatorExpression e) {				//TODO: see note in javadoc about overriding this method
 		ArrayList<Expression> args = new ArrayList<Expression>();
 		for (Expression arg : e.getArgs()) {
-			if (arg instanceof OperatorExpression) {
+			if (arg instanceof OperatorExpression)
 				args.add(((OperatorExpression) arg).simplify());
-			}
-			else {
+			else
 				args.add(e);
 		}
-		}
 		
-        }
-        
+		return new OperatorExpression(e.getOp(), args);
+		
+	}
+	
 }
-

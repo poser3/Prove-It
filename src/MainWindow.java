@@ -26,7 +26,7 @@ public class MainWindow extends Program {
 	private final int RIGHT_PANEL_HEIGHT = 600;
 	
 	private final static JFileChooser fileChooser = new JFileChooser();
-		
+	
 	private final JTextArea instructions = new JTextArea(5, 10);
 	private JTabbedPane tabbedPane;
 	private TheoremPanel theoremPanel;
@@ -184,7 +184,7 @@ public class MainWindow extends Program {
 	public StatementPanel getStatementPanel() {
 		return statementPanel;
 	}
-    
+	
 	public void applyTheorem() {
 		TheoremChooserDialog chooser = new TheoremChooserDialog(MainWindow.this);
 		chooser.setVisible(true);
@@ -240,11 +240,11 @@ public class MainWindow extends Program {
 			addStatement(result);
 		}
 	}
-
+	
 	public void reloadTheorems() {
-        Theorem.loadTheorems();
+		Theorem.loadTheorems();
 	}
-
+	
 	public void loadStatements() {
 		int choice = fileChooser.showOpenDialog(MainWindow.this);
 		if (choice == JFileChooser.APPROVE_OPTION) {
@@ -258,7 +258,7 @@ public class MainWindow extends Program {
 			}
 		}
 	}
-
+	
 	
 	public void substitute() {
 		final Statement selected = statementPanel.getSelectedStatement();
@@ -305,6 +305,7 @@ public class MainWindow extends Program {
 		 */
 		LatexHandler.latexToImage("hello world");
 		
+		sketchCanvas = new SketchCanvas(this, SKETCH_CANVAS_WIDTH, SKETCH_CANVAS_HEIGHT);
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
@@ -346,7 +347,7 @@ public class MainWindow extends Program {
 		//For Debugging...
 		@SuppressWarnings("unused")
 		Tester tester = new Tester(this);
-
+	
 	}
 	
 	public void setInstructionsText(String s) {

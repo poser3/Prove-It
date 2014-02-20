@@ -2,7 +2,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public abstract class Expression implements Comparable<Expression>, Selectable {
-		
+	
 	////////////////////////
 	// Instance Variables //
 	////////////////////////
@@ -13,7 +13,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	////////////////////
 	// Static Methods //
 	////////////////////
-
+	
 	/**
 	 * Turn an prefix LISP-like expression template into an Expression.
 	 * @param template a String containing a prefix LISP-like expression
@@ -139,35 +139,34 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	//////////////////////
 	
 	/**
-	* Determine whether two expressions are the same.
-	* @param obj another object
-	* @return true if the two objects are the same, or false if they are not
-	*/
+	 * Determine whether two expressions are the same.
+	 * @param obj another object
+	 * @return true if the two objects are the same, or false if they are not
+	 */
 	@Override
 	public abstract boolean equals(Object obj);
 	
 	/**
-	* Return a string representation of this Expression.
-	* @return a string representation of this Expression
-	*/
+	 * Return a string representation of this Expression.
+	 * @return a string representation of this Expression
+	 */
 	@Override
 	public abstract String toString();
 	
 	/**
-	* Return a LaTex representation of this Expression.
-	* @return a LaTex representation of this Expression
-	*/
+	 * Return a LaTex representation of this Expression.
+	 * @return a LaTex representation of this Expression
+	 */
 	public abstract String toLatex();
 	
 	/**
-	* Compare two expressions, for sorting purposes.
-	* OperatorExpressions come before VariableExpressions, which come before NumberExpressions.
-	* @param e another expression
-	* @return a negative integer if e comes before this, a positive number if e comes after this, or 0 if this and e are the same
-	*/
+	 * Compare two expressions, for sorting purposes.
+	 * OperatorExpressions come before VariableExpressions, which come before NumberExpressions.
+	 * @param e another expression
+	 * @return a negative integer if e comes before this, a positive number if e comes after this, or 0 if this and e are the same
+	 */
 	@Override
 	public abstract int compareTo(Expression e);
-
 	
 	/////////////////////////
 	// Getters and Setters //
@@ -268,7 +267,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			}
 		}
 	}
-
+	
 	public void shiftSelectionDeeper() {
 		if (this instanceof OperatorExpression) {
 			OperatorExpression oe = (OperatorExpression) this;
@@ -509,7 +508,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 	}
 	
-	
 	/**
 	 * Create a new expression that is identical to this expression, except that
 	 * every occurrence of expression quid in this expression has been replaced 
@@ -540,7 +538,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		else
 			return this;
 	}
-	
 	
 	/**
 	 * Perform a given set of variable substitutions simultaneously.
@@ -580,7 +577,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 	}
 	
-	
 	/**
 	 * Determine whether or not this expression matches a given LISP-like expression template (in prefix form).
 	 * @param template a String containing a LISP-like expression (in prefix form)
@@ -589,7 +585,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	public boolean matchesTemplate(String template) {
 		return equals(parse(template));
 	}
-	
 	
 	/**
 	 * Reconciles a template with an expression that are identical up to names of variables, creating a HashMap of 
@@ -606,7 +601,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	public HashMap<String, String> findPairings(String template) {
 		return findPairings(parse(template));
 	}
-	
 	
 	/**
 	 * Reconciles expressions that are identical up to names of variables, creating a HashMap of 
@@ -663,7 +657,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			throw new ClassCastException();
 	}
 	
-	
 	/**
 	 * Saves memory by finding identical subexpressions within this expression and making them the same object.
 	 * This should probably be deprecated, as it could be downright harmful if expressions become mutable.
@@ -680,29 +673,28 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 		return this;
 	}
-		
 	
 	////////////////////
 	// Nested Classes //
 	////////////////////
 	
 	/**
-	* Static nested class for use by the trim() method.
-	* @author Lee Vian
-	*/
+	 * Static nested class for use by the trim() method.
+	 * @author Lee Vian
+	 */
 	private static class Trimmer {
 		/**
-		* Maintains a list of references to expressions already encountered during the execution of this program
-		* (not just those seen in one expression).  
-		*/
+		 * Maintains a list of references to expressions already encountered during the execution of this program
+		 * (not just those seen in one expression).  
+		 */
 		private static ArrayList<Expression> expressions = new ArrayList<Expression>();
 		
 		/**
-		* Determines whether an expression has already been encountered.
-		* @param e an expression
-		* @return the index of the expression in the expression list if it has been encountered, 
-		* or -1 if it has not been encountered
-		*/
+		 * Determines whether an expression has already been encountered.
+		 * @param e an expression
+		 * @return the index of the expression in the expression list if it has been encountered, 
+		 * or -1 if it has not been encountered
+		 */
 		private static int alreadySeen(Expression e) {
 			for (int i = 0; i < expressions.size(); i++) {
 				if (expressions.get(i).equals(e)) {
@@ -714,10 +706,10 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 		
 		/**
-		* Look through each argument to an OperatorExpression, visit those that have not been visited, 
-		* and replace those that have been visited.
-		* @param e an OperatorExpression to look through
-		*/
+		 * Look through each argument to an OperatorExpression, visit those that have not been visited, 
+		 * and replace those that have been visited.
+		 * @param e an OperatorExpression to look through
+		 */
 		static void iterate(OperatorExpression e) {
 			// for each argument
 			for (int i = 0; i < e.getNumArgs(); i++) {
