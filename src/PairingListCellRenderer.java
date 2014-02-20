@@ -13,9 +13,10 @@ public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 		
 		String latex = "?";
 		
-		String varTypeString = value.getVariableExpression().getTypeInLatex();
-		
 		if (value != null) {
+			
+			String varTypeString = value.getVariableExpression().getTypeInLatex();
+			
 			if (value.isPaired()) {
 				//make a copy of the expression so that any selections can be removed,
 				//otherwise the selected subexpression will show as highlighted in the pairings list.

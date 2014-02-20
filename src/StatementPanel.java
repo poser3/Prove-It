@@ -124,7 +124,7 @@ public class StatementPanel extends JPanel{
 	}
 	
 	public Statement getSelectedStatement() {
-		return (Statement) statementList_.getSelectedValue();
+		return statementList_.getSelectedValue();
 	}
 	
 	public JList<Statement> getStatementList() {

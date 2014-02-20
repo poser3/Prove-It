@@ -41,7 +41,7 @@
 		String varType = "unknown";
 		if (posOfUnderscore != -1) {
 			varType = s.substring(0, posOfUnderscore);
-			s = s.substring(posOfUnderscore + 1);
+			//s = s.substring(posOfUnderscore + 1);
 		}
 		
 		return varType;

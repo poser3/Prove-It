@@ -24,7 +24,7 @@ public class Tester {
 		  this = "= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1"
 		  returns the expression "= (+ (* x2 (+ x2 y2)) (- y2 z2)) z2"
 		*/
-		Expression e5 = (OperatorExpression) (Expression.parse("= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1"));
+		Expression e5 = Expression.parse("= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1");
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("x1", "x2");
 		map.put("y1", "y2");

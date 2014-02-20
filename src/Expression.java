@@ -335,7 +335,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.addAll(oeThis.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 			
@@ -354,7 +354,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(e);
 					newArgs.addAll(oeThis.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 			
@@ -373,7 +373,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.add(this);
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 		}
@@ -388,7 +388,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		ArrayList<Expression> newArgs = new ArrayList<Expression>();
 		newArgs.add(e);
 		newArgs.add(this);
-		return (OperatorExpression) new OperatorExpression(op, newArgs);
+		return new OperatorExpression(op, newArgs);
 	}
 	
 	
@@ -419,7 +419,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.addAll(oeE.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 			
@@ -438,7 +438,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.add(e);
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 			
@@ -457,7 +457,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(this);
 					newArgs.addAll(oeE.getArgs());
-					return (OperatorExpression) new OperatorExpression(op, newArgs);
+					return new OperatorExpression(op, newArgs);
 				}
 			}
 		}
@@ -472,7 +472,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		ArrayList<Expression> newArgs = new ArrayList<Expression>();
 		newArgs.add(this);
 		newArgs.add(e);
-		return (OperatorExpression) new OperatorExpression(op, newArgs);
+		return new OperatorExpression(op, newArgs);
 	}
 	
 	/**
@@ -643,7 +643,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 				HashMap<String, String> map = new HashMap<String, String>();
 				for(HashMap<String, String> subMap : subMaps) {
 					for(String quid : subMap.keySet()) {
-						if(map.containsKey(quid) && (map.get(quid) != subMap.get(quid)))
+						if(map.containsKey(quid) && (! map.get(quid).equals(subMap.get(quid))))
 							return null;
 						
 						map.put(quid, subMap.get(quid));
@@ -651,7 +651,9 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 				}
 				return map;
 			}
-			return null;
+			else {
+				return null;
+			}
 		}
 		else
 			throw new ClassCastException();

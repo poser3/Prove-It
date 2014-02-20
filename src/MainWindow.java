@@ -394,7 +394,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatementAndSelect(final String s, boolean shouldScroll) {
-		statementPanel.deselectAllStatements();
+		addStatementAndSelect(new Statement(s), shouldScroll);
 	}
 	
 	public TheoremPanel getTheoremPanel() {
