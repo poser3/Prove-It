@@ -35,5 +35,24 @@ public class Drawables extends ArrayList<Drawable> {
 		this.add(drawable1);
 		this.add(drawable2);
 	}
+	
+	public static void registerWithParents(Drawable drawable) {
+		System.out.println("registering " + drawable + " with parents...");
+		for (int i = 0; i < drawable.getParents().size(); i++) {
+			drawable.getParents().get(i).getDependents().add(drawable);
+			System.out.println("Added " + drawable + " as dependent to " + drawable.getParents().get(i));
+		}
+	}
+	
+	public static boolean allDependentsExist(Drawables dependents) {
+		boolean dependentsExist = true;
+		for (Drawable d : dependents) {
+			if ((! d.exists()) || (! allDependentsExist(d.getDependents()))) {
+				dependentsExist = false;
+				break;
+			}
+		}
+		return dependentsExist;
+	}
+	
 }
-

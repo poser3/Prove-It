@@ -14,4 +14,3 @@ public interface MadeWith2Points {
 	public String getLabel();
 	
 }
-

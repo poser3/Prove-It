@@ -16,6 +16,8 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		private boolean selected_;
 		private double labelAngle = -Math.PI/6;
 		private boolean exists_;
+		private Drawables parents_;
+		private Drawables dependents_;
 				
 		/**
 		 * Create a new circle from a center, a point on the circle, and a label.
@@ -28,6 +30,10 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			this.add(gOval_);
 			c1_ = c1;
 			p2_ = p2;
+			parents_ = new Drawables();
+			parents_.add(c1_);
+			parents_.add(p2_);
+			dependents_ = new Drawables();
 
 			gOval_.setLocation(c1_.getX() - getRadius(), c1_.getY() - getRadius());
 			gOval_.setSize(2*getRadius(), 2*getRadius());
@@ -39,6 +45,16 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			this.update();
 			
 			setSelected(false);
+		}
+		
+		@Override
+		public Drawables getParents() {
+			return parents_;
+		}
+		
+		@Override
+		public Drawables getDependents() {
+			return dependents_;
 		}
 		
 		@Override
@@ -156,4 +172,3 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		
 		
 	}
-

@@ -30,4 +30,3 @@ public class SubstitutionCellRenderer extends StatementListCellRenderer {
 			
 	}
 }
-

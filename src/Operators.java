@@ -63,6 +63,15 @@ public class Operators extends HashMap<String, Operator> {
 			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
+				
+				//Keep a running total of constants present in the e.getArgs()
+				//Simplify any of the args that are operatorExpressions
+				//Then, put everything back together into a new expression,
+				//keeping in mind the special cases that this could collapse 
+				//all the way down to:
+				// 1) nothing (sum of a bunch of zero args) and should be 0; or
+				// 2) a number (sum of a bunch of constants) and should be a number expression
+
 				BigDecimal constant = BigDecimal.ZERO;
 				ArrayList<Expression> args = new ArrayList<Expression>();
 				

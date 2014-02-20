@@ -24,6 +24,7 @@ public class SettingsReader {
 	private static final HashMap<String, String> defaults = new HashMap<String, String>();
 	static {
 		// Each new setting should have a default value here.
+		defaults.put("image-path", "../res/images/");
 		defaults.put("theorem-path", "../res/theorems/");
 	}
 	
@@ -37,7 +38,8 @@ public class SettingsReader {
 		if (! fileRead)
 			readFile();
 		
-		return settings.get(key);
+		String fromFile = settings.get(key);
+		return fromFile != null ? fromFile : defaults.get(key);
 	}
 	/**
 	 * Ask the SettingsReader to reload the settings file the next time someone asks for a

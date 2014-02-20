@@ -1,6 +1,7 @@
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+
 import javax.swing.JOptionPane;
 
 import acm.graphics.GCanvas;
@@ -14,11 +15,7 @@ public class SketchCanvas extends GCanvas {
 		public final byte SELECT_MODE = 0;
 		public final byte ADDING_POINT_MODE = 1;
 		public final byte ADDING_FIRST_POINT_MODE = 2;
-		public final byte ADDING_MIDPOINT_MODE = 3;
-		public final byte ADDING_LINE_MODE = 4;
-		public final byte ADDING_CIRCLE_MODE = 5;
-		public final byte ADDING_SECOND_POINT_MODE = 6;
-		public final byte INTERSECTION_MODE = 7;
+		public final byte ADDING_SECOND_POINT_MODE = 3;
 		
 		public final byte SEGMENT = 0;
 		public final byte LINE = 1;
@@ -173,8 +170,13 @@ public class SketchCanvas extends GCanvas {
 						
 						double dx = x - workingPoint_.getX();
 						double dy = y - workingPoint_.getY();
+
 						workingPoint_.move(dx, dy);
 						drawables_.update();
+						if (! Drawables.allDependentsExist(workingPoint_.getDependents())) {
+							workingPoint_.move(-dx, -dy);
+							drawables_.update();
+						}
 					}
 				}
 
@@ -198,15 +200,17 @@ public class SketchCanvas extends GCanvas {
 							double dx = x - workingPoint_.getX();
 							double dy = y - workingPoint_.getY();
 							workingPoint_.move(dx, dy);
-							
-							//for safety, we update all of the drawable objects
 							drawables_.update();
+							if (! Drawables.allDependentsExist(workingPoint_.getDependents())) {
+								workingPoint_.move(-dx, -dy);
+								drawables_.update();
+							}
+							//for safety above, we update all of the drawable objects
 						}
 						break;
-					case INTERSECTION_MODE :
-						drawables_.update();
-						break;
+						
 					}
+					drawables_.update();  
 				}
 				
 			});
@@ -374,14 +378,13 @@ public class SketchCanvas extends GCanvas {
 		
 		private void addStatement(String s, Object... args) {
 			Drawables parents = new Drawables();
-			for (int i=0; i<args.length; i++) {
+            for (int i=0; i<args.length; i++) {
 				if (args[i] instanceof Drawable) {
 					parents.add((Drawable) args[i]);
 					args[i] = ((Drawable) args[i]).expression();
 				}
-			}
+            }
 			parents = new Drawables(ListUtils.removeDuplicates(parents));
-			
 			Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
 			mainWindow_.addStatement(result);
 		}
@@ -453,6 +456,12 @@ public class SketchCanvas extends GCanvas {
 							
 			default :		throw new IllegalArgumentException();
 			}
+			if (thing instanceof Drawable) {
+				Drawables.registerWithParents((Drawable) thing);
+			}
+			else {
+				System.out.print("There was a problem casting thing to a Drawable");
+			}
 			add((GObject) thing);
 			return thing;
 		}
@@ -471,6 +480,7 @@ public class SketchCanvas extends GCanvas {
 		 * * A point on a ray
 		 * @return the constructed object
 		 */
+		
 		public MadeWith2Points addWith2PointsHalfBaked(PPoint p1, PPoint p2) {
 			MadeWith2Points thing;
 			
@@ -625,12 +635,14 @@ public class SketchCanvas extends GCanvas {
 				
 				if (intersection != null) {
 					add(intersection);
+					Drawables.registerWithParents(intersection);
 					addStatement("on %s %s", intersection, parent1);
 					addStatement("on %s %s", intersection, parent2);
 					addStatement("intersect %s %s %s", intersection, parent1, parent2);
 				}
 				if (intersection2 != null) {
 					add(intersection2);
+					Drawables.registerWithParents(intersection2);
 					addStatement("on %s %s", intersection2, parent1);
 					addStatement("on %s %s", intersection2, parent2);
 					addStatement("intersect %s %s %s", intersection2, parent1, parent2);
@@ -669,7 +681,7 @@ public class SketchCanvas extends GCanvas {
 			if (selectedPoints.size() == 2) {
 				
 				PPoint midpoint = new PPoint(PPoint.MIDPOINT, selectedPoints, labelMaker_.nextLabel(LabelMaker.POINT));
-				
+				Drawables.registerWithParents(midpoint);
 				add(midpoint);
 				addStatement("midpoint %s %s %s", midpoint, selectedPoints.get(0), selectedPoints.get(1));
 				
@@ -755,14 +767,14 @@ public class SketchCanvas extends GCanvas {
 			
 			if (d != null) {
 				System.out.println("object selected: " + d);
+				System.out.println("  parents = " + d.getParents());
+				System.out.println("  dependents = " + d.getDependents());
 				if (d instanceof PPoint) {
 					workingPoint_ = (PPoint) d;    
 				}				
 				select(d, !(isCtrlDown && d.isSelected()));				
 			}
-			
-			
+		
 		}
-	
-}
 
+}
