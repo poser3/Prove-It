@@ -217,6 +217,11 @@ public class SketchCanvas extends GCanvas {
 			
 		}
 		
+		//update all drawables
+		public void updateDrawables() {
+			drawables_.update();
+		}
+		
 		//Getters and Setters
 		public SketchPanel getSketchPanel() {
 			return sketchPanel_;

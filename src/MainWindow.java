@@ -7,6 +7,7 @@ import java.util.Scanner;
 
 import javax.swing.*;
 
+import acm.graphics.GRect;
 import acm.gui.TableLayout;
 import acm.program.Program;
 
@@ -22,8 +23,8 @@ public class MainWindow extends Program {
 	private final int TABBED_PANE_WIDTH = 260;
 	private final int TABBED_PANE_HEIGHT = 480;
 	
-	private final int RIGHT_PANEL_WIDTH = 280;
-	private final int RIGHT_PANEL_HEIGHT = 600;
+	private final int INST_AND_TABS_PANEL_WIDTH = 280;
+	private final int INST_AND_TABS_PANEL_HEIGHT = 600;
 	
 	private final static JFileChooser fileChooser = new JFileChooser();
 		
@@ -36,6 +37,7 @@ public class MainWindow extends Program {
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
 	private StatementPanel statementPanel = new StatementPanel(this);
+	public ViewingRectangle viewingRectangle;
 	
 	private class OperatePanel extends JPanel {
 		final private short COLUMNS = 2;
@@ -299,22 +301,26 @@ public class MainWindow extends Program {
 	@Override
 	public void init() {
 		
+		
+		
 		sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
+		System.out.println("SKETCH_CANVAS_WIDTH = " + SKETCH_CANVAS_WIDTH);
+		System.out.println("SKETCH_CANVAS_HEIGHT = " + SKETCH_CANVAS_HEIGHT);
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
 		this.add(sketchCanvas);
 		this.add(sketchPanel,SOUTH);
 		
-		JPanel rightPanel = new JPanel();
+		JPanel instructionsAndTabsPanel = new JPanel();
 		
-		rightPanel.setLayout(new TableLayout(2,1));		
-		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH,RIGHT_PANEL_HEIGHT));
+		instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
+		instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
 		
 		
 		setInstructionsText("Push the button, Max!");
 		instructions.setEditable(false);
-		rightPanel.add(instructions);
+		instructionsAndTabsPanel.add(instructions);
 				
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
@@ -324,25 +330,60 @@ public class MainWindow extends Program {
 		tabbedPane.addTab("Operate", operatePanel);
 		tabbedPane.addTab("Create", createPanel);
 		tabbedPane.addTab("Theorem", theoremPanel);
-		rightPanel.add(tabbedPane);
+		instructionsAndTabsPanel.add(tabbedPane);
 		
 		this.add(statementPanel, EAST);
-		this.add(rightPanel, WEST);
+		this.add(instructionsAndTabsPanel, WEST);
 		
 		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
 		
 		menuBar = new MainMenuBar(this);
 		this.setJMenuBar(menuBar);
 		
-		this.getCentralRegionSize().getWidth();
+		//this.getCentralRegionSize().getWidth();
 		
 		log = instructions;
+		
+		System.out.println("this.getCentralRegionSize().getWidth() = " + this.getCentralRegionSize().getWidth());
+		System.out.println("this.getCentralRegionSize().getHeight() = " + this.getCentralRegionSize().getHeight());
+		
+		viewingRectangle = new ViewingRectangle(0,this.getCentralRegionSize().getWidth(),
+				                                0,this.getCentralRegionSize().getHeight());
+		
+		sketchCanvas.setViewingRectangle(viewingRectangle);
+		
+		this.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				sketchCanvas.setViewingRectangle(new ViewingRectangle(0,MainWindow.this.getCentralRegionSize().getWidth(),
+                                                                      0,MainWindow.this.getCentralRegionSize().getHeight()));
+				sketchCanvas.updateDrawables();
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+			
+		});
 		
 		//For Debugging...
 		@SuppressWarnings("unused")
 		Tester tester = new Tester(this);
-
 	}
+	
+	
 	
 	public void setInstructionsText(String s) {
 		instructions.setText(s);
