@@ -353,30 +353,6 @@ public class Operators extends HashMap<String, Operator> {
 				return Type.ANGLE;
 			}
 	    });
-	    put("line", new Operator("line") {
-	    	@Override
-            public String toLatex(final OperatorExpression e) {
-                    return String.format("\\text{line } %s",
-                                    e.getArg(0).toLatex());
-            }
-	    	
-	    	@Override
-	    	public Type getType(Type... argTypes) {
-	    		return Type.LINE;
-	    	}
-	    });
-		put("ray", new Operator("ray") {
-			@Override
-			public String toLatex(final OperatorExpression e) {
-                    return String.format("\\text{ray } %s",
-                                    e.getArg(0).toLatex());
-            }
-			
-			@Override
-			public Type getType(Type... argTypes) {
-				return Type.RAY;
-			}
-		});
 	    put("segment", new Operator("segment") {
 	    	public final boolean isCommutative = true;
 	    	
@@ -433,18 +409,6 @@ public class Operators extends HashMap<String, Operator> {
 				return String.format("%s \\text{ is the endpoint of } %s",
 						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex());
-			}
-		});
-		put("circle", new Operator("circle") {
-			@Override
-			public String toLatex(final OperatorExpression e) {
-                    return String.format("\\text{circle } %s",
-                                    e.getArg(0).toLatex());
-            }
-			
-			@Override
-			public Type getType(Type... argTypes) {
-				return Type.CIRCLE;
 			}
 		});
 		put("center", new Operator("center") {

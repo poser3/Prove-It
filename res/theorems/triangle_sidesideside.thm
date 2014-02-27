@@ -1,11 +1,11 @@
 Side-side-side Triangle Congruence
 variables
-A
-B
-C
-D
-E
-F
+point A
+point B
+point C
+point D
+point E
+point F
 hypotheses
 congruent (segment A B) (segment D E)
 congruent (segment A C) (segment D F)
