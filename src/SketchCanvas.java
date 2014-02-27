@@ -638,14 +638,14 @@ public class SketchCanvas extends GCanvas {
 					Drawables.registerWithParents(intersection);
 					addStatement("on %s %s", intersection, parent1);
 					addStatement("on %s %s", intersection, parent2);
-					addStatement("intersect %s %s %s", intersection, parent1, parent2);
+					addStatement("intersect %s %s %s", parent1, parent2, intersection);
 				}
 				if (intersection2 != null) {
 					add(intersection2);
 					Drawables.registerWithParents(intersection2);
 					addStatement("on %s %s", intersection2, parent1);
 					addStatement("on %s %s", intersection2, parent2);
-					addStatement("intersect %s %s %s", intersection2, parent1, parent2);
+					addStatement("intersect %s %s %s", parent1, parent2, intersection2);
 				}
 				
 				deselectEverythingInCanvas();

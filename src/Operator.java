@@ -61,7 +61,7 @@ public class Operator implements Comparable<Operator> {
 	 * @return true if e1 and e2 represent the same thing and false otherwise
 	 */
 	public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-		if (! e1.getOp().equals(e2.getOp()))
+		if ((! this.equals(e1.getOp()) || ! this.equals(e2.getOp())))
 			return false;
 		
 		if (e1.getNumArgs() != e2.getNumArgs())

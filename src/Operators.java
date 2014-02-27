@@ -422,18 +422,18 @@ public class Operators extends HashMap<String, Operator> {
 		put("intersect", new Operator("intersect") {
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-				if (e1.getArg(0) != e2.getArg(0))
+				if (e1.getArg(2) != e2.getArg(2))
 					return false;
-				return (e1.getArg(1).equals(e2.getArg(1)) && e1.getArg(2).equals(e2.getArg(2)))
-						|| e1.getArg(1).equals(e2.getArg(2)) && e1.getArg(2).equals(e2.getArg(1));
+				return (e1.getArg(0).equals(e2.getArg(0)) && e1.getArg(1).equals(e2.getArg(1)))
+						|| e1.getArg(0).equals(e2.getArg(1)) && e1.getArg(1).equals(e2.getArg(0));
 			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ and } %s \\text{ intersect at } %s",
+						e.getArg(0).toLatex(),
 						e.getArg(1).toLatex(),
-						e.getArg(2).toLatex(),
-						e.getArg(0).toLatex());
+						e.getArg(2).toLatex());
 			}
 		});
 		put("midpoint", new Operator("midpoint") {
