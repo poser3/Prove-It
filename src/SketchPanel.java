@@ -1,7 +1,13 @@
+import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.IOException;
+import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JTextArea;
+import javax.swing.border.EmptyBorder;
 
 import acm.gui.TablePanel;
 
@@ -20,14 +26,28 @@ public class SketchPanel extends TablePanel {
 	private JButton constructMidpointButton_;
 	private JButton intersectionButton_;
 	
+	private JButton jButtonFromResource(String pathToResource) {
+        try {
+        	Image image = ImageIO.read(new File(
+        			SettingsReader.getSetting("image-path") + pathToResource));
+        	ImageIcon imageIcon = new ImageIcon(image);
+        	JButton jButton = new JButton(imageIcon);
+        	jButton.setBorder( new EmptyBorder(0, 0, 0, 0) ); 
+        	return jButton;
+        }
+        catch (IOException e) {
+        	System.out.println("There was a problem loading the image");
+        	return null;
+        }
+	}
+	
 	//Constructors
 	public SketchPanel() {
-		
-	  //invoke super-class constructor to set rows and cols
-		super(9,1);
+		 //invoke super-class constructor to set rows and cols
+		super(1,15);
 		  
       //Setup select button
-		selectButton_ = new JButton("Select");
+		selectButton_ = jButtonFromResource("select.png");
 		selectButton_.addActionListener( new ActionListener() {
 
 			@Override
@@ -39,7 +59,7 @@ public class SketchPanel extends TablePanel {
 		this.add(selectButton_);
 		
 	  //Setup point button
-		pointButton_ = new JButton("Point");
+		pointButton_ = jButtonFromResource("draw_point.png");
 		pointButton_.addActionListener( new ActionListener() {
 
 			@Override
@@ -51,7 +71,7 @@ public class SketchPanel extends TablePanel {
 		this.add(pointButton_);
 		
 		//Setup segment button
-		segmentButton_ = new JButton("Segment");
+		segmentButton_ = jButtonFromResource("draw_segment.png");
 		segmentButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -63,7 +83,7 @@ public class SketchPanel extends TablePanel {
 		this.add(segmentButton_);
 		
 		//Setup circle button
-		circleButton_ = new JButton("Circle");
+		circleButton_ = jButtonFromResource("draw_circle.png");
 		circleButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -75,7 +95,7 @@ public class SketchPanel extends TablePanel {
 		this.add(circleButton_);
 		
 		//Setup line button
-		lineButton_ = new JButton("Line");
+		lineButton_ = jButtonFromResource("draw_line.png");
 		lineButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -87,7 +107,7 @@ public class SketchPanel extends TablePanel {
 		this.add(lineButton_);
 		
 		//Setup ray button
-		rayButton_ = new JButton("Ray");
+		rayButton_ = jButtonFromResource("draw_ray.png");
 		rayButton_.addActionListener( new ActionListener() {
 			
 			@Override
@@ -99,7 +119,7 @@ public class SketchPanel extends TablePanel {
 		this.add(rayButton_);
 		
 		//Setup constructMidpointButton
-		constructMidpointButton_ = new JButton("Midpoint");
+		constructMidpointButton_ = jButtonFromResource("construct_midpoint.png");
 		constructMidpointButton_.addActionListener( new ActionListener() {
 					
 			@Override
@@ -111,20 +131,21 @@ public class SketchPanel extends TablePanel {
 		this.add(constructMidpointButton_);
 		
 		//Setup constructIntersectionButton
-				intersectionButton_ = new JButton("Intersect");
-				intersectionButton_.addActionListener( new ActionListener() {
-							
-					@Override
-					public void actionPerformed(ActionEvent arg0) {
-						sketchCanvas_.addIntersection();
-						sketchCanvas_.setMode(sketchCanvas_.INTERSECTION_MODE);
-					}
-				});
-				this.add(intersectionButton_);
+		intersectionButton_ = jButtonFromResource("construct_intersection.png");
+		intersectionButton_.addActionListener( new ActionListener() {
+					
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				sketchCanvas_.addIntersection();
+			}
+		});
+		this.add(intersectionButton_);
 		
 		//Setup selectedTypesTextArea
+		//TODO: The text area below was for debugging only -- it should be removed
+		//although it is updated elsewhere, so those updates should be removed too
 	    selectedTypesTextArea_ = new JTextArea("Selected Types...");
-	    this.add(selectedTypesTextArea_);
+	    //this.add(selectedTypesTextArea_);
 	  
 	
 	}
@@ -147,4 +168,3 @@ public class SketchPanel extends TablePanel {
 	}
 
 }
-

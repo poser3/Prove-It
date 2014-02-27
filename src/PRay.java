@@ -21,6 +21,8 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 	private FancyLabel fancyLabel_;
 	private PPoint p1_;
 	private PPoint p2_;
+	private Drawables parents_;
+	private Drawables dependents_;
 	private boolean selected_;
 	private boolean exists_;
 	
@@ -34,12 +36,26 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 		this.add(gLine_);
 		p1_ = p1;
 		p2_ = p2;
+		parents_ = new Drawables();
+		parents_.add(p1_);
+		parents_.add(p2_);
+		dependents_ = new Drawables();
 		label_ = label;
 		fancyLabel_ = new FancyLabel(label_);
 		this.add(fancyLabel_);
 		setSelected(false);
 		exists_ = true;
 		update();
+	}
+	
+	@Override
+	public Drawables getParents() {
+		return parents_;
+	}
+	
+	@Override
+	public Drawables getDependents() {
+		return dependents_;
 	}
 	
 	@Override
@@ -163,4 +179,3 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 	}
 	
 }
-

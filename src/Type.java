@@ -1,9 +1,16 @@
 
 public enum Type {
-	NUMBER, LOGICAL, POINT, SEGMENT, RAY, LINE, CIRCLE, ANGLE;
+	NUMBER("number"), LOGICAL("logical"), POINT("point"), SEGMENT("segment"), RAY("ray"),
+	LINE("line"), CIRCLE("circle"), ANGLE("angle");
 	
-	public Type fromString(String s) {
-		switch(s) {
+	private final String latex;
+	
+	Type(String latex) {
+		this.latex = latex;
+	}
+	
+	public static Type fromString(String s) {
+		switch(s.toLowerCase()) {
 		case "number":
 			return NUMBER;
 		case "logical":
@@ -21,7 +28,12 @@ public enum Type {
 		case "angle":
 			return ANGLE;
 		default:
-			throw new IllegalArgumentException(s + " is not a type!");
+			return null;
 		}
+	}
+	
+	@Override
+	public String toString() {
+		return latex;
 	}
 }

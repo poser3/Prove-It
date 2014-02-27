@@ -1,30 +1,38 @@
-public class VariableExpression extends Expression {
+ public class VariableExpression extends Expression {
+	 
+	///////////////
+	// Constants //
+	///////////////
 	
-	private final String name;
-	private final Type type;
+	private final String name_;
+	private final Type type_;
 
 	public VariableExpression(final String name) {
-		this.name = name;
-		this.type = Type.NUMBER;
+		this.name_ = name;
+		this.type_ = Type.NUMBER;
 	}
 	
 	public VariableExpression(final String name, Type type) {
-		this.name = name;
-		this.type = type;
+		this.name_ = name;
+		this.type_ = type;
 	}
 	
 	@Override
 	public String toString() {
-		return name;
+		return name_;
 	}
+	
 	@Override
 	public String toLatex() {
-		return name;
+		if (this.isSelected())
+			return "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + name_ + "}";
+		else
+			return name_;
 	}
 	
 	@Override
 	public boolean equals(final Object obj) {
-		return obj instanceof VariableExpression && ((VariableExpression) obj).toString().equals(name);
+		return obj instanceof VariableExpression && ((VariableExpression) obj).toString().equals(name_);
 	}
 	
 	/**
@@ -39,7 +47,7 @@ public class VariableExpression extends Expression {
 		if(e instanceof OperatorExpression)
 			return Integer.MAX_VALUE;
 		else if(e instanceof VariableExpression)
-			return name.compareTo(e.toString());
+			return name_.compareTo(e.toString());
 		else if(e instanceof NumberExpression)
 			return Integer.MIN_VALUE;
 		else
@@ -48,8 +56,7 @@ public class VariableExpression extends Expression {
 	
 	@Override
 	public Type getType() {
-		return type;
+		return type_;
 	}
 
 }
-

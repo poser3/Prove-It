@@ -10,6 +10,8 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	private final String label_;
 	private PPoint p1_;
 	private PPoint p2_;
+	private Drawables parents_;
+	private Drawables dependents_;
 	private boolean selected_;
 	private boolean exists_;
 	
@@ -18,9 +20,23 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 		super(p1.getX(), p1.getY(), p2.getX(), p2.getY());
 		p1_ = p1;
 		p2_ = p2;
+		parents_ = new Drawables();
+		parents_.add(p1_);
+		parents_.add(p2_);
+		dependents_ = new Drawables();
 		label_ = label;
 		setSelected(false);
 		exists_ = true;
+	}
+	
+	@Override
+	public Drawables getParents() {
+		return parents_;
+	}
+	
+	@Override
+	public Drawables getDependents() {
+		return dependents_;
 	}
 	
 	@Override
@@ -136,4 +152,3 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	}
 	
 }
-

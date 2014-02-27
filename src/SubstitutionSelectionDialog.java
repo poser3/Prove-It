@@ -117,4 +117,3 @@ public class SubstitutionSelectionDialog extends JDialog {
 	}
 
 }
-
