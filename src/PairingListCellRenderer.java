@@ -1,12 +1,9 @@
 import java.awt.Component;
-import java.awt.image.BufferedImage;
-
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.ListCellRenderer;
 
-@SuppressWarnings("unused")
 public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 	
 	@Override
@@ -23,16 +20,21 @@ public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 				//otherwise the selected subexpression will show as highlighted in the pairings list.
 				Expression copy = value.getPairedExpression().duplicate();
 				copy.deselectRecursive();
-				latex = type + " " + value.getVariableExpression().toLatex() + " \\leftarrow " + copy.toLatex();
-				//latex = value.getVariableExpression().toLatex() + " \\leftarrow " + value.getPairedExpression().toLatex();
+				latex = String.format("\\textrm{%s } %s \\leftarrow %s",
+						type,
+						value.getVariableExpression().toLatex(),
+						copy.toLatex());
 			}
 			else {
-				latex = type + " " + value.getVariableExpression().toLatex() + " \\textrm{ is unpaired}";
+				latex = String.format("\\textrm{%s } %s \\textrm{ is unpaired}",
+						type,
+						value.getVariableExpression().toLatex());
 			}
 			
-			if (isSelected) {
-	            latex = "\\bgcolor{" + LookAndFeel.SELECTED_LATEX_COLOR + "}{" + latex + "}";
-			}
+			if (isSelected)
+	            latex = String.format("\\bgcolor{%s}{%s}",
+	            		LookAndFeel.SELECTED_LATEX_COLOR,
+	            		latex);
 		}
 		
 		return new JLabel(new ImageIcon(LatexHandler.latexToImage(latex)));
