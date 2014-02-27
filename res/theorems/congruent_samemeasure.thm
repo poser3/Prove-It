@@ -1,9 +1,9 @@
 Congruent segments have same measure
 variables
-A
-B
-C
-D
+point A
+point B
+point C
+point D
 hypotheses
 congruent (segment A B) (segment C D)
 conclusions

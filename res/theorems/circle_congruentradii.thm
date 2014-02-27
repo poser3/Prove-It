@@ -1,9 +1,9 @@
 Radii of same circle are equal
 variables
-c
-O
-A
-B
+circle c
+point O
+point A
+point B
 hypotheses
 center O (circle c)
 on A (circle c)

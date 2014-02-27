@@ -21,7 +21,7 @@ public class Theorem {
 	////////////////////////
 	
 	public final String name;
-	public final ArrayList<Expression> variables;
+	public final ArrayList<VariableExpression> variables;
 	public final ArrayList<Statement> hypotheses;
 	public final ArrayList<Statement> conclusions;
 	
@@ -44,11 +44,13 @@ public class Theorem {
 		Scanner scanner = new Scanner(file);
 				
 		name = scanner.nextLine();
-		variables = new ArrayList<Expression>();
+		variables = new ArrayList<VariableExpression>();
 		hypotheses = new ArrayList<Statement>();
 		conclusions = new ArrayList<Statement>();
 		byte currentSection = VARIABLES;
 		
+		ArrayList<Statement> preliminaryHypotheses = new ArrayList<Statement>();
+		ArrayList<Statement> preliminaryConclusions = new ArrayList<Statement>();
 		while (scanner.hasNextLine()) {
 			String line = scanner.nextLine();
 			if (line.length() > 0) {
@@ -73,7 +75,7 @@ public class Theorem {
 							variables.add(new VariableExpression(words[0], Type.NUMBER));
 						}
 						else if (words.length == 2) {
-							variables.add(new VariableExpression(words[0], Type.fromString(words[1])));
+							variables.add(new VariableExpression(words[1], Type.fromString(words[0])));
 						}
 						else {
 							// Wrong format! Choke!
@@ -81,13 +83,30 @@ public class Theorem {
 						}
 						break;
 					case HYPOTHESES:
-						hypotheses.add(new Statement(line));
+						preliminaryHypotheses.add(new Statement(line));
 						break;
 					case CONCLUSIONS:
-						conclusions.add(new Statement(line));
+						preliminaryConclusions.add(new Statement(line));
 						break;
 					}
 			}
+		}
+		
+		/*
+		 * Replace untyped variables that occur in hypotheses and conclusions
+		 * with the corresponding typed variables from the variables section.
+		 */
+		for (Statement hypothesis : preliminaryHypotheses) {
+			for (VariableExpression var : variables) {
+				hypothesis = hypothesis.substitute(var, var);
+			}
+			hypotheses.add(hypothesis);
+		}
+		for (Statement conclusion : preliminaryConclusions) {
+			for (VariableExpression var : variables) {
+				conclusion = conclusion.substitute(var, var);
+			}
+			conclusions.add(conclusion);
 		}
 		
 		scanner.close();
