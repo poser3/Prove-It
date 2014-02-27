@@ -19,7 +19,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return the template in tree form
 	 * @throws IllegalArgumentException if parentheses are mismatched or the operator was not recognized
 	 */
-	public static Expression parse(String template) {
+	public static Expression parse(String template, ArrayList<VariableExpression> environment) {
 		//example of a template string "= (^ c 2) (+ (^ a 2) (^ b 2))"
 		
 		//if template string is empty, there is no expression to create
@@ -92,19 +92,37 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			}
 			catch(NumberFormatException e) {
 				// Just take it as a variable of type NUMBER
-				return new VariableExpression(words.get(0));
+				VariableExpression var = new VariableExpression(words.get(0));
+				if (environment.indexOf(var) == -1) {
+					// This is a new variable, so add it to the environment and return it
+					environment.add(var);
+					return var;
+				}
+				else {
+					// This is another reference to an existing variable, so just return the original
+					return environment.get(environment.indexOf(var));
+				}
 			}
 		}
 		
 		// If there is only one word and it does contain a space, then this is a single expression  
 		// enclosed in an extra pair of parentheses. Hence, strip off the extra parentheses and try again.
 		else if(words.size() == 1 && template.indexOf(' ') != -1) {
-			return parse(words.get(0).substring(1, words.get(0).length()-1));
+			return parse(words.get(0).substring(1, words.get(0).length()-1), environment);
 		}
 		
 		// If there are two words, it could be a variable with its type
 		else if(words.size() == 2 && Type.fromString(words.get(0)) != null) {
-			return new VariableExpression(words.get(1), Type.fromString(words.get(0)));
+			VariableExpression var = new VariableExpression(words.get(1), Type.fromString(words.get(0)));
+			if (environment.indexOf(var) == -1) {
+				// This is a new variable, so add it to the environment and return it
+				environment.add(var);
+				return var;
+			}
+			else {
+				// This is another reference to an existing variable, so just return the original
+				return environment.get(environment.indexOf(var));
+			}
 		}
 		
 		// If the first word isn't a type, it must be an operator,
@@ -121,7 +139,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 				// Save ourselves some stack space for compound expressions in arguments
                                 if(word.startsWith("\\(") && word.endsWith("\\)"))
 					word = word.substring(1, word.length()-1);
-				args.add(parse(word));
+				args.add(parse(word, environment));
 			}
 			
 			// Make and return the OperatorExpression mentioned above
@@ -539,7 +557,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			if (map.containsKey(name)) {
 				//added below to account for when map.get(name) was not a variable expression
 				//i.e., a simple name, but instead a subexpression
-				return Expression.parse(map.get(name));
+				return Expression.parse(map.get(name), new ArrayList<VariableExpression>());
 				//return new VariableExpression(map.get(name));
 			}
 			return this;
@@ -562,7 +580,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return true if this expression matches the template, or false if it does not.
 	 */
 	public boolean matchesTemplate(String template) {
-		return equals(parse(template));
+		return equals(parse(template, new ArrayList<VariableExpression>()));
 	}
 	
 	/**
@@ -578,7 +596,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return a map from variable names in this expression to variable names used by the template containing the substitutions necessary for reconciliation, or null if no reconciliation is possible.
 	 */
 	public HashMap<String, String> findPairings(String template) {
-		return findPairings(parse(template));
+		return findPairings(parse(template, new ArrayList<VariableExpression>()));
 	}
 	
 	/**

@@ -36,6 +36,7 @@ public class MainWindow extends Program {
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
 	private StatementPanel statementPanel = new StatementPanel(this);
+	private ArrayList<VariableExpression> variableEnvironment = new ArrayList<VariableExpression>();
 	
 	private class OperatePanel extends JPanel {
 		final private short COLUMNS = 2;
@@ -87,7 +88,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					Expression selected = statement.getExpression();
-					final Expression fromField = Expression.parse(textField.getText());
+					final Expression fromField = Expression.parse(textField.getText(), variableEnvironment);
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
 						return;
@@ -153,7 +154,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					Expression selected = statement.getExpression();
-					Expression fromField = Expression.parse(textField.getText());
+					Expression fromField = Expression.parse(textField.getText(), variableEnvironment);
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
 						return;
@@ -400,6 +401,10 @@ public class MainWindow extends Program {
 	public TheoremPanel getTheoremPanel() {
 		System.out.println("getTheoremPanel() returns : " + theoremPanel);
 		return theoremPanel;
+	}
+	
+	public ArrayList<VariableExpression> getVariableEnvironment() {
+		return variableEnvironment;
 	}
 	
 	public void deselectAll() {

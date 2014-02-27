@@ -1,3 +1,4 @@
+import java.util.ArrayList;
 import java.util.HashMap;
 
 
@@ -11,10 +12,12 @@ public class Tester {
 	}
 	
 	public Tester(MainWindow mainWindow) {
+		final ArrayList<VariableExpression> environment = new ArrayList<VariableExpression>();
+		
 		System.out.println("Hi from the tester...");
-		OperatorExpression oe1 = (OperatorExpression) (Expression.parse("= (+ a b c) (- c d) (* x (- c d))"));
-		OperatorExpression oe2 = (OperatorExpression) (Expression.parse("- c d"));
-		OperatorExpression oe3 = (OperatorExpression) (Expression.parse("/ x (+ y z)"));
+		OperatorExpression oe1 = (OperatorExpression) (Expression.parse("= (+ a b c) (- c d) (* x (- c d))", environment));
+		OperatorExpression oe2 = (OperatorExpression) (Expression.parse("- c d", environment));
+		OperatorExpression oe3 = (OperatorExpression) (Expression.parse("/ x (+ y z)", environment));
 		System.out.println(oe1);
 		
 		/*
@@ -24,7 +27,7 @@ public class Tester {
 		  this = "= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1"
 		  returns the expression "= (+ (* x2 (+ x2 y2)) (- y2 z2)) z2"
 		*/
-		Expression e5 = Expression.parse("= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1");
+		Expression e5 = Expression.parse("= (+ (* x1 (+ x1 y1)) (- y1 z1)) z1", environment);
 		HashMap<String, String> map = new HashMap<String, String>();
 		map.put("x1", "x2");
 		map.put("y1", "y2");
@@ -33,8 +36,8 @@ public class Tester {
 		System.out.println(e6);
 		System.out.println(e6.matchesTemplate("= (+ (* x2 (+ x2 y2)) (- y2 z2)) z2"));
 		printHashMapOfStrings(e5.findPairings(e6));
-		Expression e7 = Expression.parse("= x (+ y z)");
-		Expression e8 = Expression.parse("= x (+ y z)");
+		Expression e7 = Expression.parse("= x (+ y z)", environment);
+		Expression e8 = Expression.parse("= x (+ y z)", environment);
 		System.out.println("expressions are equal is " + e7.equals(e8));
 		
 		

@@ -385,7 +385,8 @@ public class SketchCanvas extends GCanvas {
 				}
             }
 			parents = new Drawables(ListUtils.removeDuplicates(parents));
-			Statement result = new Statement(Expression.parse(String.format(s, args)), null, parents);
+			Statement result = new Statement(Expression.parse(String.format(s, args), mainWindow_.getVariableEnvironment()),
+												null, parents);
 			mainWindow_.addStatement(result);
 		}
 		
