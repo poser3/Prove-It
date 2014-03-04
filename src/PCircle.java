@@ -10,6 +10,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 		
 		private GOval gOval_;
 		private final String label_;
+		//private final String latex_;
 		private FancyLabel fancyLabel_;
 		private PPoint c1_;
 		private PPoint p2_;
@@ -39,6 +40,7 @@ public class PCircle extends GCompound implements Drawable, Selectable, MadeWith
 			gOval_.setSize(2*getRadius(), 2*getRadius());
 			
 			label_ = label;
+			//latex_ = label;
 			fancyLabel_ = new FancyLabel(label_);
 			this.add(fancyLabel_);
 			exists_ = true;

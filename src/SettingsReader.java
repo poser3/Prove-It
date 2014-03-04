@@ -55,7 +55,7 @@ public class SettingsReader {
 		
 		try {
 			// Read in new settings
-			Scanner scanner = new Scanner(new File("./settings.txt"));
+			Scanner scanner = new Scanner(new File("../settings.txt"));
 			
 			while (scanner.hasNextLine()) {
 				String line = scanner.nextLine();

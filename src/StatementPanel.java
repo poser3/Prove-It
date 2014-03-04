@@ -2,6 +2,9 @@
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -129,6 +132,8 @@ public class StatementPanel extends JPanel{
 		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
 		statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
 		this.add(statementsScrollPane);
+		
+		statementList_.addMouseListener(new PopClickListener());
 	}
 	
 	public Statement getSelectedStatement() {

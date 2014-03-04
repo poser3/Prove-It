@@ -8,9 +8,11 @@ import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+
 import acm.gui.TableLayout;
 
 
@@ -223,16 +225,23 @@ public class TheoremPanel extends JPanel {
 						update();
 						String status = "pairing expression...";
 						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-				
 					}
 					else if ((numDrawablesSelected == 1) && (selectedStatement == null)) {
 						String status = "will attempt to pair drawable..." + "\n" +
 						        "number of drawables selected = " + numDrawablesSelected + "\n" +
 						        "selectedStatement = " + selectedStatement;
 						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-						//TODO: add selected subexpression to selected pairing
+						int indexOfSelectedPairing = pairingsList_.getSelectedIndex();
+						pairings_.get(indexOfSelectedPairing).pair(Expression.parse(selectedDrawables.get(0).expression()));
+						update();
+						status = "pairing drawable...";
+						TheoremPanel.this.mainWindow_.setInstructionsText(status);
 					}
 					else {
+						JOptionPane.showMessageDialog(null,
+								  "You have too many things selected. You can only pair \nthis variable with one object or expression.",
+								  "Whoops...",  
+								  JOptionPane.ERROR_MESSAGE); 
 						String status = "wrong number of things selected..." + "\n" +
 						        "number of drawables selected = " + numDrawablesSelected + "\n" +
 						        "selectedStatement = " + selectedStatement;
