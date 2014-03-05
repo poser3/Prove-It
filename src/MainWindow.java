@@ -1,4 +1,6 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -14,14 +16,17 @@ import acm.program.Program;
 @SuppressWarnings("serial")
 public class MainWindow extends Program {
 	
-	private final int MAIN_WINDOW_WIDTH = 1200;
-	private final int MAIN_WINDOW_HEIGHT = 600;
+	private final int MAIN_WINDOW_WIDTH = 1000;
+	private final int MAIN_WINDOW_HEIGHT = 700;
 	
 	private final int SKETCH_CANVAS_WIDTH = 450;
-	private final int SKETCH_CANVAS_HEIGHT = 600;
+	private final int SKETCH_CANVAS_HEIGHT = 450;
 	
-	private final int TABBED_PANE_WIDTH = 260;
-	private final int TABBED_PANE_HEIGHT = 480;
+	private final int TABBED_PANE_WIDTH = 480;
+	private final int TABBED_PANE_HEIGHT = 380;
+	
+	private final int VARIABLE_PANEL_WIDTH = 200;
+	private final int VARIABLE_PANEL_HEIGHT = 200;
 	
 	private final int INST_AND_TABS_PANEL_WIDTH = 280;
 	private final int INST_AND_TABS_PANEL_HEIGHT = 600;
@@ -133,6 +138,7 @@ public class MainWindow extends Program {
 				public void actionPerformed(ActionEvent event) {
 					System.out.println("adding statement and selecting it");
 					addStatementAndSelect(textField.getText(), true);
+					MainWindow.this.revalidate();
 				}
 			});
 			add(newButton, "gridwidth="+COLUMNS);
@@ -301,8 +307,6 @@ public class MainWindow extends Program {
 	@Override
 	public void init() {
 		
-		
-		
 		sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
 		System.out.println("SKETCH_CANVAS_WIDTH = " + SKETCH_CANVAS_WIDTH);
 		System.out.println("SKETCH_CANVAS_HEIGHT = " + SKETCH_CANVAS_HEIGHT);
@@ -310,37 +314,57 @@ public class MainWindow extends Program {
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
 		this.add(sketchCanvas);
-		this.add(sketchPanel,SOUTH);
+		this.add(sketchPanel,NORTH);
 		
 		JPanel instructionsAndTabsPanel = new JPanel();
 		
-		instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
-		instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
+		//instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
+		//instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
 		
 		
 		setInstructionsText("Push the button, Max!");
 		instructions.setEditable(false);
-		instructionsAndTabsPanel.add(instructions);
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		// TODO: remove the instructions area. Currently instructions area and instructionsAndTabsPanel just 
+		//       commented out above and below so as not to break anything -- but they ultimately need to be 
+		//       removed.
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		
+		//instructionsAndTabsPanel.add(instructions);
 				
 		tabbedPane = new JTabbedPane();
-		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
+		
 		theoremPanel = new TheoremPanel(this);
 		operatePanel = new OperatePanel();
 		createPanel = new CreatePanel();
+		tabbedPane.addTab("Theorem", theoremPanel);
 		tabbedPane.addTab("Operate", operatePanel);
 		tabbedPane.addTab("Create", createPanel);
-		tabbedPane.addTab("Theorem", theoremPanel);
-		instructionsAndTabsPanel.add(tabbedPane);
 		
-		this.add(statementPanel, EAST);
-		this.add(instructionsAndTabsPanel, WEST);
+		//instructionsAndTabsPanel.add(tabbedPane);
 		
+		JPanel variablePanel = new JPanel(); //stub for variable panel
+		
+		/////////////////////////////////////////////////////////////////
+		// TODO: add variable JList here instead of a stubBtn placeholder
+		/////////////////////////////////////////////////////////////////
+		JButton stubBtn = new JButton("STUB");
+		stubBtn.setPreferredSize(new Dimension(250,250));
+		variablePanel.add(stubBtn);
+		
+		this.getRegionPanel(EAST).setLayout(new BorderLayout());
+		this.getRegionPanel(EAST).add(new JLabel("Statements"));
+		this.getRegionPanel(EAST).add(statementPanel);
+		
+		this.getRegionPanel(SOUTH).setLayout(new BorderLayout());
+		this.getRegionPanel(SOUTH).add(tabbedPane);
+		this.getRegionPanel(SOUTH).add(variablePanel,BorderLayout.EAST);
+	
 		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
 		
 		menuBar = new MainMenuBar(this);
 		this.setJMenuBar(menuBar);
-		
-		//this.getCentralRegionSize().getWidth();
 		
 		log = instructions;
 		
@@ -359,6 +383,7 @@ public class MainWindow extends Program {
 				sketchCanvas.setViewingRectangle(new ViewingRectangle(0,MainWindow.this.getCentralRegionSize().getWidth(),
                                                                       0,MainWindow.this.getCentralRegionSize().getHeight()));
 				sketchCanvas.updateDrawables();
+				MainWindow.this.revalidate();
 			}
 
 			@Override
@@ -382,8 +407,6 @@ public class MainWindow extends Program {
 		@SuppressWarnings("unused")
 		Tester tester = new Tester(this);
 	}
-	
-	
 	
 	public void setInstructionsText(String s) {
 		instructions.setText(s);

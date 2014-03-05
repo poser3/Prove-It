@@ -1,4 +1,6 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -19,11 +21,11 @@ import acm.gui.TableLayout;
 @SuppressWarnings("serial")
 public class TheoremPanel extends JPanel {
 	
-		public final int PAIRINGS_SCROLLPANE_WIDTH = 200;
+		public final int PAIRINGS_SCROLLPANE_WIDTH = 300;
 		public final int PAIRINGS_SCROLLPANE_HEIGHT = 150;
-		public final int HYPOTHESES_SCROLLPANE_WIDTH = 200;
+		public final int HYPOTHESES_SCROLLPANE_WIDTH = 350;
 		public final int HYPOTHESES_SCROLLPANE_HEIGHT = 50;
-		public final int CONCLUSIONS_SCROLLPANE_WIDTH = 200;
+		public final int CONCLUSIONS_SCROLLPANE_WIDTH = 350;
 		public final int CONCLUSIONS_SCROLLPANE_HEIGHT = 50;
 		public final int VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON = 30;
 		
@@ -80,7 +82,7 @@ public class TheoremPanel extends JPanel {
 		
 		public TheoremPanel(MainWindow mainWindow) {
 			mainWindow_ = mainWindow;
-			
+			this.setLayout(new BorderLayout());
 			currentTheoremJLabel_ = new JLabel("Select a theorem from the menu...");
 			
 			hypothesesList.setCellRenderer(new StatementListCellRenderer());
@@ -175,30 +177,36 @@ public class TheoremPanel extends JPanel {
 					
 				}});
 			
-			final TableLayout layout = new TableLayout(14,1);
-			this.setLayout(layout);
+			//final TableLayout layout = new TableLayout(3,2);
+			JPanel leftSide = new JPanel();
+			JPanel rightSide = new JPanel();
+			final TableLayout leftLayout = new TableLayout(14,1);
+			final TableLayout rightLayout = new TableLayout(14,1);
+			leftSide.setLayout(leftLayout);
+			rightSide.setLayout(rightLayout);
+			//this.setLayout(layout);
 			
 			JSeparator separator = new JSeparator();
 			separator.setPreferredSize(new Dimension(0,VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON));
 			
-			this.add(currentTheoremJLabel_);
-			this.add(new JLabel(" "));
-			this.add(separator);
-			this.add(new JLabel("IF:"));
+			leftSide.add(currentTheoremJLabel_);
+			leftSide.add(new JLabel(" "));
+			leftSide.add(separator);
+			leftSide.add(new JLabel("IF:"));
 			JScrollPane hypothesesScrollPane = new JScrollPane(hypothesesList);
 			hypothesesScrollPane.setVerticalScrollBar(hypothesesScrollPane.createVerticalScrollBar());
-			hypothesesScrollPane.setPreferredSize(new Dimension(HYPOTHESES_SCROLLPANE_WIDTH,HYPOTHESES_SCROLLPANE_HEIGHT));
-			this.add(hypothesesScrollPane);
+			//hypothesesScrollPane.setPreferredSize(new Dimension(HYPOTHESES_SCROLLPANE_WIDTH,HYPOTHESES_SCROLLPANE_HEIGHT));
+			leftSide.add(hypothesesScrollPane);
 			
-			this.add(new JLabel("THEN:"));
+			leftSide.add(new JLabel("THEN:"));
 			JScrollPane conclusionsScrollPane = new JScrollPane(conclusionsList);
 			conclusionsScrollPane.setVerticalScrollBar(conclusionsScrollPane.createVerticalScrollBar());
-			conclusionsScrollPane.setPreferredSize(new Dimension(CONCLUSIONS_SCROLLPANE_WIDTH,CONCLUSIONS_SCROLLPANE_HEIGHT));
-			this.add(conclusionsScrollPane);
-			this.add(new JLabel(" "));
+			//conclusionsScrollPane.setPreferredSize(new Dimension(CONCLUSIONS_SCROLLPANE_WIDTH,CONCLUSIONS_SCROLLPANE_HEIGHT));
+			leftSide.add(conclusionsScrollPane, "weighty=1.0");
 			
-			this.add(new JLabel("Context"));
-			this.add(pairingsScrollPane);
+			
+			rightSide.add(new JLabel("Context"));
+			rightSide.add(pairingsScrollPane);
 			
 			pairButton.addActionListener(new ActionListener() {
 
@@ -250,11 +258,21 @@ public class TheoremPanel extends JPanel {
 						TheoremPanel.this.mainWindow_.setInstructionsText(status);
 					}
 				}});
-			this.add(pairButton);
+			rightSide.add(pairButton);
 			
-			this.add(separator);
+			rightSide.add(separator);
 			
-			this.add(applyTheoremButton);
+			rightSide.add(applyTheoremButton);
+			
+			this.add(new JLabel(""));
+			this.add(new JLabel(""));
+			
+			this.add(leftSide,"ipadx=10");
+			this.add(rightSide,"ipadx=10");
+			
+			this.add(new JLabel(""));
+			this.add(new JLabel(""));
+			
 		
 		}
 	

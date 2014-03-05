@@ -1,4 +1,5 @@
 
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -22,10 +23,10 @@ import acm.gui.TableLayout;
 @SuppressWarnings("serial")
 public class StatementPanel extends JPanel{
 	
-	private final int STATEMENT_PANEL_WIDTH = 460;
-	private final int STATEMENT_PANEL_HEIGHT = 590;
-    private final int STATEMENT_SCROLLPANE_WIDTH = 360;
-	private final int STATEMENT_SCROLLPANE_HEIGHT = 580;
+	private final int STATEMENT_PANEL_WIDTH = 600;
+	private final int STATEMENT_PANEL_HEIGHT = 270;
+    private final int STATEMENT_SCROLLPANE_WIDTH = 600;
+	private final int STATEMENT_SCROLLPANE_HEIGHT = 270;
 
 	private StatementListModel statements_;
 	private JList<Statement> statementList_;
@@ -36,8 +37,7 @@ public class StatementPanel extends JPanel{
 		statements_ = new StatementListModel();
 		statementList_ = new JList<Statement>(statements_);
 		
-		this.setLayout(new TableLayout(1,1));
-		this.setPreferredSize(new Dimension(STATEMENT_PANEL_WIDTH,STATEMENT_PANEL_HEIGHT));
+		this.setLayout(new BorderLayout());
 		statementList_.setCellRenderer(new StatementListCellRenderer());
 		JScrollPane statementsScrollPane = new JScrollPane(statementList_);
 		statementList_.setFocusable(true);
@@ -130,7 +130,7 @@ public class StatementPanel extends JPanel{
 			}});
 		
 		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
-		statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
+		//statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
 		this.add(statementsScrollPane);
 		
 		statementList_.addMouseListener(new PopClickListener());
