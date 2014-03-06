@@ -82,7 +82,7 @@ public class TheoremPanel extends JPanel {
 		
 		public TheoremPanel(MainWindow mainWindow) {
 			mainWindow_ = mainWindow;
-			this.setLayout(new BorderLayout());
+			
 			currentTheoremJLabel_ = new JLabel("Select a theorem from the menu...");
 			
 			hypothesesList.setCellRenderer(new StatementListCellRenderer());
@@ -96,7 +96,7 @@ public class TheoremPanel extends JPanel {
 			pairingsList_.setFocusable(true);
 			
 			pairingsScrollPane.setVerticalScrollBar(pairingsScrollPane.createVerticalScrollBar());
-			pairingsScrollPane.setPreferredSize(new Dimension(PAIRINGS_SCROLLPANE_WIDTH,PAIRINGS_SCROLLPANE_HEIGHT));
+			//pairingsScrollPane.setPreferredSize(new Dimension(PAIRINGS_SCROLLPANE_WIDTH,PAIRINGS_SCROLLPANE_HEIGHT));
 			
 			chooseTheoremButton = new JButton("Choose Theorem");
 			chooseTheoremButton.addActionListener(new ActionListener() {
@@ -177,17 +177,17 @@ public class TheoremPanel extends JPanel {
 					
 				}});
 			
-			//final TableLayout layout = new TableLayout(3,2);
+			final TableLayout layout = new TableLayout(3,2);
 			JPanel leftSide = new JPanel();
 			JPanel rightSide = new JPanel();
 			final TableLayout leftLayout = new TableLayout(14,1);
 			final TableLayout rightLayout = new TableLayout(14,1);
 			leftSide.setLayout(leftLayout);
 			rightSide.setLayout(rightLayout);
-			//this.setLayout(layout);
+			this.setLayout(layout);
 			
 			JSeparator separator = new JSeparator();
-			separator.setPreferredSize(new Dimension(0,VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON));
+			//separator.setPreferredSize(new Dimension(0,VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON));
 			
 			leftSide.add(currentTheoremJLabel_);
 			leftSide.add(new JLabel(" "));

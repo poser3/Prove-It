@@ -1,6 +1,10 @@
 import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -17,10 +21,10 @@ import acm.program.Program;
 public class MainWindow extends Program {
 	
 	private final int MAIN_WINDOW_WIDTH = 1000;
-	private final int MAIN_WINDOW_HEIGHT = 700;
+	private final int MAIN_WINDOW_HEIGHT = 800;
 	
 	private final int SKETCH_CANVAS_WIDTH = 450;
-	private final int SKETCH_CANVAS_HEIGHT = 450;
+	private final int SKETCH_CANVAS_HEIGHT = 300;
 	
 	private final int TABBED_PANE_WIDTH = 480;
 	private final int TABBED_PANE_HEIGHT = 380;
@@ -41,7 +45,8 @@ public class MainWindow extends Program {
 	public static JTextArea log;
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
-	private StatementPanel statementPanel = new StatementPanel(this);
+	private StatementPanel statementPanel;
+	private JPanel drawingPanel;
 	public ViewingRectangle viewingRectangle;
 	
 	private class OperatePanel extends JPanel {
@@ -307,34 +312,27 @@ public class MainWindow extends Program {
 	@Override
 	public void init() {
 		
+		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
+		
+		//construct sketch canvas, where the drawing takes place:
+		drawingPanel = new JPanel();
+		drawingPanel.setLayout(new BorderLayout());
+		JLabel drawingPanelTitle = new JLabel("Figure / Construction");
+		drawingPanelTitle.setHorizontalAlignment(SwingConstants.CENTER);;
 		sketchCanvas = new SketchCanvas(this,SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT);
-		System.out.println("SKETCH_CANVAS_WIDTH = " + SKETCH_CANVAS_WIDTH);
-		System.out.println("SKETCH_CANVAS_HEIGHT = " + SKETCH_CANVAS_HEIGHT);
+		sketchCanvas.setPreferredSize(new Dimension(SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT));
+		drawingPanel.add(drawingPanelTitle, NORTH);
+		drawingPanel.add(sketchCanvas);
+		
+		//construct sketchPanel, where buttons for adding drawables are located
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
-		this.add(sketchCanvas);
-		this.add(sketchPanel,NORTH);
 		
-		JPanel instructionsAndTabsPanel = new JPanel();
-		
-		//instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
-		//instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
-		
-		
-		setInstructionsText("Push the button, Max!");
-		instructions.setEditable(false);
-		
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		// TODO: remove the instructions area. Currently instructions area and instructionsAndTabsPanel just 
-		//       commented out above and below so as not to break anything -- but they ultimately need to be 
-		//       removed.
-		////////////////////////////////////////////////////////////////////////////////////////////////////
-		
-		//instructionsAndTabsPanel.add(instructions);
-				
+		//construct tabbed area, where variable pairing and theorem application happens
+		//TODO: move functionality of non-theorem tabs to various context menus
 		tabbedPane = new JTabbedPane();
-		
+		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
 		theoremPanel = new TheoremPanel(this);
 		operatePanel = new OperatePanel();
 		createPanel = new CreatePanel();
@@ -342,26 +340,61 @@ public class MainWindow extends Program {
 		tabbedPane.addTab("Operate", operatePanel);
 		tabbedPane.addTab("Create", createPanel);
 		
-		//instructionsAndTabsPanel.add(tabbedPane);
+		//construct statement area, where given and deduced statements are shown
+		JPanel deductionsPanel = new JPanel();
+		deductionsPanel.setLayout(new BorderLayout());
+		JLabel statementPanelTitle = new JLabel("Given and/or Deduced Statements");
+		statementPanelTitle.setHorizontalAlignment(SwingConstants.CENTER);;
+		statementPanel = new StatementPanel(this);
+		deductionsPanel.add(statementPanelTitle, NORTH);
+		deductionsPanel.add(statementPanel);
 		
-		JPanel variablePanel = new JPanel(); //stub for variable panel
 		
-		/////////////////////////////////////////////////////////////////
+		//construct variable area, where variable types and definitions are shown
 		// TODO: add variable JList here instead of a stubBtn placeholder
-		/////////////////////////////////////////////////////////////////
-		JButton stubBtn = new JButton("STUB");
-		stubBtn.setPreferredSize(new Dimension(250,250));
-		variablePanel.add(stubBtn);
+		JPanel variablePanel = new JPanel();
+		variablePanel.setLayout(new BorderLayout());
+		JLabel variablePanelTitle = new JLabel("Variables Defined");
+		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		VariablePanel variableListPanel = new VariablePanel(); //stub for variable panel
+		variablePanel.add(variablePanelTitle, NORTH);
+		variablePanel.add(variableListPanel);
+		//DEBUG: put some sample variables in the list
+		variableListPanel.addVariable(new VariableExpression("realValue","theta","\\theta"));  //args = type, name, latex
+		variableListPanel.addVariable(new VariableExpression("point","A","A"));  //args = type, name, latex
+		variableListPanel.addVariable(new VariableExpression("line","L1","l_1"));  //args = type, name, latex
 		
-		this.getRegionPanel(EAST).setLayout(new BorderLayout());
-		this.getRegionPanel(EAST).add(new JLabel("Statements"));
-		this.getRegionPanel(EAST).add(statementPanel);
+		//add the panels and setup the layout manager
+		this.getRegionPanel(NORTH).add(sketchPanel);
+		this.setLayout(new SpringLayout());
+		this.add(drawingPanel);
+		this.add(variablePanel);
+		this.add(tabbedPane);
+		this.add(deductionsPanel);
+		SpringUtilities.makeCompactGrid(this.getRegionPanel(CENTER),
+                						2, 2,  //rows, cols
+                						5, 5,  //initialX, initialY
+                						5, 5); //xPad, yPad
+		this.revalidate();
 		
-		this.getRegionPanel(SOUTH).setLayout(new BorderLayout());
-		this.getRegionPanel(SOUTH).add(tabbedPane);
-		this.getRegionPanel(SOUTH).add(variablePanel,BorderLayout.EAST);
-	
-		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
+		
+		//DEBUG INFO:
+		System.out.println("SKETCH_CANVAS_WIDTH = " + SKETCH_CANVAS_WIDTH);
+		System.out.println("SKETCH_CANVAS_HEIGHT = " + SKETCH_CANVAS_HEIGHT);
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		// TODO: remove the instructions area. Currently instructions area and instructionsAndTabsPanel just 
+		//       commented out below so as not to break anything -- but they ultimately need to be 
+		//       removed.
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		//JPanel instructionsAndTabsPanel = new JPanel();
+		//instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
+		//instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
+		//setInstructionsText("Push the button, Max!");
+		//instructions.setEditable(false);
+		//instructionsAndTabsPanel.add(instructions);
+		//instructionsAndTabsPanel.add(tabbedPane);
+		///////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		menuBar = new MainMenuBar(this);
 		this.setJMenuBar(menuBar);
