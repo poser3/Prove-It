@@ -21,19 +21,13 @@ import acm.program.Program;
 public class MainWindow extends Program {
 	
 	private final int MAIN_WINDOW_WIDTH = 1000;
-	private final int MAIN_WINDOW_HEIGHT = 800;
+	private final int MAIN_WINDOW_HEIGHT = 700;
 	
 	private final int SKETCH_CANVAS_WIDTH = 450;
-	private final int SKETCH_CANVAS_HEIGHT = 300;
+	private final int SKETCH_CANVAS_HEIGHT = 400;
 	
-	private final int TABBED_PANE_WIDTH = 480;
-	private final int TABBED_PANE_HEIGHT = 380;
-	
-	private final int VARIABLE_PANEL_WIDTH = 200;
-	private final int VARIABLE_PANEL_HEIGHT = 200;
-	
-	private final int INST_AND_TABS_PANEL_WIDTH = 280;
-	private final int INST_AND_TABS_PANEL_HEIGHT = 600;
+	private final int TABBED_PANE_WIDTH = 450;
+	private final int TABBED_PANE_HEIGHT = 400;
 	
 	private final static JFileChooser fileChooser = new JFileChooser();
 		
@@ -367,14 +361,17 @@ public class MainWindow extends Program {
 		//add the panels and setup the layout manager
 		this.getRegionPanel(NORTH).add(sketchPanel);
 		this.setLayout(new SpringLayout());
+		
 		this.add(drawingPanel);
 		this.add(variablePanel);
 		this.add(tabbedPane);
 		this.add(deductionsPanel);
+
 		SpringUtilities.makeCompactGrid(this.getRegionPanel(CENTER),
                 						2, 2,  //rows, cols
                 						5, 5,  //initialX, initialY
                 						5, 5); //xPad, yPad
+
 		this.revalidate();
 		
 		

@@ -14,6 +14,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 
 import acm.gui.TableLayout;
 
@@ -176,37 +178,12 @@ public class TheoremPanel extends JPanel {
 					}
 					
 				}});
-			
-			final TableLayout layout = new TableLayout(3,2);
-			JPanel leftSide = new JPanel();
-			JPanel rightSide = new JPanel();
-			final TableLayout leftLayout = new TableLayout(14,1);
-			final TableLayout rightLayout = new TableLayout(14,1);
-			leftSide.setLayout(leftLayout);
-			rightSide.setLayout(rightLayout);
-			this.setLayout(layout);
-			
-			JSeparator separator = new JSeparator();
-			//separator.setPreferredSize(new Dimension(0,VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON));
-			
-			leftSide.add(currentTheoremJLabel_);
-			leftSide.add(new JLabel(" "));
-			leftSide.add(separator);
-			leftSide.add(new JLabel("IF:"));
+
 			JScrollPane hypothesesScrollPane = new JScrollPane(hypothesesList);
 			hypothesesScrollPane.setVerticalScrollBar(hypothesesScrollPane.createVerticalScrollBar());
-			//hypothesesScrollPane.setPreferredSize(new Dimension(HYPOTHESES_SCROLLPANE_WIDTH,HYPOTHESES_SCROLLPANE_HEIGHT));
-			leftSide.add(hypothesesScrollPane);
 			
-			leftSide.add(new JLabel("THEN:"));
 			JScrollPane conclusionsScrollPane = new JScrollPane(conclusionsList);
 			conclusionsScrollPane.setVerticalScrollBar(conclusionsScrollPane.createVerticalScrollBar());
-			//conclusionsScrollPane.setPreferredSize(new Dimension(CONCLUSIONS_SCROLLPANE_WIDTH,CONCLUSIONS_SCROLLPANE_HEIGHT));
-			leftSide.add(conclusionsScrollPane, "weighty=1.0");
-			
-			
-			rightSide.add(new JLabel("Context"));
-			rightSide.add(pairingsScrollPane);
 			
 			pairButton.addActionListener(new ActionListener() {
 
@@ -258,22 +235,34 @@ public class TheoremPanel extends JPanel {
 						TheoremPanel.this.mainWindow_.setInstructionsText(status);
 					}
 				}});
-			rightSide.add(pairButton);
 			
-			rightSide.add(separator);
+			JLabel ifLabel = new JLabel("If:",SwingConstants.RIGHT);
+			JLabel thenLabel = new JLabel("Then:",SwingConstants.RIGHT);
+			JLabel contextLabel = new JLabel("Context:",SwingConstants.RIGHT);
 			
-			rightSide.add(applyTheoremButton);
+			this.setLayout(new BorderLayout());
 			
-			this.add(new JLabel(""));
-			this.add(new JLabel(""));
+			JPanel centralTheoremArea = new JPanel();
+			this.add(centralTheoremArea);
 			
-			this.add(leftSide,"ipadx=10");
-			this.add(rightSide,"ipadx=10");
+			JPanel topTheoremArea = new JPanel();
+			this.add(topTheoremArea,BorderLayout.PAGE_START);
+			topTheoremArea.add(currentTheoremJLabel_);
+			topTheoremArea.add(pairButton);
+			topTheoremArea.add(applyTheoremButton);
 			
-			this.add(new JLabel(""));
-			this.add(new JLabel(""));
-			
-		
+			centralTheoremArea.setLayout(new SpringLayout());
+			centralTheoremArea.add(ifLabel);
+			centralTheoremArea.add(hypothesesScrollPane);
+			centralTheoremArea.add(thenLabel);
+			centralTheoremArea.add(conclusionsScrollPane);
+			centralTheoremArea.add(contextLabel);
+			centralTheoremArea.add(pairingsScrollPane);
+			SpringUtilities.makeCompactGrid(centralTheoremArea,
+					3, 2,  //rows, cols
+					5, 5,  //initialX, initialY
+					5, 5); //xPad, yPad
+			centralTheoremArea.revalidate();
 		}
 	
 	}
