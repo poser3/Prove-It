@@ -1,3 +1,4 @@
+
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
@@ -5,11 +6,11 @@ import javax.swing.JList;
 import javax.swing.SwingUtilities;
 
 
-public class PopClickListener extends MouseAdapter {
+public class SketchCanvasPopClickListener extends MouseAdapter {
 	
 	MainWindow mainWindow_;
 	
-	public PopClickListener(MainWindow mainWindow) {
+	public SketchCanvasPopClickListener(MainWindow mainWindow) {
 		mainWindow_ = mainWindow;
 	}
 	
@@ -24,14 +25,8 @@ public class PopClickListener extends MouseAdapter {
     }
 
     private void doPop(MouseEvent e){
-    	
-    	// Note to self: you can check to see if the mouse was right-clicked here with: 
-    	//
-    	// 	  SwingUtilities.isRightMouseButton(e)
-    	//
-    	// but the popup menu only shows up when right-clicked, so this probably doesn't matter
 
-		StatementPopUpMenu menu = new StatementPopUpMenu(mainWindow_, e);
+		SketchCanvasPopUpMenu menu = new SketchCanvasPopUpMenu(mainWindow_, e);
 		menu.show(e.getComponent(), e.getX(), e.getY());
   
     }

@@ -16,7 +16,6 @@ public class SketchPanel extends TablePanel {
 	
 	//Instance Variables
 	private SketchCanvas sketchCanvas_;
-	private JTextArea  selectedTypesTextArea_;
 	private JButton selectButton_;
 	private JButton pointButton_;
 	private JButton segmentButton_;
@@ -140,13 +139,6 @@ public class SketchPanel extends TablePanel {
 			}
 		});
 		this.add(intersectionButton_);
-		
-		//Setup selectedTypesTextArea
-		//TODO: The text area below was for debugging only -- it should be removed
-		//although it is updated elsewhere, so those updates should be removed too
-	    selectedTypesTextArea_ = new JTextArea("Selected Types...");
-	    //this.add(selectedTypesTextArea_);
-	  
 	
 	}
 	
@@ -161,10 +153,6 @@ public class SketchPanel extends TablePanel {
 	
 	public void setMidpointButtonEnabled(boolean enabled) {
 		constructMidpointButton_.setEnabled(enabled);
-	}
-	
-	public void setSelectedTypesText(String s) {
-		selectedTypesTextArea_.setText(s);
 	}
 
 }

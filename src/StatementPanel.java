@@ -27,13 +27,16 @@ public class StatementPanel extends JPanel{
 	private final int STATEMENT_PANEL_HEIGHT = 270;
     private final int STATEMENT_SCROLLPANE_WIDTH = 600;
 	private final int STATEMENT_SCROLLPANE_HEIGHT = 270;
+	private final int NOTHING_SELECTED = -1;
 
+	private MainWindow mainWindow_;
 	private StatementListModel statements_;
 	private JList<Statement> statementList_;
 	
 	
 	public StatementPanel(MainWindow mainWindow) {
 		
+		mainWindow_ = mainWindow;
 		statements_ = new StatementListModel();
 		statementList_ = new JList<Statement>(statements_);
 		
@@ -125,15 +128,17 @@ public class StatementPanel extends JPanel{
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				deselectAllStatements();
-				Statement selectedStatement = statementList_.getSelectedValue();
-				selectedStatement.getExpression().setSelected(true);
+				if (statementList_.getSelectedIndex() != NOTHING_SELECTED) {
+					Statement selectedStatement = statementList_.getSelectedValue();
+					selectedStatement.getExpression().setSelected(true);
+				}
 			}});
 		
 		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
 		//statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
 		this.add(statementsScrollPane);
 		
-		statementList_.addMouseListener(new PopClickListener());
+		statementList_.addMouseListener(new PopClickListener(mainWindow_));
 	}
 	
 	public Statement getSelectedStatement() {

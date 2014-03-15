@@ -229,6 +229,20 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	///////////////////
 	
 	/**
+	 * Determines if this expression is an equation (i.e., top operator is "=")
+	 * @return true if this expression is an equation, false otherwise
+	 */
+	public boolean isEquation() {
+		if (this instanceof OperatorExpression) {
+			OperatorExpression oe = (OperatorExpression) this;
+			return (oe.getOp().equals(new Operator("="))); 
+		}
+		else {
+			return false;
+		}
+	}
+	
+	/**
 	 * Applies an operator to this, with another expression as its left argument
 	 * @param op the operator to apply
 	 * @param e the operator's left argument

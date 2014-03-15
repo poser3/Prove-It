@@ -3,13 +3,17 @@ import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -32,8 +36,8 @@ public class TheoremPanel extends JPanel {
 		public final int VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON = 30;
 		
 		MainWindow mainWindow_;
+		JComboBox<String> theoremComboBox_;
 		final JButton chooseTheoremButton;
-		final JButton pairButton;
 		final JButton applyTheoremButton;
 		private DefaultListModel<Pairing> pairings_;
 	    private JList<Pairing> pairingsList_;
@@ -42,11 +46,18 @@ public class TheoremPanel extends JPanel {
 	    private final JList<Statement> hypothesesList = new JList<Statement>(hypotheses);
 		private final JList<Statement> conclusionsList = new JList<Statement>(conclusions);
 		private Theorem currentTheorem_;
-		private JLabel currentTheoremJLabel_;
 		
 		@Override
 		public String toString() {
 			return "Theorem panel has current theorem of : " + currentTheorem_;
+		}
+		
+		public DefaultListModel<Pairing> getPairings() {
+			return pairings_;
+		}
+		
+		public JList<Pairing> getPairingsList() {
+			return pairingsList_;
 		}
 		
 		public void update() {
@@ -56,9 +67,6 @@ public class TheoremPanel extends JPanel {
 		public void setCurrentTheorem(Theorem theorem) {
 			//set current theorem instance variable
 			currentTheorem_ = theorem;
-			
-			//update theorem JLabel
-			currentTheoremJLabel_.setText(currentTheorem_.toString());
 			
 			//update hypotheses and conclusions...
 			hypotheses.clear();
@@ -79,13 +87,26 @@ public class TheoremPanel extends JPanel {
 					System.out.println("There was a problem: expected a variable expression");
 				}
 			}
-			pairButton.setEnabled(true);
 		}
 		
 		public TheoremPanel(MainWindow mainWindow) {
 			mainWindow_ = mainWindow;
 			
-			currentTheoremJLabel_ = new JLabel("Select a theorem from the menu...");
+			String[] theoremStrings = new String[Theorem.theorems.size()];
+			
+			Theorem.loadTheorems();
+			for (int i=0; i < Theorem.theorems.size(); i++) {
+				theoremStrings[i] = Theorem.theorems.get(i).toString();
+			}
+		
+			theoremComboBox_ = new JComboBox(theoremStrings);
+			theoremComboBox_.setSelectedIndex(0);
+			theoremComboBox_.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TheoremPanel.this.setCurrentTheorem(Theorem.theorems.get(theoremComboBox_.getSelectedIndex()));
+					System.out.println(TheoremPanel.this); //for DEBUGGING, shows current theorem 
+				}});
 			
 			hypothesesList.setCellRenderer(new StatementListCellRenderer());
 			conclusionsList.setCellRenderer(new StatementListCellRenderer());
@@ -121,9 +142,6 @@ public class TheoremPanel extends JPanel {
 						}
 					}
 				}});
-			
-			pairButton = new JButton("Pair Selected");
-			pairButton.setEnabled(false);
 			
 			applyTheoremButton = new JButton("Apply Theorem");
 			applyTheoremButton.addActionListener(new ActionListener() {
@@ -185,56 +203,7 @@ public class TheoremPanel extends JPanel {
 			JScrollPane conclusionsScrollPane = new JScrollPane(conclusionsList);
 			conclusionsScrollPane.setVerticalScrollBar(conclusionsScrollPane.createVerticalScrollBar());
 			
-			pairButton.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Drawables selectedDrawables = TheoremPanel.this.mainWindow_.getSketchCanvas().getSelectedDrawables();
-					int numDrawablesSelected = selectedDrawables.size();
-					
-					Statement selectedStatement = TheoremPanel.this.mainWindow_.getStatementPanel().getSelectedStatement();
-					
-					if ((numDrawablesSelected == 0) && (selectedStatement != null)) {
-						int indexOfSelectedPairing = pairingsList_.getSelectedIndex();
-						
-						/*
-						Expression originalSelectedExpression = selectedStatement.getExpression().getSelectedSubExpression();
-						Expression copyOfSelectedExpression = originalSelectedExpression.duplicate();
-						copyOfSelectedExpression.deselectRecursive();
-						pairings_.get(indexOfSelectedPairing).pair(copyOfSelectedExpression);
-						*/
-						
-						//replaced with...
-						pairings_.get(indexOfSelectedPairing).pair(selectedStatement.getExpression().getSelectedSubExpression());
-						
-						update();
-						String status = "pairing expression...";
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-					}
-					else if ((numDrawablesSelected == 1) && (selectedStatement == null)) {
-						String status = "will attempt to pair drawable..." + "\n" +
-						        "number of drawables selected = " + numDrawablesSelected + "\n" +
-						        "selectedStatement = " + selectedStatement;
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-						int indexOfSelectedPairing = pairingsList_.getSelectedIndex();
-						pairings_.get(indexOfSelectedPairing).pair(Expression.parse(selectedDrawables.get(0).expression()));
-						update();
-						status = "pairing drawable...";
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-					}
-					else {
-						JOptionPane.showMessageDialog(null,
-								  "You have too many things selected. You can only pair \nthis variable with one object or expression.",
-								  "Whoops...",  
-								  JOptionPane.ERROR_MESSAGE); 
-						String status = "wrong number of things selected..." + "\n" +
-						        "number of drawables selected = " + numDrawablesSelected + "\n" +
-						        "selectedStatement = " + selectedStatement;
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-					}
-				}});
 			
 			JLabel ifLabel = new JLabel("If:",SwingConstants.RIGHT);
 			JLabel thenLabel = new JLabel("Then:",SwingConstants.RIGHT);
@@ -247,8 +216,7 @@ public class TheoremPanel extends JPanel {
 			
 			JPanel topTheoremArea = new JPanel();
 			this.add(topTheoremArea,BorderLayout.PAGE_START);
-			topTheoremArea.add(currentTheoremJLabel_);
-			topTheoremArea.add(pairButton);
+			topTheoremArea.add(theoremComboBox_);
 			topTheoremArea.add(applyTheoremButton);
 			
 			centralTheoremArea.setLayout(new SpringLayout());

@@ -1,10 +1,5 @@
 import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -13,14 +8,13 @@ import java.util.Scanner;
 
 import javax.swing.*;
 
-import acm.graphics.GRect;
 import acm.gui.TableLayout;
 import acm.program.Program;
 
 @SuppressWarnings("serial")
 public class MainWindow extends Program {
 	
-	private final int MAIN_WINDOW_WIDTH = 1000;
+	private final int MAIN_WINDOW_WIDTH = 1200;
 	private final int MAIN_WINDOW_HEIGHT = 700;
 	
 	private final int SKETCH_CANVAS_WIDTH = 450;
@@ -323,6 +317,10 @@ public class MainWindow extends Program {
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
 		
+		//construct expressionsPanel, where buttons for creating or modifying expressions are located
+		ExpressionPanel expressionsPanel = new ExpressionPanel(this);
+		
+		
 		//construct tabbed area, where variable pairing and theorem application happens
 		//TODO: move functionality of non-theorem tabs to various context menus
 		tabbedPane = new JTabbedPane();
@@ -348,7 +346,7 @@ public class MainWindow extends Program {
 		// TODO: add variable JList here instead of a stubBtn placeholder
 		JPanel variablePanel = new JPanel();
 		variablePanel.setLayout(new BorderLayout());
-		JLabel variablePanelTitle = new JLabel("Variables Defined");
+		JLabel variablePanelTitle = new JLabel("Variables");
 		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
 		VariablePanel variableListPanel = new VariablePanel(); //stub for variable panel
 		variablePanel.add(variablePanelTitle, NORTH);
@@ -360,6 +358,9 @@ public class MainWindow extends Program {
 		
 		//add the panels and setup the layout manager
 		this.getRegionPanel(NORTH).add(sketchPanel);
+		this.getRegionPanel(NORTH).add(new JSeparator(JSeparator.VERTICAL));
+		this.getRegionPanel(NORTH).add(expressionsPanel);
+		
 		this.setLayout(new SpringLayout());
 		
 		this.add(drawingPanel);
