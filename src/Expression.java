@@ -111,9 +111,15 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			return parse(words.get(0).substring(1, words.get(0).length()-1), environment);
 		}
 		
-		// If there are two words, it could be a variable with its type
-		else if(words.size() == 2 && Type.fromString(words.get(0)) != null) {
-			VariableExpression var = new VariableExpression(words.get(1), Type.fromString(words.get(0)));
+		// If there are at least two words, it could be a variable with its type
+		else if(words.size() >= 2 && Type.fromString(words.get(0)) != null) {
+			StringBuilder name = new StringBuilder(words.get(1));
+			for (int i=2; i<words.size(); i++) {
+				name.append(' ');
+				name.append(words.get(i));
+			}
+			
+			VariableExpression var = new VariableExpression(name.toString(), Type.fromString(words.get(0)));
 			if (environment.indexOf(var) == -1) {
 				// This is a new variable, so add it to the environment and return it
 				environment.add(var);
