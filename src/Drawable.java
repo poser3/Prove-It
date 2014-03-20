@@ -11,6 +11,7 @@ public interface Drawable {
 	public void setSelected(boolean select);
 	public boolean isSelected();
 	public String getLabel();
+	//public String getLatex();
 	public String expression();
 	public boolean exists();
 	public void setExists(boolean exists);

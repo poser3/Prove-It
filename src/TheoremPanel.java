@@ -1,4 +1,4 @@
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -6,28 +6,29 @@ import java.util.HashMap;
 
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JSeparator;
-import acm.gui.TableLayout;
+import javax.swing.SpringLayout;
+import javax.swing.SwingConstants;
 
 
 @SuppressWarnings("serial")
 public class TheoremPanel extends JPanel {
 	
-		public final int PAIRINGS_SCROLLPANE_WIDTH = 200;
+		public final int PAIRINGS_SCROLLPANE_WIDTH = 300;
 		public final int PAIRINGS_SCROLLPANE_HEIGHT = 150;
-		public final int HYPOTHESES_SCROLLPANE_WIDTH = 200;
+		public final int HYPOTHESES_SCROLLPANE_WIDTH = 350;
 		public final int HYPOTHESES_SCROLLPANE_HEIGHT = 50;
-		public final int CONCLUSIONS_SCROLLPANE_WIDTH = 200;
+		public final int CONCLUSIONS_SCROLLPANE_WIDTH = 350;
 		public final int CONCLUSIONS_SCROLLPANE_HEIGHT = 50;
 		public final int VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON = 30;
 		
 		MainWindow mainWindow_;
+		JComboBox<String> theoremComboBox_;
 		final JButton chooseTheoremButton;
-		final JButton pairButton;
 		final JButton applyTheoremButton;
 		private DefaultListModel<Pairing> pairings_;
 	    private JList<Pairing> pairingsList_;
@@ -36,11 +37,18 @@ public class TheoremPanel extends JPanel {
 	    private final JList<Statement> hypothesesList = new JList<Statement>(hypotheses);
 		private final JList<Statement> conclusionsList = new JList<Statement>(conclusions);
 		private Theorem currentTheorem_;
-		private JLabel currentTheoremJLabel_;
 		
 		@Override
 		public String toString() {
 			return "Theorem panel has current theorem of : " + currentTheorem_;
+		}
+		
+		public DefaultListModel<Pairing> getPairings() {
+			return pairings_;
+		}
+		
+		public JList<Pairing> getPairingsList() {
+			return pairingsList_;
 		}
 		
 		public void update() {
@@ -50,9 +58,6 @@ public class TheoremPanel extends JPanel {
 		public void setCurrentTheorem(Theorem theorem) {
 			//set current theorem instance variable
 			currentTheorem_ = theorem;
-			
-			//update theorem JLabel
-			currentTheoremJLabel_.setText(currentTheorem_.toString());
 			
 			//update hypotheses and conclusions...
 			hypotheses.clear();
@@ -73,13 +78,26 @@ public class TheoremPanel extends JPanel {
 					System.out.println("There was a problem: expected a variable expression");
 				}
 			}
-			pairButton.setEnabled(true);
 		}
 		
 		public TheoremPanel(MainWindow mainWindow) {
 			mainWindow_ = mainWindow;
 			
-			currentTheoremJLabel_ = new JLabel("Select a theorem from the menu...");
+			String[] theoremStrings = new String[Theorem.theorems.size()];
+			
+			Theorem.loadTheorems();
+			for (int i=0; i < Theorem.theorems.size(); i++) {
+				theoremStrings[i] = Theorem.theorems.get(i).toString();
+			}
+		
+			theoremComboBox_ = new JComboBox<String>(theoremStrings);
+			theoremComboBox_.setSelectedIndex(0);
+			theoremComboBox_.addActionListener(new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					TheoremPanel.this.setCurrentTheorem(Theorem.theorems.get(theoremComboBox_.getSelectedIndex()));
+					System.out.println(TheoremPanel.this); //for DEBUGGING, shows current theorem 
+				}});
 			
 			hypothesesList.setCellRenderer(new StatementListCellRenderer());
 			conclusionsList.setCellRenderer(new StatementListCellRenderer());
@@ -92,7 +110,7 @@ public class TheoremPanel extends JPanel {
 			pairingsList_.setFocusable(true);
 			
 			pairingsScrollPane.setVerticalScrollBar(pairingsScrollPane.createVerticalScrollBar());
-			pairingsScrollPane.setPreferredSize(new Dimension(PAIRINGS_SCROLLPANE_WIDTH,PAIRINGS_SCROLLPANE_HEIGHT));
+			//pairingsScrollPane.setPreferredSize(new Dimension(PAIRINGS_SCROLLPANE_WIDTH,PAIRINGS_SCROLLPANE_HEIGHT));
 			
 			chooseTheoremButton = new JButton("Choose Theorem");
 			chooseTheoremButton.addActionListener(new ActionListener() {
@@ -115,9 +133,6 @@ public class TheoremPanel extends JPanel {
 						}
 					}
 				}});
-			
-			pairButton = new JButton("Pair Selected");
-			pairButton.setEnabled(false);
 			
 			applyTheoremButton = new JButton("Apply Theorem");
 			applyTheoremButton.addActionListener(new ActionListener() {
@@ -172,81 +187,41 @@ public class TheoremPanel extends JPanel {
 					}
 					
 				}});
-			
-			final TableLayout layout = new TableLayout(14,1);
-			this.setLayout(layout);
-			
-			JSeparator separator = new JSeparator();
-			separator.setPreferredSize(new Dimension(0,VERT_SPACE_ABOVE_THEOREM_APPLY_BUTTON));
-			
-			this.add(currentTheoremJLabel_);
-			this.add(new JLabel(" "));
-			this.add(separator);
-			this.add(new JLabel("IF:"));
+
 			JScrollPane hypothesesScrollPane = new JScrollPane(hypothesesList);
 			hypothesesScrollPane.setVerticalScrollBar(hypothesesScrollPane.createVerticalScrollBar());
-			hypothesesScrollPane.setPreferredSize(new Dimension(HYPOTHESES_SCROLLPANE_WIDTH,HYPOTHESES_SCROLLPANE_HEIGHT));
-			this.add(hypothesesScrollPane);
 			
-			this.add(new JLabel("THEN:"));
 			JScrollPane conclusionsScrollPane = new JScrollPane(conclusionsList);
 			conclusionsScrollPane.setVerticalScrollBar(conclusionsScrollPane.createVerticalScrollBar());
-			conclusionsScrollPane.setPreferredSize(new Dimension(CONCLUSIONS_SCROLLPANE_WIDTH,CONCLUSIONS_SCROLLPANE_HEIGHT));
-			this.add(conclusionsScrollPane);
-			this.add(new JLabel(" "));
 			
-			this.add(new JLabel("Context"));
-			this.add(pairingsScrollPane);
-			
-			pairButton.addActionListener(new ActionListener() {
 
-				@Override
-				public void actionPerformed(ActionEvent e) {
-					Drawables selectedDrawables = TheoremPanel.this.mainWindow_.getSketchCanvas().getSelectedDrawables();
-					int numDrawablesSelected = selectedDrawables.size();
-					
-					Statement selectedStatement = TheoremPanel.this.mainWindow_.getStatementPanel().getSelectedStatement();
-					
-					if ((numDrawablesSelected == 0) && (selectedStatement != null)) {
-						int indexOfSelectedPairing = pairingsList_.getSelectedIndex();
-						
-						/*
-						Expression originalSelectedExpression = selectedStatement.getExpression().getSelectedSubExpression();
-						Expression copyOfSelectedExpression = originalSelectedExpression.duplicate();
-						copyOfSelectedExpression.deselectRecursive();
-						pairings_.get(indexOfSelectedPairing).pair(copyOfSelectedExpression);
-						*/
-						
-						//replaced with...
-						pairings_.get(indexOfSelectedPairing).pair(selectedStatement.getExpression().getSelectedSubExpression());
-						
-						update();
-						String status = "pairing expression...";
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-				
-					}
-					else if ((numDrawablesSelected == 1) && (selectedStatement == null)) {
-						String status = "will attempt to pair drawable..." + "\n" +
-						        "number of drawables selected = " + numDrawablesSelected + "\n" +
-						        "selectedStatement = " + selectedStatement;
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-						//TODO: add selected subexpression to selected pairing
-					}
-					else {
-						String status = "wrong number of things selected..." + "\n" +
-						        "number of drawables selected = " + numDrawablesSelected + "\n" +
-						        "selectedStatement = " + selectedStatement;
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-
-						TheoremPanel.this.mainWindow_.setInstructionsText(status);
-					}
-				}});
-			this.add(pairButton);
 			
-			this.add(separator);
+			JLabel ifLabel = new JLabel("If:",SwingConstants.RIGHT);
+			JLabel thenLabel = new JLabel("Then:",SwingConstants.RIGHT);
+			JLabel contextLabel = new JLabel("Context:",SwingConstants.RIGHT);
 			
-			this.add(applyTheoremButton);
-		
+			this.setLayout(new BorderLayout());
+			
+			JPanel centralTheoremArea = new JPanel();
+			this.add(centralTheoremArea);
+			
+			JPanel topTheoremArea = new JPanel();
+			this.add(topTheoremArea,BorderLayout.PAGE_START);
+			topTheoremArea.add(theoremComboBox_);
+			topTheoremArea.add(applyTheoremButton);
+			
+			centralTheoremArea.setLayout(new SpringLayout());
+			centralTheoremArea.add(ifLabel);
+			centralTheoremArea.add(hypothesesScrollPane);
+			centralTheoremArea.add(thenLabel);
+			centralTheoremArea.add(conclusionsScrollPane);
+			centralTheoremArea.add(contextLabel);
+			centralTheoremArea.add(pairingsScrollPane);
+			SpringUtilities.makeCompactGrid(centralTheoremArea,
+					3, 2,  //rows, cols
+					5, 5,  //initialX, initialY
+					5, 5); //xPad, yPad
+			centralTheoremArea.revalidate();
 		}
 	
 	}

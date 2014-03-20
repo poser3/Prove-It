@@ -231,90 +231,23 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 	}
 	
-	public void shiftSelectionRight() {
-		if (this instanceof OperatorExpression) {
-			OperatorExpression oe = (OperatorExpression) this;
-			ArrayList<Expression> args = oe.getArgs();
-			for (int i=0; i < args.size(); i++) {
-				if ((args.get(i).isSelected()) && (i+1 < args.size())) {
-					args.get(i).setSelected(false);
-					args.get(i+1).setSelected(true);
-					break; // i.e., don't look for another selected expression to shift
-				}
-				else if ((args.get(i).isSelected()) && (i+1 == args.size())) {
-					args.get(i).setSelected(false);
-					this.setSelected(true);
-					break; 
-				}
-				else {
-					args.get(i).shiftSelectionRight();
-				}
-			}
-			
-		}
-	}
-	
-	public void shiftSelectionLeft() {
-		if (this instanceof OperatorExpression) {
-			OperatorExpression oe = (OperatorExpression) this;
-			ArrayList<Expression> args = oe.getArgs();
-			for (int i=0; i < args.size(); i++) {
-				if ((args.get(i).isSelected()) && (i-1 >= 0)) {
-					args.get(i).setSelected(false);
-					args.get(i-1).setSelected(true);
-					break;
-				}
-				else if ((args.get(i).isSelected()) && (i-1 < 0)) {
-					args.get(i).setSelected(false);
-					this.setSelected(true);
-					break;
-				}
-				else {
-					args.get(i).shiftSelectionLeft();
-				}
-			}
-		}
-	}
-	
-	public void shiftSelectionDeeper() {
-		if (this instanceof OperatorExpression) {
-			OperatorExpression oe = (OperatorExpression) this;
-			ArrayList<Expression> args = oe.getArgs();
-			if (this.isSelected() && (args.size() > 0)) {
-				this.setSelected(false);
-				args.get(0).setSelected(true);
-			}
-			else {
-				for (int i=0; i < args.size(); i++) {
-					args.get(i).shiftSelectionDeeper();
-				}
-			}
-		}
-	}
-	
-	public void shiftSelectionHigher() {
-		if (this instanceof OperatorExpression) {
-			OperatorExpression oe = (OperatorExpression) this;
-			ArrayList<Expression> args = oe.getArgs();
-			boolean shiftedSomething = false;
-			for (int i=0; i < args.size(); i++) {
-				if (args.get(i).isSelected()) {
-					args.get(i).setSelected(false);
-					this.setSelected(true);
-					shiftedSomething = true;
-				}
-			}
-			if (!shiftedSomething) {
-				for (int i=0; i < args.size(); i++) {
-					args.get(i).shiftSelectionHigher();
-				}
-			}
-		}
-	}
-	
 	///////////////////
 	// Other Methods //
 	///////////////////
+	
+	/**
+	 * Determines if this expression is an equation (i.e., top operator is "=")
+	 * @return true if this expression is an equation, false otherwise
+	 */
+	public boolean isEquation() {
+		if (this instanceof OperatorExpression) {
+			OperatorExpression oe = (OperatorExpression) this;
+			return (oe.getOp().equals(new Operator("="))); 
+		}
+		else {
+			return false;
+		}
+	}
 	
 	/**
 	 * Applies an operator to this, with another expression as its left argument

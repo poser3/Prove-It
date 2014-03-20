@@ -1,3 +1,4 @@
+import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.*;
 import java.io.FileNotFoundException;
@@ -14,16 +15,13 @@ import acm.program.Program;
 public class MainWindow extends Program {
 	
 	private final int MAIN_WINDOW_WIDTH = 1200;
-	private final int MAIN_WINDOW_HEIGHT = 600;
+	private final int MAIN_WINDOW_HEIGHT = 700;
 	
 	private final int SKETCH_CANVAS_WIDTH = 450;
-	private final int SKETCH_CANVAS_HEIGHT = 600;
+	private final int SKETCH_CANVAS_HEIGHT = 400;
 	
-	private final int TABBED_PANE_WIDTH = 260;
-	private final int TABBED_PANE_HEIGHT = 480;
-	
-	private final int RIGHT_PANEL_WIDTH = 280;
-	private final int RIGHT_PANEL_HEIGHT = 600;
+	private final int TABBED_PANE_WIDTH = 450;
+	private final int TABBED_PANE_HEIGHT = 400;
 	
 	private final static JFileChooser fileChooser = new JFileChooser();
 	
@@ -35,8 +33,10 @@ public class MainWindow extends Program {
 	public static JTextArea log;
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
-	private StatementPanel statementPanel = new StatementPanel(this);
+	private StatementPanel statementPanel;
 	private ArrayList<VariableExpression> variableEnvironment = new ArrayList<VariableExpression>();
+	private JPanel drawingPanel;
+	public ViewingRectangle viewingRectangle;
 	
 	private class OperatePanel extends JPanel {
 		final private short COLUMNS = 2;
@@ -130,7 +130,9 @@ public class MainWindow extends Program {
 			newButton.addActionListener(new ActionListener() {
 				@Override
 				public void actionPerformed(ActionEvent event) {
+					System.out.println("adding statement and selecting it");
 					addStatementAndSelect(textField.getText(), true);
+					MainWindow.this.revalidate();
 				}
 			});
 			add(newButton, "gridwidth="+COLUMNS);
@@ -306,44 +308,139 @@ public class MainWindow extends Program {
 		 */
 		LatexHandler.latexToImage("hello world");
 		
+		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
+		
+		//construct sketch canvas, where the drawing takes place:
+		drawingPanel = new JPanel();
+		drawingPanel.setLayout(new BorderLayout());
+		JLabel drawingPanelTitle = new JLabel("Figure / Construction");
+		drawingPanelTitle.setHorizontalAlignment(SwingConstants.CENTER);;
 		sketchCanvas = new SketchCanvas(this, SKETCH_CANVAS_WIDTH, SKETCH_CANVAS_HEIGHT);
+		sketchCanvas.setPreferredSize(new Dimension(SKETCH_CANVAS_WIDTH,SKETCH_CANVAS_HEIGHT));
+		drawingPanel.add(drawingPanelTitle, NORTH);
+		drawingPanel.add(sketchCanvas);
+		
+		//construct sketchPanel, where buttons for adding drawables are located
 		SketchPanel sketchPanel = new SketchPanel();
 		sketchPanel.setSketchCanvas(sketchCanvas);
 		sketchCanvas.setSketchPanel(sketchPanel);
-		this.add(sketchCanvas);
-		this.add(sketchPanel,SOUTH);
 		
-		JPanel rightPanel = new JPanel();
-		
-		rightPanel.setLayout(new TableLayout(2,1));		
-		rightPanel.setPreferredSize(new Dimension(RIGHT_PANEL_WIDTH,RIGHT_PANEL_HEIGHT));
+		//construct expressionsPanel, where buttons for creating or modifying expressions are located
+		ExpressionPanel expressionsPanel = new ExpressionPanel(this);
 		
 		
-		setInstructionsText("Push the button, Max!");
-		instructions.setEditable(false);
-		rightPanel.add(instructions);
-				
+		//construct tabbed area, where variable pairing and theorem application happens
+		//TODO: move functionality of non-theorem tabs to various context menus
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
 		theoremPanel = new TheoremPanel(this);
 		operatePanel = new OperatePanel();
 		createPanel = new CreatePanel();
+		tabbedPane.addTab("Theorem", theoremPanel);
 		tabbedPane.addTab("Operate", operatePanel);
 		tabbedPane.addTab("Create", createPanel);
-		tabbedPane.addTab("Theorem", theoremPanel);
-		rightPanel.add(tabbedPane);
 		
-		this.add(statementPanel, EAST);
-		this.add(rightPanel, WEST);
+		//construct statement area, where given and deduced statements are shown
+		JPanel deductionsPanel = new JPanel();
+		deductionsPanel.setLayout(new BorderLayout());
+		JLabel statementPanelTitle = new JLabel("Given and/or Deduced Statements");
+		statementPanelTitle.setHorizontalAlignment(SwingConstants.CENTER);;
+		statementPanel = new StatementPanel(this);
+		deductionsPanel.add(statementPanelTitle, NORTH);
+		deductionsPanel.add(statementPanel);
 		
-		setSize(MAIN_WINDOW_WIDTH,MAIN_WINDOW_HEIGHT);
+		
+		//construct variable area, where variable types and definitions are shown
+		// TODO: add variable JList here instead of a stubBtn placeholder
+		JPanel variablePanel = new JPanel();
+		variablePanel.setLayout(new BorderLayout());
+		JLabel variablePanelTitle = new JLabel("Variables");
+		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
+		VariablePanel variableListPanel = new VariablePanel(); //stub for variable panel
+		variablePanel.add(variablePanelTitle, NORTH);
+		variablePanel.add(variableListPanel);
+		//DEBUG: put some sample variables in the list
+		variableListPanel.addVariable(new VariableExpression("\\theta", Type.NUMBER));
+		variableListPanel.addVariable(new VariableExpression("A", Type.POINT));
+		variableListPanel.addVariable(new VariableExpression("l_1", Type.LINE));
+		
+		//add the panels and setup the layout manager
+		this.getRegionPanel(NORTH).add(sketchPanel);
+		this.getRegionPanel(NORTH).add(new JSeparator(JSeparator.VERTICAL));
+		this.getRegionPanel(NORTH).add(expressionsPanel);
+		
+		this.setLayout(new SpringLayout());
+		
+		this.add(drawingPanel);
+		this.add(variablePanel);
+		this.add(tabbedPane);
+		this.add(deductionsPanel);
+
+		SpringUtilities.makeCompactGrid(this.getRegionPanel(CENTER),
+                						2, 2,  //rows, cols
+                						5, 5,  //initialX, initialY
+                						5, 5); //xPad, yPad
+
+		this.revalidate();
+		
+		
+		//DEBUG INFO:
+		System.out.println("SKETCH_CANVAS_WIDTH = " + SKETCH_CANVAS_WIDTH);
+		System.out.println("SKETCH_CANVAS_HEIGHT = " + SKETCH_CANVAS_HEIGHT);
+		
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		// TODO: remove the instructions area. Currently instructions area and instructionsAndTabsPanel just 
+		//       commented out below so as not to break anything -- but they ultimately need to be 
+		//       removed.
+		////////////////////////////////////////////////////////////////////////////////////////////////////
+		//JPanel instructionsAndTabsPanel = new JPanel();
+		//instructionsAndTabsPanel.setLayout(new TableLayout(2,1));		
+		//instructionsAndTabsPanel.setPreferredSize(new Dimension(INST_AND_TABS_PANEL_WIDTH,INST_AND_TABS_PANEL_HEIGHT));
+		//setInstructionsText("Push the button, Max!");
+		//instructions.setEditable(false);
+		//instructionsAndTabsPanel.add(instructions);
+		//instructionsAndTabsPanel.add(tabbedPane);
+		///////////////////////////////////////////////////////////////////////////////////////////////////
 		
 		menuBar = new MainMenuBar(this);
 		this.setJMenuBar(menuBar);
 		
-		this.getCentralRegionSize().getWidth();
-		
 		log = instructions;
+		
+		System.out.println("this.getCentralRegionSize().getWidth() = " + this.getCentralRegionSize().getWidth());
+		System.out.println("this.getCentralRegionSize().getHeight() = " + this.getCentralRegionSize().getHeight());
+		
+		viewingRectangle = new ViewingRectangle(0,this.getCentralRegionSize().getWidth(),
+				                                0,this.getCentralRegionSize().getHeight());
+		
+		sketchCanvas.setViewingRectangle(viewingRectangle);
+		
+		this.addComponentListener(new ComponentListener() {
+
+			@Override
+			public void componentResized(ComponentEvent e) {
+				sketchCanvas.setViewingRectangle(new ViewingRectangle(0,MainWindow.this.getCentralRegionSize().getWidth(),
+                                                                      0,MainWindow.this.getCentralRegionSize().getHeight()));
+				sketchCanvas.updateDrawables();
+				MainWindow.this.revalidate();
+			}
+
+			@Override
+			public void componentMoved(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void componentShown(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+
+			@Override
+			public void componentHidden(ComponentEvent e) {
+				// TODO Auto-generated method stub
+			}
+			
+		});
 		
 		//For Debugging...
 		@SuppressWarnings("unused")
@@ -379,6 +476,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatement(Statement s) {
+		System.out.println("adding statement" + s);
 		statementPanel.addStatement(s);
 		setInstructionsText(s.toString());
 	}

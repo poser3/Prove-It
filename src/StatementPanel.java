@@ -1,5 +1,5 @@
 
-import java.awt.Dimension;
+import java.awt.BorderLayout;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -11,28 +11,28 @@ import javax.swing.KeyStroke;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
-import acm.gui.TableLayout;
-
 
 @SuppressWarnings("serial")
 public class StatementPanel extends JPanel{
 	
-	private final int STATEMENT_PANEL_WIDTH = 460;
-	private final int STATEMENT_PANEL_HEIGHT = 590;
-    private final int STATEMENT_SCROLLPANE_WIDTH = 360;
-	private final int STATEMENT_SCROLLPANE_HEIGHT = 580;
+	private final int STATEMENT_PANEL_WIDTH = 600;
+	private final int STATEMENT_PANEL_HEIGHT = 270;
+    private final int STATEMENT_SCROLLPANE_WIDTH = 600;
+	private final int STATEMENT_SCROLLPANE_HEIGHT = 270;
+	private final int NOTHING_SELECTED = -1;
 
+	private MainWindow mainWindow_;
 	private StatementListModel statements_;
 	private JList<Statement> statementList_;
 	
 	
 	public StatementPanel(MainWindow mainWindow) {
 		
+		mainWindow_ = mainWindow;
 		statements_ = new StatementListModel();
 		statementList_ = new JList<Statement>(statements_);
 		
-		this.setLayout(new TableLayout(1,1));
-		this.setPreferredSize(new Dimension(STATEMENT_PANEL_WIDTH,STATEMENT_PANEL_HEIGHT));
+		this.setLayout(new BorderLayout());
 		statementList_.setCellRenderer(new StatementListCellRenderer());
 		JScrollPane statementsScrollPane = new JScrollPane(statementList_);
 		statementList_.setFocusable(true);
@@ -42,7 +42,9 @@ public class StatementPanel extends JPanel{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionDeeper();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionDown();
+				//getSelectedStatement().getExpression().shiftSelectionDeeper();
 				statementList_.repaint();
 			}
 			
@@ -52,7 +54,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionHigher();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionUp();
+				//getSelectedStatement().getExpression().shiftSelectionHigher();
 				statementList_.repaint();
 			}
 	
@@ -62,7 +66,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionLeft();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionBackward();
+				//getSelectedStatement().getExpression().shiftSelectionLeft();
 				statementList_.repaint();
 			}
 	
@@ -72,7 +78,9 @@ public class StatementPanel extends JPanel{
 			
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				getSelectedStatement().getExpression().shiftSelectionRight();
+				Shifter shifter = new Shifter(getSelectedStatement().getExpression());
+				shifter.shiftSelectionForward();
+				//getSelectedStatement().getExpression().shiftSelectionRight();
 				statementList_.repaint();
 			}
 	
@@ -89,21 +97,19 @@ public class StatementPanel extends JPanel{
 			}
 		};
 		
-		
 		KeyStroke keyStroke;
 		InputMap im = statementList_.getInputMap();
-		keyStroke = KeyStroke.getKeyStroke("shift DOWN");
-		statementList_.getActionMap().put(im.get(keyStroke), shiftDownAction);
-		keyStroke = KeyStroke.getKeyStroke("shift UP");
-		statementList_.getActionMap().put(im.get(keyStroke), shiftUpAction);
+		
 		keyStroke = KeyStroke.getKeyStroke("LEFT");
 		statementList_.getActionMap().put(im.get(keyStroke), leftAction);
 		keyStroke = KeyStroke.getKeyStroke("RIGHT");
 		statementList_.getActionMap().put(im.get(keyStroke), rightAction);
 		
-		//For DEBUGGING - Space bar activates a testAction defined above
-		//note: additional step of putting keystroke and string to the input map
-		//needed as this key binding is not present.
+		//NOTE FOR FUTURE REFERENCE - If you want to use other keystrokes, be aware some of these
+		//won't be in the InputMap yet, so you have to add them.  For example, space bar is 
+		//not automatically in the InputMap (i.e., no key binding is present), so if we want 
+		//it to activate a testAction defined above, we have one additional step/line of 
+		//code to put the keystroke and string into the input map (see below)
 		String keyStrokeAndKey = "SPACE";
 		keyStroke = KeyStroke.getKeyStroke(keyStrokeAndKey);
 		statementList_.getInputMap().put(keyStroke, keyStrokeAndKey);
@@ -114,13 +120,17 @@ public class StatementPanel extends JPanel{
 			@Override
 			public void valueChanged(ListSelectionEvent e) {
 				deselectAllStatements();
-				Statement selectedStatement = statementList_.getSelectedValue();
-				selectedStatement.getExpression().setSelected(true);
+				if (statementList_.getSelectedIndex() != NOTHING_SELECTED) {
+					Statement selectedStatement = statementList_.getSelectedValue();
+					selectedStatement.getExpression().setSelected(true);
+				}
 			}});
 		
 		statementsScrollPane.setVerticalScrollBar(statementsScrollPane.createVerticalScrollBar());
-		statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
+		//statementsScrollPane.setPreferredSize(new Dimension(STATEMENT_SCROLLPANE_WIDTH,STATEMENT_SCROLLPANE_HEIGHT));
 		this.add(statementsScrollPane);
+		
+		statementList_.addMouseListener(new PopClickListener(mainWindow_));
 	}
 	
 	public Statement getSelectedStatement() {

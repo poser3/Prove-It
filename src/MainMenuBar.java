@@ -29,7 +29,9 @@ public class MainMenuBar extends JMenuBar{
 			
 		mainWindow_ = mainWindow;
 		
-		menu = new JMenu("Manipulate");
+		menu = new JMenu("File");
+		
+		/*//REMOVED
 		menuItem = new JMenuItem("Hide Selected Statements");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -37,6 +39,9 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.getStatementPanel().hideSelectedStatements();	
 			}});
 		menu.add(menuItem);
+		*/
+		
+		/*//REMOVED
 		menuItem = new JMenuItem("Show All Hidden Statements");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -44,6 +49,9 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.getStatementPanel().showHiddenStatements();	
 			}});
 		menu.add(menuItem);
+		*/
+		
+		/*//REMOVED
 		menuItem = new JMenuItem("Apply Theorem");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -51,13 +59,8 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.applyTheorem();	
 			}});
 		menu.add(menuItem);
-		menuItem = new JMenuItem("Reload Theorems");
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainWindow_.reloadTheorems();	
-			}});
-		menu.add(menuItem);
+		*/
+		
 		menuItem = new JMenuItem("Load Statements...");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -65,6 +68,17 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.loadStatements();	
 			}});
 		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Reload Theorems");
+		menuItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainWindow_.reloadTheorems();	
+			}});
+		menu.add(menuItem);
+		
+		
+		/*//REMOVED
 		menuItem = new JMenuItem("Substitute");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -72,7 +86,10 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.substitute();	
 			}});
 		menu.add(menuItem);
+		*/
+		
 		this.add(menu);
+		
 		
 		//////////////////////////////////////////////////////////
 		

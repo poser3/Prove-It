@@ -215,6 +215,13 @@ public class SketchCanvas extends GCanvas {
 				
 			});
 			
+			this.addMouseListener(new SketchCanvasPopClickListener(mainWindow_));
+			
+		}
+		
+		//update all drawables
+		public void updateDrawables() {
+			drawables_.update();
 		}
 		
 		//Getters and Setters
@@ -293,7 +300,6 @@ public class SketchCanvas extends GCanvas {
 				selectedDrawables_.add(d);
 			else
 				selectedDrawables_.remove(d);
-			updateSelectedDisplay();
 		}
 		
 		/**
@@ -322,13 +328,6 @@ public class SketchCanvas extends GCanvas {
 			return typeStr.toString();
 		}
 		
-		
-		/**
-		 * Update the SketchPanel's display of selected objects.
-		 */
-		public void updateSelectedDisplay() {
-			sketchPanel_.setSelectedTypesText(getSelectedTypes());
-		}
 		
 		public Drawable getDrawableAt(double x, double y) {
 			//TODO: This still has some issues.  It will return a drawable point within epsilon

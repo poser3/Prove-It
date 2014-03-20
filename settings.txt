@@ -1,1 +1,2 @@
-theorem-path = ../res/theorems/
+theorem-path = ./theorems/
+image-path = ./images/

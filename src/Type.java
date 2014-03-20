@@ -28,7 +28,6 @@ public enum Type {
 		case "angle":
 			return ANGLE;
 		default:
-			System.out.println("Tried to look up type " + s);
 			return null;
 		}
 	}
