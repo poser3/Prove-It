@@ -15,10 +15,10 @@ import javax.swing.event.ListSelectionListener;
 @SuppressWarnings("serial")
 public class StatementPanel extends JPanel{
 	
-	private final int STATEMENT_PANEL_WIDTH = 600;
-	private final int STATEMENT_PANEL_HEIGHT = 270;
-    private final int STATEMENT_SCROLLPANE_WIDTH = 600;
-	private final int STATEMENT_SCROLLPANE_HEIGHT = 270;
+	//private final int STATEMENT_PANEL_WIDTH = 600;
+	//private final int STATEMENT_PANEL_HEIGHT = 270;
+    //private final int STATEMENT_SCROLLPANE_WIDTH = 600;
+	//private final int STATEMENT_SCROLLPANE_HEIGHT = 270;
 	private final int NOTHING_SELECTED = -1;
 
 	private MainWindow mainWindow_;
@@ -38,6 +38,7 @@ public class StatementPanel extends JPanel{
 		statementList_.setFocusable(true);
 		statementList_.requestFocus();
 		
+		/*
 		Action shiftDownAction = new AbstractAction() {
 
 			@Override
@@ -61,6 +62,7 @@ public class StatementPanel extends JPanel{
 			}
 	
 		}; 
+		*/
 		
 		Action leftAction = new AbstractAction() {
 			

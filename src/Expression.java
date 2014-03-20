@@ -143,7 +143,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for(int i=1; i<words.size(); i++) {
 				String word = words.get(i);
 				// Save ourselves some stack space for compound expressions in arguments
-                                if(word.startsWith("\\(") && word.endsWith("\\)"))
+				if(word.startsWith("\\(") && word.endsWith("\\)"))
 					word = word.substring(1, word.length()-1);
 				args.add(parse(word, environment));
 			}

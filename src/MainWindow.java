@@ -34,7 +34,7 @@ public class MainWindow extends Program {
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
 	private StatementPanel statementPanel;
-	private ArrayList<VariableExpression> variableEnvironment = new ArrayList<VariableExpression>();
+	private VariablePanel variableListPanel;
 	private JPanel drawingPanel;
 	public ViewingRectangle viewingRectangle;
 	
@@ -88,7 +88,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					Expression selected = statement.getExpression();
-					final Expression fromField = Expression.parse(textField.getText(), variableEnvironment);
+					final Expression fromField = Expression.parse(textField.getText(), getVariableEnvironment());
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
 						return;
@@ -156,7 +156,7 @@ public class MainWindow extends Program {
 						return;
 					}
 					Expression selected = statement.getExpression();
-					Expression fromField = Expression.parse(textField.getText(), variableEnvironment);
+					Expression fromField = Expression.parse(textField.getText(), getVariableEnvironment());
 					if (fromField == null) {
 						setInstructionsText("Enter an expression below.");
 						return;
@@ -356,13 +356,9 @@ public class MainWindow extends Program {
 		variablePanel.setLayout(new BorderLayout());
 		JLabel variablePanelTitle = new JLabel("Variables");
 		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		VariablePanel variableListPanel = new VariablePanel(); //stub for variable panel
+		variableListPanel = new VariablePanel(); //stub for variable panel
 		variablePanel.add(variablePanelTitle, NORTH);
 		variablePanel.add(variableListPanel);
-		//DEBUG: put some sample variables in the list
-		variableListPanel.addVariable(new VariableExpression("\\theta", Type.NUMBER));
-		variableListPanel.addVariable(new VariableExpression("A", Type.POINT));
-		variableListPanel.addVariable(new VariableExpression("l_1", Type.LINE));
 		
 		//add the panels and setup the layout manager
 		this.getRegionPanel(NORTH).add(sketchPanel);
@@ -502,7 +498,7 @@ public class MainWindow extends Program {
 	}
 	
 	public ArrayList<VariableExpression> getVariableEnvironment() {
-		return variableEnvironment;
+		return variableListPanel.getEnvironment();
 	}
 	
 	public void deselectAll() {
