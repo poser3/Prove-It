@@ -116,15 +116,8 @@ public class Operator implements Comparable<Operator> {
 		else if (e.getNumArgs() == 1) {
 			StringBuilder sb = new StringBuilder();
 			sb.append(e.getOp());
-			if (e.getArg(0) instanceof OperatorExpression) {     //TODO: See note about overriding in Javadoc comment for this method
-				sb.append(" (");                                
-				sb.append(e.getArg(0).toLatex());
-				sb.append(")");
-			}
-			else {
-				sb.append(" ");
-				sb.append(e.getArg(0).toLatex());
-			}
+			sb.append(' ');
+			sb.append(expressionWithParens(e.getArg(0)));
 			return sb.toString();
 		}
 		
@@ -133,30 +126,24 @@ public class Operator implements Comparable<Operator> {
 		//leaving off the relevant parentheses when arg is not an operator expression
 		else {
 			StringBuilder sb = new StringBuilder();
-			if (e.getArg(0) instanceof OperatorExpression) {
-				sb.append("(");
-				sb.append(e.getArg(0).toLatex());
-				sb.append(")");
-			}
-			else
-				sb.append(e.getArg(0).toLatex());
+			sb.append(expressionWithParens(e.getArg(0)));
 			
 			for (int i=1; i<e.getNumArgs(); i++) {
-				sb.append(" ");
+				sb.append(' ');
 				sb.append(e.getOp());
-				if (e.getArg(i) instanceof OperatorExpression) {
-					sb.append(" (");
-					sb.append(e.getArg(i).toLatex());
-					sb.append(")");
-				}
-                else {
-					sb.append(" ");
-					sb.append(e.getArg(i).toLatex());
-				}
+				sb.append(' ');
+				sb.append(expressionWithParens(e.getArg(i)));
             }
 			return sb.toString();
 		}
     }
+	
+	private String expressionWithParens(final Expression e) {
+		String s = e.toLatex();
+		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().precedence > this.precedence)
+			s = '(' + s + ')';
+		return s;
+	}
 	
     /**
 	 * Determines whether two operators are the same, based on their names.

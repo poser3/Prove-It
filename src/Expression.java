@@ -137,6 +137,8 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			
 			// identify the operator (i.e., the first word)
 			Operator op = Operators.named(words.get(0));
+			if (op == null)
+				throw new IllegalArgumentException("Unrecognized operator " + words.get(0));
 			
 			// create an arrayList for all of the arguments to the operator (i.e., the rest of the words)
 			ArrayList<Expression> args = new ArrayList<Expression>(words.size()-1);
