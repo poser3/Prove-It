@@ -22,10 +22,10 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(e.getArg(0).toLatex());
+				sb.append(expressionWithParens(e.getArg(0)));
 				for(int i=1; i<e.getNumArgs(); i++) {
 					sb.append(" \\neq ");
-					sb.append(e.getArg(i));
+					sb.append(expressionWithParens(e.getArg(0)));
 				}
 				return sb.toString();
 			}
@@ -36,10 +36,10 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(e.getArg(0).toLatex());
+				sb.append(expressionWithParens(e.getArg(0)));
 				for(int i=1; i<e.getNumArgs(); i++) {
 					sb.append(" \\leq ");
-					sb.append(e.getArg(i));
+					sb.append(expressionWithParens(e.getArg(i)));
 				}
 				return sb.toString();
 			}
@@ -48,10 +48,10 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
-				sb.append(e.getArg(0).toLatex());
+				sb.append(expressionWithParens(e.getArg(0)));
 				for(int i=1; i<e.getNumArgs(); i++) {
 					sb.append(" \\geq ");
-					sb.append(e.getArg(i));
+					sb.append(expressionWithParens(e.getArg(i)));
 				}
 				return sb.toString();
 			}
@@ -322,7 +322,7 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(OperatorExpression e) {
 				return String.format("\\text{m } %s",
-						e.getArg(0).toLatex());
+						expressionWithParens(e.getArg(0)));
 			}
 			
 			@Override
@@ -331,53 +331,60 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("angle", new Operator("angle") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
-                    if (! e1.getArg(1).equals(e2.getArg(1)))
-                            return false;
-                    else
-                            return (e1.getArg(0).equals(e2.getArg(0)) && e1.getArg(2).equals(e2.getArg(2)))
-                                            || (e1.getArg(0).equals(e2.getArg(2)) && e1.getArg(2).equals(e2.getArg(0)));
-            }
-            
+				if (! e1.getArg(1).equals(e2.getArg(1)))
+					return false;
+				else
+					return (e1.getArg(0).equals(e2.getArg(0)) && e1.getArg(2).equals(e2.getArg(2)))
+							|| (e1.getArg(0).equals(e2.getArg(2)) && e1.getArg(2).equals(e2.getArg(0)));
+			}
+			
 			@Override
-            public String toLatex(final OperatorExpression e) {
-                    return String.format("\\angle %s %s %s",
-                                    e.getArg(0).toLatex(),
-                                    e.getArg(1).toLatex(),
-                                    e.getArg(2).toLatex());
-            }
+			public String toLatex(final OperatorExpression e) {
+					return String.format("\\angle %s %s %s",
+									expressionWithParens(e.getArg(0)),
+									expressionWithParens(e.getArg(1)),
+									expressionWithParens(e.getArg(2)));
+			}
 			
 			@Override
 			public Type getType(Type... argTypes) {
 				return Type.ANGLE;
 			}
-	    });
-	    put("segment", new Operator("segment") {
-	    	public final boolean isCommutative = true;
-	    	
-	    	@Override
-            public String toLatex(final OperatorExpression e) {
-                    return String.format("\\text{segment } \\overline{%s %s}",
-                                    e.getArg(0).toLatex(),
-                                    e.getArg(1).toLatex());
-            }
-	    	
-	    	@Override
-	    	public Type getType(Type... argTypes) {
-	    		return Type.SEGMENT;
-	    	}
-	    });
-		put("congruent", new Operator("congruent") {
+		});
+		put("segment", new Operator("segment") {
+			public final short precedence = Short.MAX_VALUE;
 			public final boolean isCommutative = true;
 			
 			@Override
+			public String toLatex(final OperatorExpression e) {
+					return String.format("\\text{segment } \\overline{%s %s}",
+									expressionWithParens(e.getArg(0)),
+									expressionWithParens(e.getArg(1)));
+			}
+			
+			@Override
+			public Type getType(Type... argTypes) {
+				return Type.SEGMENT;
+			}
+		});
+		put("congruent", new Operator("congruent") {
+			public final short precedence = Short.MAX_VALUE;
+			public final boolean isCommutative = true;
+						
+			@Override
 			public String toLatex(OperatorExpression e) {
 				return String.format("%s \\text{ is congruent to } %s",
-						e.getArg(0).toLatex(), e.getArg(1).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
 			}
 		});
 		put("between", new Operator("between") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
 				if (! e1.getArg(0).equals(e2.getArg(0)))
@@ -390,36 +397,44 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ is between } %s \\text{ and } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex(),
-						e.getArg(2).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)),
+						expressionWithParens(e.getArg(2)));
 			}
 		});
 		put("on", new Operator("on") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ is on } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
 			}
 		});
 		put("endpoint", new Operator("endpoint") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ is the endpoint of } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
 			}
 		});
 		put("center", new Operator("center") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ is the center of } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
 			}
 		});
 		put("intersect", new Operator("intersect") {
+			public final short precedence = Short.MAX_VALUE;
+			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
 				if (e1.getArg(2) != e2.getArg(2))
@@ -431,18 +446,20 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ and } %s \\text{ intersect at } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex(),
-						e.getArg(2).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)),
+						expressionWithParens(e.getArg(2)));
 			}
 		});
 		put("midpoint", new Operator("midpoint") {
+			public final short predecence = Short.MAX_VALUE;
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				return String.format("%s \\text{ is the midpoint of } %s \\text{ and } %s",
-						e.getArg(0).toLatex(),
-						e.getArg(1).toLatex(),
-						e.getArg(2).toLatex());
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)),
+						expressionWithParens(e.getArg(2)));
 			}
 		});
 	}

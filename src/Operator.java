@@ -138,7 +138,7 @@ public class Operator implements Comparable<Operator> {
 		}
     }
 	
-	private String expressionWithParens(final Expression e) {
+	protected final String expressionWithParens(final Expression e) {
 		String s = e.toLatex();
 		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().precedence > this.precedence)
 			s = '(' + s + ')';
