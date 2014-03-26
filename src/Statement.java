@@ -15,8 +15,8 @@ public class Statement implements Comparable<Statement> {
 		this.logicDependencies = new ArrayList<Statement>();
 		this.geometryDependencies = new Drawables();
 	}
-	public Statement(final String expression) {
-		this.expression = Expression.parse(expression, new VariableEnvironment());
+	public Statement(final String expression, final VariableEnvironment environment) {
+		this.expression = Expression.parse(expression, environment);
 		this.logicDependencies = new ArrayList<Statement>();
 		this.geometryDependencies = new Drawables();
 	}
@@ -27,8 +27,8 @@ public class Statement implements Comparable<Statement> {
 		this.logicDependencies = (logicDependencies == null) ? new ArrayList<Statement>() : logicDependencies;
 		this.geometryDependencies = (geometryDependencies == null) ? new Drawables() : geometryDependencies;
 	}
-	public Statement(final String expression, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
-		this.expression = Expression.parse(expression, new VariableEnvironment());
+	public Statement(final String expression, final VariableEnvironment environment, final ArrayList<Statement> logicDependencies, final Drawables geometryDependencies) {
+		this.expression = Expression.parse(expression, environment);
 		
 		this.logicDependencies = (logicDependencies == null) ? new ArrayList<Statement>() : logicDependencies;
 		this.geometryDependencies = (geometryDependencies == null) ? new Drawables() : geometryDependencies;

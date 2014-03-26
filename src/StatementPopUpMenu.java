@@ -143,7 +143,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 				String statementString = "= (+ " + wrapIfNeeded(leftSideExpression_) + " " + wrapIfNeeded(StatementPopUpMenu.this.selectedSubExpression_) + ") " + 
 						                   "(+ " + wrapIfNeeded(rightSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ")";
 				System.out.println("new statement = " + statementString);
-				statementPanel_.getStatements().addElement(new Statement(statementString));
+				statementPanel_.getStatements().addElement(new Statement(statementString, mainWindow_.getVariableEnvironment()));
 			}});
     	add(addToBothSidesItem);
     	
@@ -156,7 +156,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 				String statementString = "= (- " + wrapIfNeeded(leftSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ") " + 
                                            "(- " + wrapIfNeeded(rightSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ")";
 				System.out.println("new statement = " + statementString);
-				statementPanel_.getStatements().addElement(new Statement(statementString));
+				statementPanel_.getStatements().addElement(new Statement(statementString, mainWindow_.getVariableEnvironment()));
 			}});
     	add(subtractFromBothSidesItem);
     	
@@ -169,7 +169,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 				String statementString = "= (* " + wrapIfNeeded(leftSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ") " + 
                                            "(* " + wrapIfNeeded(rightSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ")";
 				System.out.println("new statement = " + statementString);
-				statementPanel_.getStatements().addElement(new Statement(statementString));
+				statementPanel_.getStatements().addElement(new Statement(statementString, mainWindow_.getVariableEnvironment()));
 			}});
     	add(multiplyBothSidesItem);
     	
@@ -182,7 +182,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 				String statementString = "= (/ " + wrapIfNeeded(leftSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ") " + 
                                            "(/ " + wrapIfNeeded(rightSideExpression_) + " " + wrapIfNeeded(selectedSubExpression_) + ")";
 				System.out.println("new statement = " + statementString);
-				statementPanel_.getStatements().addElement(new Statement(statementString));
+				statementPanel_.getStatements().addElement(new Statement(statementString, mainWindow_.getVariableEnvironment()));
 			}});
     	add(divideBothSidesItem);
     }

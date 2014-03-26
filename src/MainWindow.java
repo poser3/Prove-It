@@ -478,7 +478,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatement(final String s) {
-		addStatement(new Statement(s));
+		addStatement(new Statement(s, getVariableEnvironment()));
 	}
 		
 	public void addStatementAndSelect(Statement s, boolean shouldScroll) {
@@ -489,7 +489,7 @@ public class MainWindow extends Program {
 	}
 	
 	public void addStatementAndSelect(final String s, boolean shouldScroll) {
-		addStatementAndSelect(new Statement(s), shouldScroll);
+		addStatementAndSelect(new Statement(s, getVariableEnvironment()), shouldScroll);
 	}
 	
 	public TheoremPanel getTheoremPanel() {

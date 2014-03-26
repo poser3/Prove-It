@@ -21,7 +21,7 @@ public class Theorem {
 	////////////////////////
 	
 	public final String name;
-	public final ArrayList<VariableExpression> variables;
+	public final VariableEnvironment variables;
 	public final ArrayList<Statement> hypotheses;
 	public final ArrayList<Statement> conclusions;
 	
@@ -44,7 +44,7 @@ public class Theorem {
 		Scanner scanner = new Scanner(file);
 				
 		name = scanner.nextLine();
-		variables = new ArrayList<VariableExpression>();
+		variables = new VariableEnvironment();
 		hypotheses = new ArrayList<Statement>();
 		conclusions = new ArrayList<Statement>();
 		byte currentSection = VARIABLES;
@@ -83,10 +83,10 @@ public class Theorem {
 						}
 						break;
 					case HYPOTHESES:
-						preliminaryHypotheses.add(new Statement(line));
+						preliminaryHypotheses.add(new Statement(line, variables));
 						break;
 					case CONCLUSIONS:
-						preliminaryConclusions.add(new Statement(line));
+						preliminaryConclusions.add(new Statement(line, variables));
 						break;
 					}
 			}
