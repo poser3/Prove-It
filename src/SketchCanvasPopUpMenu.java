@@ -1,8 +1,6 @@
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
-import java.util.ArrayList;
-
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -34,7 +32,8 @@ public class SketchCanvasPopUpMenu extends JPopupMenu {
 				int indexOfSelectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedIndex();
 				System.out.println("index of selected variable in theorem panel = " + indexOfSelectedPairing);
 				System.out.println("selectedDrawableString = " + mainWindow_.getSketchCanvas().getSelectedDrawables().get(0).expression());
-				mainWindow_.getTheoremPanel().getPairings().get(indexOfSelectedPairing).pair(Expression.parse(mainWindow_.getSketchCanvas().getSelectedDrawables().get(0).expression(), new ArrayList<VariableExpression>()));
+				mainWindow_.getTheoremPanel().getPairings().get(indexOfSelectedPairing).pair(
+						Expression.parse(mainWindow_.getSketchCanvas().getSelectedDrawables().get(0).expression(), new VariableEnvironment()));
 				mainWindow_.getTheoremPanel().update();
 			}});
     	add(pairItem_);

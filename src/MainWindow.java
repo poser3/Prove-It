@@ -497,7 +497,7 @@ public class MainWindow extends Program {
 		return theoremPanel;
 	}
 	
-	public ArrayList<VariableExpression> getVariableEnvironment() {
+	public VariableEnvironment getVariableEnvironment() {
 		return variableListPanel.getEnvironment();
 	}
 	

@@ -1,6 +1,4 @@
 import java.awt.BorderLayout;
-import java.util.ArrayList;
-
 import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -9,7 +7,7 @@ import javax.swing.JScrollPane;
 @SuppressWarnings("serial")
 public class VariablePanel extends JPanel {
 
-	private final VariableListModel variables = new VariableListModel();
+	private final VariableEnvironment variables = new VariableEnvironment();
 	private final JList<VariableExpression> variableList = new JList<VariableExpression>(variables);
 	
 	public VariablePanel() {
@@ -24,10 +22,10 @@ public class VariablePanel extends JPanel {
 	}
 	
 	public void addVariable(VariableExpression variable) {
-		variables.addElement(variable);
+		variables.add(variable);
 	}
 	
-	public ArrayList<VariableExpression> getEnvironment() {
-		return variables.getDelegate();
+	public VariableEnvironment getEnvironment() {
+		return variables;
 	}
 }

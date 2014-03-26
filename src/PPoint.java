@@ -402,7 +402,7 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	
 	@Override
 	public String expression() {
-		return getLabel();
+		return "point " + getLabel();
 	}
 	
 	@Override

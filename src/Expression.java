@@ -19,7 +19,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return the template in tree form
 	 * @throws IllegalArgumentException if parentheses are mismatched or the operator was not recognized
 	 */
-	public static Expression parse(String template, ArrayList<VariableExpression> environment) {
+	public static Expression parse(String template, VariableEnvironment environment) {
 		//example of a template string "= (^ c 2) (+ (^ a 2) (^ b 2))"
 		
 		//if template string is empty, there is no expression to create
@@ -498,7 +498,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			if (map.containsKey(name)) {
 				//added below to account for when map.get(name) was not a variable expression
 				//i.e., a simple name, but instead a subexpression
-				return Expression.parse(map.get(name), new ArrayList<VariableExpression>());
+				return Expression.parse(map.get(name), new VariableEnvironment());
 				//return new VariableExpression(map.get(name));
 			}
 			return this;
@@ -521,7 +521,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return true if this expression matches the template, or false if it does not.
 	 */
 	public boolean matchesTemplate(String template) {
-		return equals(parse(template, new ArrayList<VariableExpression>()));
+		return equals(parse(template, new VariableEnvironment()));
 	}
 	
 	/**
@@ -537,7 +537,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 * @return a map from variable names in this expression to variable names used by the template containing the substitutions necessary for reconciliation, or null if no reconciliation is possible.
 	 */
 	public HashMap<String, String> findPairings(String template) {
-		return findPairings(parse(template, new ArrayList<VariableExpression>()));
+		return findPairings(parse(template, new VariableEnvironment()));
 	}
 	
 	/**

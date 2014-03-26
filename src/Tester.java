@@ -12,7 +12,7 @@ public class Tester {
 	}
 	
 	public Tester(MainWindow mainWindow) {
-		final ArrayList<VariableExpression> environment = new ArrayList<VariableExpression>();
+		final VariableEnvironment environment = new VariableEnvironment();
 		
 		System.out.println("Hi from the tester...");
 		OperatorExpression oe1 = (OperatorExpression) (Expression.parse("= (+ a b c) (- c d) (* x (- c d))", environment));

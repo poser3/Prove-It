@@ -440,18 +440,18 @@ public class SketchCanvas extends GCanvas {
 			case SEGMENT :	thing = new PSegment(p1, p2, p1.getLabel() + "-" + p2.getLabel());
 							break;
 			case LINE :		thing = new PLine(p1, p2, labelMaker_.nextLabel(LabelMaker.LINE));
-							addStatement("on %s %s", p1, thing);
-							addStatement("on %s %s", p2, thing);
+							addStatement("on (%s) (%s)", p1, thing);
+							addStatement("on (%s) (%s)", p2, thing);
 							break;
 							
 			case RAY :		thing = new PRay(p1, p2, labelMaker_.nextLabel(LabelMaker.RAY));
-							addStatement("endpoint %s %s", p1, thing);
-							addStatement("on %s %s", p2, thing);
+							addStatement("endpoint (%s) (%s)", p1, thing);
+							addStatement("on (%s) (%s)", p2, thing);
 							break;
 							
 			case CIRCLE :	thing = new PCircle(p1, p2, labelMaker_.nextLabel(LabelMaker.CIRCLE));
-							addStatement("center %s %s", p1, thing);
-							addStatement("on %s %s", p2, thing);
+							addStatement("center (%s) (%s)", p1, thing);
+							addStatement("on (%s) (%s)", p2, thing);
 							break;
 							
 			default :		throw new IllegalArgumentException();
@@ -636,16 +636,16 @@ public class SketchCanvas extends GCanvas {
 				if (intersection != null) {
 					add(intersection);
 					Drawables.registerWithParents(intersection);
-					addStatement("on %s %s", intersection, parent1);
-					addStatement("on %s %s", intersection, parent2);
-					addStatement("intersect %s %s %s", parent1, parent2, intersection);
+					addStatement("on (%s) (%s)", intersection, parent1);
+					addStatement("on (%s) (%s)", intersection, parent2);
+					addStatement("intersect (%s) (%s) (%s)", parent1, parent2, intersection);
 				}
 				if (intersection2 != null) {
 					add(intersection2);
 					Drawables.registerWithParents(intersection2);
-					addStatement("on %s %s", intersection2, parent1);
-					addStatement("on %s %s", intersection2, parent2);
-					addStatement("intersect %s %s %s", parent1, parent2, intersection2);
+					addStatement("on (%s) (%s)", intersection2, parent1);
+					addStatement("on (%s) (%s)", intersection2, parent2);
+					addStatement("intersect (%s) (%s) (%s)", parent1, parent2, intersection2);
 				}
 				
 				deselectEverythingInCanvas();
@@ -683,7 +683,7 @@ public class SketchCanvas extends GCanvas {
 				PPoint midpoint = new PPoint(PPoint.MIDPOINT, selectedPoints, labelMaker_.nextLabel(LabelMaker.POINT));
 				Drawables.registerWithParents(midpoint);
 				add(midpoint);
-				addStatement("midpoint %s %s %s", midpoint, selectedPoints.get(0), selectedPoints.get(1));
+				addStatement("midpoint (%s) (%s) (%s)", midpoint, selectedPoints.get(0), selectedPoints.get(1));
 				
 				deselectEverythingInCanvas();				
 				select(midpoint, true);

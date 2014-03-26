@@ -140,7 +140,7 @@ public class Operator implements Comparable<Operator> {
 	
 	protected final String expressionWithParens(final Expression e) {
 		String s = e.toLatex();
-		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().precedence > this.precedence)
+		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().precedence >= this.precedence)
 			s = '(' + s + ')';
 		return s;
 	}
