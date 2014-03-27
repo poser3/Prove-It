@@ -97,6 +97,11 @@ public class PSegment extends GLine implements Drawable, Selectable, MadeWith2Po
 	}
 	
 	@Override
+	public Type getType() {
+		return Type.SEGMENT;
+	}
+	
+	@Override
 	public boolean equals(Object o) {
 		if (o instanceof PSegment) {
 			return (get1stPoint().equals(((PSegment) o).get1stPoint())

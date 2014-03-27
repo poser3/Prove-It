@@ -70,28 +70,26 @@ public class StatementPopUpMenu extends JPopupMenu {
     	System.out.println("right side = " + rightSideExpression_);
     	System.out.println("selected subexpression = " + selectedSubExpression_);
     	
-    	// TODO: the pairItem should be enabled only when the conditions met below are met 
-    	// (a statement was selected and a pairing var from the theorem was selected) AND
-    	// when the types of these two vars match -- this last piece will need to be added
-    	// to the below...
-    	//
-    	// TODO: if we add multiple selections to the statement list, we will want to 
-    	// check that there is only one selected statement when we are trying to pair
-    	
+    	/*
+    	 * The pairItem is only enabled when (1) a statement is selected, (2) a
+    	 * pairing from a theorem is selected, and (3) the type of the selected
+    	 * subexpression matches the type of the variable in the theorem
+    	 * pairing.
+    	 * 
+    	 * If we add multiple selection to the statement list then we must
+    	 * TODO: make sure that only one statement is selected as we try to pair.
+    	 */
     	pairItem = new JMenuItem("Pair with selected theorem variable");
-    	int indexOfSelectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedIndex();
-    	pairItem.setEnabled((selectedStatement_ != null) &&
-    			            (indexOfSelectedPairing != -1));
+    	final Pairing selectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedValue();
+    	pairItem.setEnabled((selectedSubExpression_ != null) && (selectedPairing != null)
+    			&& (selectedSubExpression_.getType() == selectedPairing.getVariableExpression().getType()));
     	pairItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int indexOfSelectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedIndex();
-				
-				mainWindow_.getTheoremPanel().getPairings().get(indexOfSelectedPairing).pair(selectedStatement_.getExpression().getSelectedSubExpression());
+				selectedPairing.pair(selectedSubExpression_);
 				
 				mainWindow_.getTheoremPanel().update();
-				String status = "pairing expression...";
-				mainWindow_.setInstructionsText(status);		
+				mainWindow_.setInstructionsText("Pairing expression...");
 			}});
     	add(pairItem);
     	

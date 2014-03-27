@@ -406,6 +406,11 @@ public class PPoint extends GCompound implements Drawable, Selectable {
 	}
 	
 	@Override
+	public Type getType() {
+		return Type.POINT;
+	}
+	
+	@Override
 	public double distanceTo(double x, double y) {
 		return Math.sqrt( (x-this.getX())*(x-this.getX()) +
 				          (y-this.getY())*(y-this.getY())   );

@@ -83,8 +83,7 @@ public class VariableEnvironment extends AbstractListModel<VariableExpression> i
 	@Override
 	public Iterator<VariableExpression> iterator() {
 		/* 
-		 * TODO: The iterator is able to remove elements from the list,
-		 * and should call fireIntervalRemoved() when it does so.
+		 * TODO: Fire intervalRemoved event when the iterator removes an element from the list.
 		 */
 		return variables.iterator();
 	}
@@ -97,8 +96,7 @@ public class VariableEnvironment extends AbstractListModel<VariableExpression> i
 	@Override
 	public ListIterator<VariableExpression> listIterator() {
 		/*
-		 * TODO: The list iterator is able to add, remove, and change elements in the list,
-		 * and should fire the relevant events when it does so.
+		 * TODO: Fire relevant events when the iterator changes the list.
 		 */
 		return variables.listIterator();
 	}
@@ -106,8 +104,7 @@ public class VariableEnvironment extends AbstractListModel<VariableExpression> i
 	@Override
 	public ListIterator<VariableExpression> listIterator(int index) {
 		/*
-		 * TODO: The list iterator is able to add, remove, and change elements in the list,
-		 * and should fire the relevant events when it does so.
+		 * TODO: Fire relevant events when the iterator changes the list.
 		 */
 		return variables.listIterator(index);
 	}

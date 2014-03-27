@@ -133,6 +133,11 @@ public class PLine extends GCompound implements Drawable, Selectable, MadeWith2P
 	}
 	
 	@Override
+	public Type getType() {
+		return Type.LINE;
+	}
+	
+	@Override
 	public double distanceTo(double x, double y) {
 		double ax = p1_.getX();
 		double ay = p1_.getY();

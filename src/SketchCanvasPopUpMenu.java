@@ -21,19 +21,22 @@ public class SketchCanvasPopUpMenu extends JPopupMenu {
 		//TODO: if we need it, here is how we can get the drawable that was right-clicked to produce the pop-up menu
 		//Drawable drawableClicked = mainWindow_.getSketchCanvas().getDrawableAt(mouseEvent_.getX(), mouseEvent_.getY());
 		
-		int indexOfSelectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedIndex();
+		final Pairing selectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedValue();
+		final Type pairingType = selectedPairing == null ? null : selectedPairing.getVariableExpression().getType();
+		final Drawable selectedDrawable = mainWindow_.getSketchCanvas().getSelectedDrawables().size() == 1 ?
+				mainWindow_.getSketchCanvas().getSelectedDrawables().get(0) : null;
+		final Type drawableType = selectedDrawable == null ? null : selectedDrawable.getType();
     	
 		pairItem_ = new JMenuItem("Pair selected object with selected theorem variable");
-		pairItem_.setEnabled((mainWindow_.getSketchCanvas().getSelectedDrawables().size() == 1)  &&
-	                         (indexOfSelectedPairing != -1));
+		pairItem_.setEnabled((selectedPairing != null) && (selectedDrawable != null)
+				&& (pairingType == drawableType));
 		pairItem_.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				int indexOfSelectedPairing = mainWindow_.getTheoremPanel().getPairingsList().getSelectedIndex();
-				System.out.println("index of selected variable in theorem panel = " + indexOfSelectedPairing);
-				System.out.println("selectedDrawableString = " + mainWindow_.getSketchCanvas().getSelectedDrawables().get(0).expression());
-				mainWindow_.getTheoremPanel().getPairings().get(indexOfSelectedPairing).pair(
-						Expression.parse(mainWindow_.getSketchCanvas().getSelectedDrawables().get(0).expression(), new VariableEnvironment()));
+				Expression drawableExpression = Expression.parse(selectedDrawable.expression(),
+						mainWindow_.getVariableEnvironment());
+				
+				selectedPairing.pair(drawableExpression);
 				mainWindow_.getTheoremPanel().update();
 			}});
     	add(pairItem_);

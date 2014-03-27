@@ -133,6 +133,11 @@ public class PRay extends GCompound implements Drawable, Selectable, MadeWith2Po
 	}
 	
 	@Override
+	public Type getType() {
+		return Type.RAY;
+	}
+	
+	@Override
 	public double distanceTo(double x, double y) {
 		//Suppose we want distance from X to segment AB
 		//Find angle BAX using law of cosines.
