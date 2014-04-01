@@ -8,7 +8,7 @@ public class Operator implements Comparable<Operator> {
 	////////////////////////
 	
 	private final String name;
-	public final short precedence = 0;
+	public short precedence = 0;
 	public final boolean isAssociative = false;
 	public final boolean isCommutative = false;
 	private final String distributes = null;
@@ -30,6 +30,10 @@ public class Operator implements Comparable<Operator> {
 	///////////////////
 	// Other Methods //
 	///////////////////
+	
+	public short getPrecedence() {
+		return this.precedence;
+	}
 	
 	/**
 	 * Checks if this operator distributes over another.
@@ -140,7 +144,19 @@ public class Operator implements Comparable<Operator> {
 	
 	protected final String expressionWithParens(final Expression e) {
 		String s = e.toLatex();
-		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().precedence >= this.precedence)
+		///DEBUG
+		//Operator myop = Operators.named("+");
+		//System.out.println("myop precedence = " + myop.getPrecedence());
+		if (e instanceof OperatorExpression) {
+			System.out.println(((OperatorExpression) e).getOp().name + " has precedence " + 
+		                       ((OperatorExpression) e).getOp().getPrecedence());
+		}
+		else {
+			System.out.println("not an operator");
+		}
+		System.out.println(this.toString() + " has precedence " + this.getPrecedence());
+		////////
+		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().getPrecedence() < this.getPrecedence())
 			s = '(' + s + ')';
 		return s;
 	}

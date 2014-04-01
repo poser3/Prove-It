@@ -15,9 +15,18 @@ public class Operators extends HashMap<String, Operator> {
 	private Operators() {
 		put("=", new Operator("=") {
 			public final boolean isCommutative = true;
+			
+			public short getPrecedence() {
+				return 1;
+			}
+			
 		});
 		put("!=", new Operator("!=") {
 			public final boolean isCommutative = true;
+			
+			public short getPrecedence() {
+				return 1;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
@@ -30,9 +39,24 @@ public class Operators extends HashMap<String, Operator> {
 				return sb.toString();
 			}
 		});
-		put("<", new Operator("<"));
-		put(">", new Operator(">"));
+		put("<", new Operator("<") {
+			public short getPrecedence() {
+				return 1;
+			}
+			
+		});
+		put(">", new Operator(">") {
+			public short getPrecedence() {
+				return 1;
+			}
+			
+		});
 		put("<=", new Operator("<=") {
+
+			public short getPrecedence() {
+				return 1;
+			}
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
@@ -45,6 +69,10 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put(">=", new Operator(">=") {
+			public short getPrecedence() {
+				return 1;
+			}
+			
 			@Override
 			public String toLatex(final OperatorExpression e) {
 				StringBuilder sb = new StringBuilder();
@@ -60,6 +88,10 @@ public class Operators extends HashMap<String, Operator> {
 			public final boolean isCommutative = true;
 			public final boolean isAssociative = true;
 			private final String inverse = "-";
+			
+			public short getPrecedence() {
+				return 2;
+			}
 			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
@@ -101,6 +133,10 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put("-", new Operator("-") {
 			private final String inverse = "+";
+			
+			public short getPrecedence() {
+				return 2;
+			}
 			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
@@ -168,6 +204,14 @@ public class Operators extends HashMap<String, Operator> {
 			private final String distributes = "+";
 			private final String inverse = "/";
 			
+			public short getPrecedence() {
+				return 3;
+			}
+			
+			public String toLatex(final OperatorExpression e) {
+				return super.toLatex(e).replace('*', '#').replaceAll("#"," \\\\cdot ");
+			}
+			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
 				BigDecimal constant = BigDecimal.ONE;
@@ -201,6 +245,14 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put("/", new Operator("/") {
 			private final String inverse = "*";
+			
+			public short getPrecedence() {
+				return 3;
+			}
+			
+			public String toLatex(final OperatorExpression e) {
+				return "\\frac{" + super.toLatex(e).replace('/', '#').replaceAll("#","}{") + "}";
+			}
 			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
@@ -268,6 +320,14 @@ public class Operators extends HashMap<String, Operator> {
 		put("^", new Operator("^") {
 			private final String distributes = "*";
 			
+			public short getPrecedence() {
+				return 4;
+			}
+			
+			public String toLatex(final OperatorExpression e) {
+				return "{" + super.toLatex(e).replace('/', '#').replaceAll("#","}^{") + "}";
+			}
+			
 			@Override
 			public Expression simplify(final OperatorExpression e) {
 				if (e.getNumArgs() == 2) {
@@ -319,6 +379,10 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("m", new Operator("m") {
+			public short getPrecedence() {
+				return 5;
+			}
+			
 			@Override
 			public String toLatex(OperatorExpression e) {
 				return String.format("\\text{m } %s",
@@ -331,7 +395,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("angle", new Operator("angle") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
@@ -356,8 +422,11 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("segment", new Operator("segment") {
-			public final short precedence = Short.MAX_VALUE;
 			public final boolean isCommutative = true;
+			
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
@@ -372,8 +441,10 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("congruent", new Operator("congruent") {
-			public final short precedence = Short.MAX_VALUE;
 			public final boolean isCommutative = true;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 						
 			@Override
 			public String toLatex(OperatorExpression e) {
@@ -383,7 +454,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("between", new Operator("between") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
@@ -403,7 +476,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("on", new Operator("on") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
@@ -413,7 +488,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("endpoint", new Operator("endpoint") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
@@ -423,7 +500,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("center", new Operator("center") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
@@ -433,7 +512,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("intersect", new Operator("intersect") {
-			public final short precedence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public boolean areEqual(final OperatorExpression e1, final OperatorExpression e2) {
@@ -452,7 +533,9 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("midpoint", new Operator("midpoint") {
-			public final short predecence = Short.MAX_VALUE;
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
