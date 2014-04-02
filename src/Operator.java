@@ -127,11 +127,12 @@ public class Operator implements Comparable<Operator> {
 		
 		//If the operator has more than one argument:
 		//use the form "(arg) op (arg) op (arg) op ... op (arg)", 
-		//leaving off the relevant parentheses when arg is not an operator expression
+		//leaving off the relevant parentheses when arg is not an operator expression 
+		//or when arg is an operator expression whose operator has a higher precedence level
 		else {
 			StringBuilder sb = new StringBuilder();
-			sb.append(expressionWithParens(e.getArg(0)));
 			
+			sb.append(expressionWithParens(e.getArg(0)));
 			for (int i=1; i<e.getNumArgs(); i++) {
 				sb.append(' ');
 				sb.append(e.getOp());
@@ -144,18 +145,6 @@ public class Operator implements Comparable<Operator> {
 	
 	protected final String expressionWithParens(final Expression e) {
 		String s = e.toLatex();
-		///DEBUG
-		//Operator myop = Operators.named("+");
-		//System.out.println("myop precedence = " + myop.getPrecedence());
-		if (e instanceof OperatorExpression) {
-			System.out.println(((OperatorExpression) e).getOp().name + " has precedence " + 
-		                       ((OperatorExpression) e).getOp().getPrecedence());
-		}
-		else {
-			System.out.println("not an operator");
-		}
-		System.out.println(this.toString() + " has precedence " + this.getPrecedence());
-		////////
 		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().getPrecedence() < this.getPrecedence())
 			s = '(' + s + ')';
 		return s;

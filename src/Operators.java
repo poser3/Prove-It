@@ -208,8 +208,15 @@ public class Operators extends HashMap<String, Operator> {
 				return 3;
 			}
 			
+			@Override
 			public String toLatex(final OperatorExpression e) {
-				return super.toLatex(e).replace('*', '#').replaceAll("#"," \\\\cdot ");
+				StringBuilder sb = new StringBuilder();
+				sb.append(expressionWithParens(e.getArg(0)));
+				for(int i=1; i<e.getNumArgs(); i++) {
+					sb.append(" \\cdot ");
+					sb.append(expressionWithParens(e.getArg(i)));
+				}
+				return sb.toString();
 			}
 			
 			@Override
@@ -250,8 +257,15 @@ public class Operators extends HashMap<String, Operator> {
 				return 3;
 			}
 			
+			@Override
 			public String toLatex(final OperatorExpression e) {
-				return "\\frac{" + super.toLatex(e).replace('/', '#').replaceAll("#","}{") + "}";
+				StringBuilder sb = new StringBuilder();
+				sb.append(" \\frac{");
+				sb.append(expressionWithParens(e.getArg(0)));
+				sb.append("}{");
+				sb.append(expressionWithParens(e.getArg(1)));
+				sb.append("} ");
+				return sb.toString();
 			}
 			
 			@Override
@@ -324,8 +338,15 @@ public class Operators extends HashMap<String, Operator> {
 				return 4;
 			}
 			
+			@Override
 			public String toLatex(final OperatorExpression e) {
-				return "{" + super.toLatex(e).replace('/', '#').replaceAll("#","}^{") + "}";
+				StringBuilder sb = new StringBuilder();
+				sb.append(" {");
+				sb.append(expressionWithParens(e.getArg(0)));
+				sb.append("}^{");
+				sb.append(expressionWithParens(e.getArg(1)));
+				sb.append("} ");
+				return sb.toString();
 			}
 			
 			@Override
