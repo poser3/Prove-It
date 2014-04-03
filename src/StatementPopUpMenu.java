@@ -124,7 +124,6 @@ public class StatementPopUpMenu extends JPopupMenu {
 		
 		this.addSeparator();
     	
-    	
 		// TODO: For adding, subtracting, multiplying, and dividing both sides, enable menu items only if 
     	// clicked item is an equation AND selected item is a reasonable expression to this end.
     	// The former has been done (possibly poorly), the latter still needs to be added.

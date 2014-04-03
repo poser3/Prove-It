@@ -188,6 +188,10 @@ public class MainWindow extends Program {
 		return statementPanel;
 	}
 	
+	public VariablePanel getVariableListPanel() {
+		return variableListPanel;
+	}
+	
 	public void applyTheorem() {
 		TheoremChooserDialog chooser = new TheoremChooserDialog(MainWindow.this);
 		chooser.setVisible(true);
@@ -356,7 +360,7 @@ public class MainWindow extends Program {
 		variablePanel.setLayout(new BorderLayout());
 		JLabel variablePanelTitle = new JLabel("Variables");
 		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		variableListPanel = new VariablePanel(); //stub for variable panel
+		variableListPanel = new VariablePanel(this); //stub for variable panel
 		variablePanel.add(variablePanelTitle, NORTH);
 		variablePanel.add(variableListPanel);
 		
