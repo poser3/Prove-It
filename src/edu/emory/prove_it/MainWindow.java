@@ -46,8 +46,6 @@ public class MainWindow extends Program {
 	private final JTextArea instructions = new JTextArea(5, 10);
 	private JTabbedPane tabbedPane;
 	private TheoremPanel theoremPanel;
-	private OperatePanel operatePanel;
-	private CreatePanel createPanel;
 	public static JTextArea log;
 	private MainMenuBar menuBar;
 	private SketchCanvas sketchCanvas;
@@ -56,151 +54,9 @@ public class MainWindow extends Program {
 	private JPanel drawingPanel;
 	public ViewingRectangle viewingRectangle;
 	
-	private class OperatePanel extends JPanel {
-		final private short COLUMNS = 2;
-		final JTextField textField = new JTextField();
-		
-		OperatePanel() {
-			final TableLayout layout = new TableLayout(0, COLUMNS);
-			layout.setHgap(20);
-			layout.setVgap(20);
-			setLayout(layout);
-			
-			addButton("+");
-			addButton("-");
-			addButton("*");
-			addButton("/");
-			
-			add(textField, "gridwidth="+COLUMNS);
-			
-			JButton simplifyButton = new JButton("Simplify");
-			simplifyButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					for (Object selected : statementPanel.getStatementList().getSelectedValuesList()) {
-						Statement s = (Statement) selected;
-						Expression e = s.getExpression();
-						
-						if (e instanceof OperatorExpression) {
-							Expression simplified = ((OperatorExpression) e).simplify();
-							if (! simplified.equals(e)) {
-								Statement result = new Statement(simplified, s.logicParents(), s.geometryParents());
-								addStatementAndSelect(result, true);
-							}
-						}
-					}
-				}
-			});
-			add(simplifyButton, "gridwidth="+COLUMNS);
-		}
-		
-		private void addButton(final String opName, final String text) {
-			final Operator op = Operators.named(opName);
-			final JButton button = new JButton(text);
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					Statement statement = statementPanel.getSelectedStatement();
-					if (statement == null) {
-						setInstructionsText("Select a statement from the list.");
-						return;
-					}
-					Expression selected = statement.getExpression();
-					final Expression fromField = Expression.parse(textField.getText(), getVariableEnvironment());
-					if (fromField == null) {
-						setInstructionsText("Enter an expression below.");
-						return;
-					}
-					Expression changed;
-					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operators.named("=")) {
-						final ArrayList<Expression> args = ((OperatorExpression) selected).getArgs();
-						ArrayList<Expression> newArgs = new ArrayList<Expression>();
-						for (Expression arg : args)
-							newArgs.add(arg.applyRight(op, fromField));
-						changed = new OperatorExpression("=", newArgs);
-						
-					} else
-						changed = selected.applyRight(op, fromField);
-					
-					Statement result = new Statement(changed, statement.logicParents(), statement.geometryParents());
-					addStatementAndSelect(result, true);
-				}
-			});
-			add(button);
-		}
-		private void addButton(final String name) {
-			addButton(name, name);
-		}
-	}
-	private class CreatePanel extends JPanel {
-		final private short COLUMNS = 2;
-		final JTextField textField = new JTextField();
-		
-		CreatePanel() {
-			final TableLayout layout = new TableLayout(0, COLUMNS);
-			layout.setVgap(20);
-			setLayout(layout);
-			
-			addButton("+", "+", "Add to");
-			addButton("*", "*", "Multiply");
-			
-			JButton newButton = new JButton("Equation from input");
-			newButton.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					System.out.println("adding statement and selecting it");
-					addStatementAndSelect(textField.getText(), true);
-					MainWindow.this.revalidate();
-				}
-			});
-			add(newButton, "gridwidth="+COLUMNS);
-			
-			add(textField, "gridwidth="+COLUMNS);
-		}
-		
-		private void addButton(final String opName, final String buttonText, final String selectName) {			
-			final String[] comboItems = {selectName+" both sides", selectName+" left side", selectName+" right side"};
-			final JComboBox<String> comboBox = new JComboBox<String>(comboItems);
-			add(comboBox);
-			
-			final Operator op = Operators.named(opName);
-			final JButton button = new JButton(buttonText);
-			button.addActionListener(new ActionListener() {
-				@Override
-				public void actionPerformed(ActionEvent event) {
-					Statement statement = statementPanel.getSelectedStatement();
-					if (statement == null) {
-						setInstructionsText("Select an expression from the list.");
-						return;
-					}
-					Expression selected = statement.getExpression();
-					Expression fromField = Expression.parse(textField.getText(), getVariableEnvironment());
-					if (fromField == null) {
-						setInstructionsText("Enter an expression below.");
-						return;
-					}
-					String mode = (String) comboBox.getSelectedItem();
-					if (selected instanceof OperatorExpression && ((OperatorExpression) selected).getOp() == Operators.named("=")) {
-						final ArrayList<Expression> args = ((OperatorExpression) selected).getArgs();
-						ArrayList<Expression> newArgs = new ArrayList<Expression>();
-						for (int i=0; i<args.size(); i++) {
-							if (mode.endsWith(" both sides"))
-								newArgs.add(args.get(i).applyRight(op, fromField));
-							else if (mode.endsWith(" left side") && i==0)
-								newArgs.add(args.get(i).applyRight(op, fromField));
-							else if (mode.endsWith(" right side") && i==args.size()-1)
-								newArgs.add(args.get(i).applyRight(op, fromField));
-							else
-								newArgs.add(args.get(i));
-						}
-						Statement result = new Statement(new OperatorExpression("=", newArgs), statement.logicParents(), statement.geometryParents());
-						addStatementAndSelect(result, true);
-					}
-				}
-			});
-			add(button);
-		}
-	}
+	
+	
+	
 	
 	public StatementPanel getStatementPanel() {
 		return statementPanel;
@@ -346,17 +202,11 @@ public class MainWindow extends Program {
 		//construct expressionsPanel, where buttons for creating or modifying expressions are located
 		ExpressionPanel expressionsPanel = new ExpressionPanel(this);
 		
-		
 		//construct tabbed area, where variable pairing and theorem application happens
-		//TODO: move functionality of non-theorem tabs to various context menus
 		tabbedPane = new JTabbedPane();
 		tabbedPane.setPreferredSize(new Dimension(TABBED_PANE_WIDTH,TABBED_PANE_HEIGHT));
 		theoremPanel = new TheoremPanel(this);
-		operatePanel = new OperatePanel();
-		createPanel = new CreatePanel();
 		tabbedPane.addTab("Theorem", theoremPanel);
-		tabbedPane.addTab("Operate", operatePanel);
-		tabbedPane.addTab("Create", createPanel);
 		
 		//construct statement area, where given and deduced statements are shown
 		JPanel deductionsPanel = new JPanel();

@@ -35,36 +35,6 @@ public class MainMenuBar extends JMenuBar{
 		
 		menu = new JMenu("File");
 		
-		/*//REMOVED
-		menuItem = new JMenuItem("Hide Selected Statements");
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainWindow_.getStatementPanel().hideSelectedStatements();	
-			}});
-		menu.add(menuItem);
-		*/
-		
-		/*//REMOVED
-		menuItem = new JMenuItem("Show All Hidden Statements");
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainWindow_.getStatementPanel().showHiddenStatements();	
-			}});
-		menu.add(menuItem);
-		*/
-		
-		/*//REMOVED
-		menuItem = new JMenuItem("Apply Theorem");
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainWindow_.applyTheorem();	
-			}});
-		menu.add(menuItem);
-		*/
-		
 		menuItem = new JMenuItem("Load Statements...");
 		menuItem.addActionListener(new ActionListener() {
 			@Override
@@ -80,17 +50,6 @@ public class MainMenuBar extends JMenuBar{
 				mainWindow_.reloadTheorems();	
 			}});
 		menu.add(menuItem);
-		
-		
-		/*//REMOVED
-		menuItem = new JMenuItem("Substitute");
-		menuItem.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				mainWindow_.substitute();	
-			}});
-		menu.add(menuItem);
-		*/
 		
 		this.add(menu);
 		
@@ -128,7 +87,7 @@ public class MainMenuBar extends JMenuBar{
 			menuItem.addActionListener(new TheoremMenuActionListener(mainWindow_.getTheoremPanel(), t));
 			menu.add(menuItem);
 		}
-		this.add(menu);
+		//this.add(menu); //<----- uncomment this if you wish to return the theorems menu to the main menu bar (this is probably not desired)
 		
 		///////////////////////////////////////////////////////////
 		
@@ -138,7 +97,7 @@ public class MainMenuBar extends JMenuBar{
 		menu.getAccessibleContext().setAccessibleDescription(
 		        "Showcase of different kinds of menu items");
 		//menuBar.add(menu);
-		this.add(menu);
+		//this.add(menu);           //<---uncomment this line to make the example menu reappear
 		
 		//a group of JMenuItems
 		menuItem = new JMenuItem("A text-only menu item",
@@ -204,7 +163,7 @@ public class MainMenuBar extends JMenuBar{
 		menu.getAccessibleContext().setAccessibleDescription(
 		        "This menu does nothing");
 		//menuBar.add(menu);
-		this.add(menu);
+		//this.add(menu);      //<----- uncomment this line to make the 2nd example menu re-appear.
 		
 
 	}

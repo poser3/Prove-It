@@ -24,6 +24,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem showHiddenItem;
     JMenuItem substituteItem;
     JMenuItem pairItem;
+    JMenuItem simplifyItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -100,6 +101,22 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}});
     	add(pairItem);
     	
+    	simplifyItem = new JMenuItem("Simplify");
+    	simplifyItem.setEnabled(selectedSubExpression_ != null);
+    	simplifyItem.addActionListener(new ActionListener() {
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			if (selectedSubExpression_ instanceof OperatorExpression) {
+    				Expression simplifiedSubExpression = ((OperatorExpression) selectedSubExpression_).simplify();
+    				if (! simplifiedSubExpression.equals(selectedSubExpression_)) {
+    					Statement result = selectedStatement_.substitute(selectedSubExpression_, simplifiedSubExpression);
+    					//TODO: add logicParents and geometryParents..
+    					mainWindow_.addStatementAndSelect(result, true);
+    				}
+    			}
+    		}
+    	});
+    	add(simplifyItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);
