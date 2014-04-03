@@ -10,9 +10,18 @@ public class VariableListCellRenderer implements ListCellRenderer<VariableExpres
 	
 	@Override
 	public Component getListCellRendererComponent(JList<? extends VariableExpression> list, VariableExpression value, int index, boolean isSelected, boolean cellHasFocus) {
-		String latex = String.format("\\textrm{%s } %s",
-				value.getType(),
-				value.toLatex());
+		String latex;
+		if (value == list.getSelectedValue()) {
+			latex = String.format("\\bgcolor{%s}{\\textrm{%s } %s}",
+					LookAndFeel.SELECTED_LATEX_COLOR,
+					value.getType(),
+					value.toLatex());
+		}
+		else {
+			latex = String.format("\\textrm{%s } %s",
+					value.getType(),
+					value.toLatex());
+		}
 		BufferedImage image = (BufferedImage) LatexHandler.latexToImage(latex);
 		ImageIcon icon = new ImageIcon(image);
 		JLabel label = new JLabel(icon);

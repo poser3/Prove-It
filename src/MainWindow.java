@@ -356,13 +356,13 @@ public class MainWindow extends Program {
 		variablePanel.setLayout(new BorderLayout());
 		JLabel variablePanelTitle = new JLabel("Variables");
 		variablePanelTitle.setHorizontalAlignment(SwingConstants.CENTER);
-		variableListPanel = new VariablePanel(); //stub for variable panel
+		variableListPanel = new VariablePanel(this); //stub for variable panel
 		variablePanel.add(variablePanelTitle, NORTH);
 		variablePanel.add(variableListPanel);
 		
 		//add the panels and setup the layout manager
 		this.getRegionPanel(NORTH).add(sketchPanel);
-		this.getRegionPanel(NORTH).add(new JSeparator(JSeparator.VERTICAL));
+		this.getRegionPanel(NORTH).add(new JSeparator(SwingConstants.VERTICAL));
 		this.getRegionPanel(NORTH).add(expressionsPanel);
 		
 		this.setLayout(new SpringLayout());
@@ -495,6 +495,10 @@ public class MainWindow extends Program {
 	public TheoremPanel getTheoremPanel() {
 		System.out.println("getTheoremPanel() returns : " + theoremPanel);
 		return theoremPanel;
+	}
+	
+	public VariablePanel getVariablePanel() {
+		return variableListPanel;
 	}
 	
 	public VariableEnvironment getVariableEnvironment() {
