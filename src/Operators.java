@@ -16,6 +16,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("=", new Operator("=") {
 			public final boolean isCommutative = true;
 			
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -24,6 +25,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("!=", new Operator("!=") {
 			public final boolean isCommutative = true;
 			
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -40,12 +42,14 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("<", new Operator("<") {
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
 			
 		});
 		put(">", new Operator(">") {
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -53,6 +57,7 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put("<=", new Operator("<=") {
 
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -69,6 +74,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put(">=", new Operator(">=") {
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -89,6 +95,7 @@ public class Operators extends HashMap<String, Operator> {
 			public final boolean isAssociative = true;
 			private final String inverse = "-";
 			
+			@Override
 			public short getPrecedence() {
 				return 2;
 			}
@@ -134,6 +141,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("-", new Operator("-") {
 			private final String inverse = "+";
 			
+			@Override
 			public short getPrecedence() {
 				return 2;
 			}
@@ -204,6 +212,7 @@ public class Operators extends HashMap<String, Operator> {
 			private final String distributes = "+";
 			private final String inverse = "/";
 			
+			@Override
 			public short getPrecedence() {
 				return 3;
 			}
@@ -253,6 +262,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("/", new Operator("/") {
 			private final String inverse = "*";
 			
+			@Override
 			public short getPrecedence() {
 				return 3;
 			}
@@ -334,6 +344,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("^", new Operator("^") {
 			private final String distributes = "*";
 			
+			@Override
 			public short getPrecedence() {
 				return 4;
 			}
@@ -400,6 +411,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("m", new Operator("m") {
+			@Override
 			public short getPrecedence() {
 				return 5;
 			}
@@ -416,6 +428,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("angle", new Operator("angle") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -445,6 +458,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("segment", new Operator("segment") {
 			public final boolean isCommutative = true;
 			
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -463,6 +477,7 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put("congruent", new Operator("congruent") {
 			public final boolean isCommutative = true;
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -475,6 +490,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("between", new Operator("between") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -497,6 +513,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("on", new Operator("on") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -509,6 +526,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("endpoint", new Operator("endpoint") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -521,6 +539,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("center", new Operator("center") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -533,6 +552,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("intersect", new Operator("intersect") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}
@@ -554,6 +574,7 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("midpoint", new Operator("midpoint") {
+			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
 			}

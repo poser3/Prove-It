@@ -10,12 +10,14 @@ public class PopClickListener extends MouseAdapter {
 		mainWindow_ = mainWindow;
 	}
 	
+	@Override
 	public void mousePressed(MouseEvent e){
         if (e.isPopupTrigger())
             doPop(e);
     }
 
-    public void mouseReleased(MouseEvent e){
+    @Override
+	public void mouseReleased(MouseEvent e){
         if (e.isPopupTrigger())
             doPop(e);
     }
