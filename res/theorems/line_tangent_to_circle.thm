@@ -1,0 +1,16 @@
+Line is tangent to circle
+variables
+circle C
+line R
+line L
+point O
+point A
+hypotheses
+center O C
+on A C
+on O R
+on A R
+on A L
+perpendicular R L
+conclusions
+tangent L C A

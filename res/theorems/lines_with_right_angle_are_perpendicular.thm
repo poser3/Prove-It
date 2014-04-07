@@ -1,0 +1,15 @@
+Lines with right angle are perpendicular
+variables
+line L_1
+line L_2
+point A
+point B
+point C
+hypotheses
+on A L_1
+on B L_1
+on B L_2
+on C L_2
+= (m (angle A B C)) 90
+conclusions
+perpendicular L_1 L_2

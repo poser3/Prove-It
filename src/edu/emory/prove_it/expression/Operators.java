@@ -588,6 +588,34 @@ public class Operators extends HashMap<String, Operator> {
 						expressionWithParens(e.getArg(2)));
 			}
 		});
+		put("perpendicular", new Operator("perpendicular") {
+			public final boolean isCommutative = true;
+			@Override
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
+			
+			@Override
+			public String toLatex(final OperatorExpression e) {
+				return String.format("%s \\text{ is perpendicular to } %s",
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
+			}
+		});
+		put("tangent", new Operator("tangent") {
+			@Override
+			public short getPrecedence() {
+				return Short.MIN_VALUE;
+			}
+			
+			@Override
+			public String toLatex(final OperatorExpression e) {
+				return String.format("%s \\text{ is tangent to } %s \\text{ at } %s",
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)),
+						expressionWithParens(e.getArg(2)));
+			}
+		});
 	}
 
 }
