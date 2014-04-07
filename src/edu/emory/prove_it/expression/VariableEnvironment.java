@@ -12,6 +12,23 @@ import javax.swing.AbstractListModel;
 public class VariableEnvironment extends AbstractListModel<VariableExpression> implements List<VariableExpression> {
 	private final ArrayList<VariableExpression> variables = new ArrayList<VariableExpression>();
 	
+	/**
+	 * Produce a canonical reference to a provided variable
+	 * 
+	 * If var is already in the environment, return the copy from the
+	 * environment. Otherwise, add var to the environment, then return it.
+	 * @param var a variable expression
+	 * @return the canonical reference to the same variable
+	 */
+	public VariableExpression get(VariableExpression var) {
+		if (indexOf(var) > -1)
+			return get(indexOf(var));
+		else {
+			add(var);
+			return var;
+		}	
+	}
+	
 	@Override
 	public VariableExpression getElementAt(int index) {
 		return get(index);

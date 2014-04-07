@@ -96,15 +96,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			catch(NumberFormatException e) {
 				// Just take it as a variable of type NUMBER
 				VariableExpression var = new VariableExpression(words.get(0));
-				if (environment.indexOf(var) == -1) {
-					// This is a new variable, so add it to the environment and return it
-					environment.add(var);
-					return var;
-				}
-				else {
-					// This is another reference to an existing variable, so just return the original
-					return environment.get(environment.indexOf(var));
-				}
+				return environment.get(var);
 			}
 		}
 		
@@ -114,34 +106,11 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			return parse(words.get(0).substring(1, words.get(0).length()-1), environment);
 		}
 		
-		// If there are at least two words, it could be a variable with its type
-		else if(words.size() >= 2 && Type.fromString(words.get(0)) != null) {
-			StringBuilder name = new StringBuilder(words.get(1));
-			for (int i=2; i<words.size(); i++) {
-				name.append(' ');
-				name.append(words.get(i));
-			}
-			
-			VariableExpression var = new VariableExpression(name.toString(), Type.fromString(words.get(0)));
-			if (environment.indexOf(var) == -1) {
-				// This is a new variable, so add it to the environment and return it
-				environment.add(var);
-				return var;
-			}
-			else {
-				// This is another reference to an existing variable, so just return the original
-				return environment.get(environment.indexOf(var));
-			}
-		}
-		
-		// If the first word isn't a type, it must be an operator,
-		// and we parse this as an OperatorExpression
-		else {
+		// If there are multiple words it might be an operator expression
+		else if (Operators.named(words.get(0)) != null) {
 			
 			// identify the operator (i.e., the first word)
 			Operator op = Operators.named(words.get(0));
-			if (op == null)
-				throw new IllegalArgumentException("Unrecognized operator " + words.get(0));
 			
 			// create an arrayList for all of the arguments to the operator (i.e., the rest of the words)
 			ArrayList<Expression> args = new ArrayList<Expression>(words.size()-1);
@@ -156,6 +125,23 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			// Make and return the OperatorExpression mentioned above
 			return new OperatorExpression(op, args);
 		}
+		
+		// If it's got multiple words and it's not an operator expression,
+		// it must be a variable expression!
+		else if(words.size() >= 2 && Type.fromString(words.get(0)) != null) {
+			StringBuilder name = new StringBuilder(words.get(1));
+			for (int i=2; i<words.size(); i++) {
+				name.append(' ');
+				name.append(words.get(i));
+			}
+			
+			VariableExpression var = new VariableExpression(name.toString(), Type.fromString(words.get(0)));
+			return environment.get(var);
+		}
+		
+		// Anything that has gotten this far must be severely malformed.
+		else
+			throw new IllegalArgumentException(template);
 	}
 	
 	
