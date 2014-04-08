@@ -15,7 +15,10 @@ public class Operators extends HashMap<String, Operator> {
 	@SuppressWarnings("unused")
 	private Operators() {
 		put("=", new Operator("=") {
-			public final boolean isCommutative = true;
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -24,7 +27,10 @@ public class Operators extends HashMap<String, Operator> {
 			
 		});
 		put("!=", new Operator("!=") {
-			public final boolean isCommutative = true;
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -57,7 +63,6 @@ public class Operators extends HashMap<String, Operator> {
 			
 		});
 		put("<=", new Operator("<=") {
-
 			@Override
 			public short getPrecedence() {
 				return 1;
@@ -92,10 +97,13 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("+", new Operator("+") {
-			public final boolean isCommutative = true;
 			public final boolean isAssociative = true;
 			private final String inverse = "-";
 			
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
 			@Override
 			public short getPrecedence() {
 				return 2;
@@ -208,10 +216,14 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("*", new Operator("*") {
-			public final boolean isCommutative = true;
 			public final boolean isAssociative = true;
 			private final String distributes = "+";
 			private final String inverse = "/";
+			
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -457,7 +469,10 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("segment", new Operator("segment") {
-			public final boolean isCommutative = true;
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -477,7 +492,11 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("congruent", new Operator("congruent") {
-			public final boolean isCommutative = true;
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
+			
 			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;
@@ -589,7 +608,11 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("perpendicular", new Operator("perpendicular") {
-			public final boolean isCommutative = true;
+			@Override
+			public boolean isCommutative() {
+				return true;
+			}
+			
 			@Override
 			public short getPrecedence() {
 				return Short.MIN_VALUE;

@@ -9,9 +9,7 @@ public class Operator implements Comparable<Operator> {
 	////////////////////////
 	
 	private final String name;
-	public short precedence = 0;
 	public final boolean isAssociative = false;
-	public final boolean isCommutative = false;
 	private final String distributes = null;
 	private final String inverse = null;
 	
@@ -33,7 +31,11 @@ public class Operator implements Comparable<Operator> {
 	///////////////////
 	
 	public short getPrecedence() {
-		return this.precedence;
+		return 0;
+	}
+	
+	public boolean isCommutative() {
+		return false;
 	}
 	
 	/**
@@ -75,7 +77,7 @@ public class Operator implements Comparable<Operator> {
 		ArrayList<Expression> args1 = e1.getArgs();
 		ArrayList<Expression> args2 = e2.getArgs();
 		
-		if (e1.getOp().isCommutative) {
+		if (this.isCommutative()) {
 			// Clone the argument lists because sorting happens in-place
 			args1 = new ArrayList<Expression>(args1);
 			args2 = new ArrayList<Expression>(args2);
