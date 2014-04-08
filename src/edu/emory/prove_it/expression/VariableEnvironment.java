@@ -21,8 +21,12 @@ public class VariableEnvironment extends AbstractListModel<VariableExpression> i
 	 * @return the canonical reference to the same variable
 	 */
 	public VariableExpression get(VariableExpression var) {
-		if (indexOf(var) > -1)
-			return get(indexOf(var));
+		if (indexOf(var) > -1) {
+			if (var.getType().equals(get(indexOf(var)).getType()))
+				return var;
+			else
+				return new VariableExpression(var.toString(), get(indexOf(var)).getType());
+		}
 		else {
 			add(var);
 			return var;
