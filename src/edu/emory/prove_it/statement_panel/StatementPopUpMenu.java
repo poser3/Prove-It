@@ -4,10 +4,12 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import edu.emory.prove_it.MainWindow;
 import edu.emory.prove_it.expression.Expression;
+import edu.emory.prove_it.expression.Manipulator;
 import edu.emory.prove_it.expression.OperatorExpression;
 import edu.emory.prove_it.expression.Statement;
 import edu.emory.prove_it.theorem.Pairing;
@@ -25,6 +27,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem substituteItem;
     JMenuItem pairItem;
     JMenuItem simplifyItem;
+    JMenuItem distributeItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -117,6 +120,27 @@ public class StatementPopUpMenu extends JPopupMenu {
     		}
     	});
     	add(simplifyItem);
+    	
+    	distributeItem = new JMenuItem("Distribute");
+    	distributeItem.setEnabled(true);
+    	distributeItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Expression distributedVersion = Manipulator.distribute(selectedSubExpression_);
+				if (distributedVersion != null) {
+					Statement result = selectedStatement_.substituteIntoDuplicate(selectedSubExpression_, distributedVersion);
+					//TODO: add logicParents and geometryParents..
+					mainWindow_.addStatementAndSelect(result, true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,
+							  "I don't know how to distribute anything here.",
+							  "Whoops!",  
+							  JOptionPane.ERROR_MESSAGE); 
+				}
+			}
+    	});
+    	add(distributeItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);

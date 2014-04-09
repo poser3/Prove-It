@@ -217,7 +217,7 @@ public class Operators extends HashMap<String, Operator> {
 		});
 		put("*", new Operator("*") {
 			public final boolean isAssociative = true;
-			private final String distributes = "+";
+			private final String distributes = "+,-";
 			private final String inverse = "/";
 			
 			@Override

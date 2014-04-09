@@ -60,6 +60,11 @@ public class Statement implements Comparable<Statement> {
 	public Statement substitute(Expression quid, Expression quo) {
 		return new Statement(expression.substitute(quid, quo), logicDependencies, geometryDependencies);
 	}
+	
+	public Statement substituteIntoDuplicate(Expression quid, Expression quo) {
+		return new Statement(expression.substitute(quid, quo).duplicate(), logicDependencies, geometryDependencies);
+	}
+	
 	public Statement substitute(HashMap<String, String> map) {
 		return new Statement(expression.substitute(map));
 	}

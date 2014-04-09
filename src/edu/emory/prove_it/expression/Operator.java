@@ -48,7 +48,13 @@ public class Operator implements Comparable<Operator> {
 	//The below seems to presume a given operator can only distribute over
 	//one other operator.
 	public boolean distributesOver(final Operator op) {
-		return op.toString().equals(distributes);
+		String[] opStringsThisDistributesOver = distributes.split(",");
+		for (int i=0; i < opStringsThisDistributesOver.length; i++) {
+			if (op.toString().equals(opStringsThisDistributesOver[i])) {
+				return true;
+			}
+		}
+		return false;
 	}
 	
 	/**
