@@ -61,8 +61,8 @@ public class Statement implements Comparable<Statement> {
 		return new Statement(expression.substitute(quid, quo), logicDependencies, geometryDependencies);
 	}
 	
-	public Statement substituteIntoDuplicate(Expression quid, Expression quo) {
-		return new Statement(expression.substitute(quid, quo).duplicate(), logicDependencies, geometryDependencies);
+	public Statement substituteSelectedIntoDuplicate(Expression quo) {
+		return new Statement(expression.substituteSelected(quo).duplicate(), logicDependencies, geometryDependencies);
 	}
 	
 	public Statement substitute(HashMap<String, String> map) {

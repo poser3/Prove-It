@@ -225,6 +225,10 @@ public class Operators extends HashMap<String, Operator> {
 				return true;
 			}
 			
+			public String opNamesThisDistributesOver() {
+				return distributes;
+			}
+			
 			@Override
 			public short getPrecedence() {
 				return 3;

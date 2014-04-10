@@ -48,13 +48,19 @@ public class Operator implements Comparable<Operator> {
 	//The below seems to presume a given operator can only distribute over
 	//one other operator.
 	public boolean distributesOver(final Operator op) {
-		String[] opStringsThisDistributesOver = distributes.split(",");
+		String[] opStringsThisDistributesOver = opNamesThisDistributesOver().split(",");
+		System.out.println(this.toString() + " distributes over " + opStringsThisDistributesOver);
 		for (int i=0; i < opStringsThisDistributesOver.length; i++) {
 			if (op.toString().equals(opStringsThisDistributesOver[i])) {
+				System.out.println("checking " + op.toString() + " vs. " + opStringsThisDistributesOver[i]);
 				return true;
 			}
 		}
 		return false;
+	}
+	
+	public String opNamesThisDistributesOver() {
+		return distributes;
 	}
 	
 	/**
@@ -138,6 +144,17 @@ public class Operator implements Comparable<Operator> {
 		//use the form "(arg) op (arg) op (arg) op ... op (arg)", 
 		//leaving off the relevant parentheses when arg is not an operator expression 
 		//or when arg is an operator expression whose operator has a higher precedence level
+		
+		//TODO:
+		//With a strict inequality in the expressionWithParents() method, the expression (- a (+ b c)) 
+		//should be displayed as a - (b + c), but instead gets displayed as a - b + c.  
+		//Using a non-strict inequality in the expressionWithParens() method, the expression (+ a (+ b c)) 
+		//ideally would be displayed as a + b + c, but instead, we see a + (b + c).  
+		//Is the latter what we want? ...or is there a better way?  This problem shows up frequently
+		//when using one of the substitute methods.  It may be that we want the parens, as shown in the
+		//2nd example -- but we need a quick way to remove them when they aren't necessary, that doesn't 
+		//do all the work for the student.
+		
 		else {
 			StringBuilder sb = new StringBuilder();
 			
@@ -154,7 +171,7 @@ public class Operator implements Comparable<Operator> {
 	
 	protected final String expressionWithParens(final Expression e) {
 		String s = e.toLatex();
-		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().getPrecedence() < this.getPrecedence())
+		if (e instanceof OperatorExpression && ((OperatorExpression) e).getOp().getPrecedence() <= this.getPrecedence())
 			s = '(' + s + ')';
 		return s;
 	}

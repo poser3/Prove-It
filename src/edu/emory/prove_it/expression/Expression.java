@@ -451,6 +451,12 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		 * which I consider a design flaw but can't envision a way around.  L.V.
 		 */
 		
+		/* TODO:
+		 * This may have a problem with messing up the precedence of operators. For example,
+		 * if this expression is a - b(c+d) and quid = b(c+d), while quo = bc + bd the substitution
+		 * results in a - bc + bd, which is incorrect. Parens are needed.
+		 */
+		
 		if (this.equals(quid)) {
 			return quo;
 		}
@@ -464,6 +470,40 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		}
 		else
 			return this;
+	}
+	
+	/**
+	 * Create a new expression that is identical to this expression, except that
+	 * any selected subexpression in this expression has been replaced by the
+	 * expression quo
+	 */
+	public Expression substituteSelected(Expression quo) {
+		
+		/* TODO:
+		 * This builds a new OperatorExpression even if this contains no instances of quid,
+		 * which I consider a design flaw but can't envision a way around.  L.V.
+		 */
+		
+		/* TODO:
+		 * This may also have a problem with messing up the precedence of operators. For example,
+		 * if this expression is a - b(c+d) and quid = b(c+d), while quo = bc + bd the substitution
+		 * results in a - bc + bd, which is incorrect. Parens are needed.
+		 */
+		
+		if (this.isSelected()) {
+			return quo;
+		}
+		else if (this instanceof OperatorExpression) {
+			OperatorExpression oeThis = (OperatorExpression) this;
+			ArrayList<Expression> args = new ArrayList<Expression>(oeThis.getNumArgs());
+			for (int i=0; i < oeThis.getNumArgs(); i++) {
+				args.add(oeThis.getArg(i).substituteSelected(quo));
+			}
+			return new OperatorExpression(oeThis.getOp(), args);
+		}
+		else
+			return this;
+		
 	}
 	
 	/**

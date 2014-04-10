@@ -28,6 +28,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem pairItem;
     JMenuItem simplifyItem;
     JMenuItem distributeItem;
+    JMenuItem commuteItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -112,7 +113,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     			if (selectedSubExpression_ instanceof OperatorExpression) {
     				Expression simplifiedSubExpression = ((OperatorExpression) selectedSubExpression_).simplify();
     				if (! simplifiedSubExpression.equals(selectedSubExpression_)) {
-    					Statement result = selectedStatement_.substitute(selectedSubExpression_, simplifiedSubExpression);
+    					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(simplifiedSubExpression);
     					//TODO: add logicParents and geometryParents..
     					mainWindow_.addStatementAndSelect(result, true);
     				}
@@ -128,7 +129,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				Expression distributedVersion = Manipulator.distribute(selectedSubExpression_);
 				if (distributedVersion != null) {
-					Statement result = selectedStatement_.substituteIntoDuplicate(selectedSubExpression_, distributedVersion);
+					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(distributedVersion);
 					//TODO: add logicParents and geometryParents..
 					mainWindow_.addStatementAndSelect(result, true);
 				}
@@ -141,6 +142,27 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}
     	});
     	add(distributeItem);
+    	
+    	commuteItem = new JMenuItem("Commute");
+    	commuteItem.setEnabled(true);
+    	commuteItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Expression commutedVersion = Manipulator.commute(selectedSubExpression_);
+				if (commutedVersion != null) {
+					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(commutedVersion);
+					//TODO: add logicParents and geometryParents..
+					mainWindow_.addStatementAndSelect(result, true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,
+							  "I don't know how to commute anything here.",
+							  "Whoops!",  
+							  JOptionPane.ERROR_MESSAGE); 
+				}
+			}
+		});
+    	add(commuteItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);
