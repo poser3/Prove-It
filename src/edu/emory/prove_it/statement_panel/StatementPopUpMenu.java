@@ -13,6 +13,7 @@ import edu.emory.prove_it.expression.Manipulator;
 import edu.emory.prove_it.expression.OperatorExpression;
 import edu.emory.prove_it.expression.Statement;
 import edu.emory.prove_it.theorem.Pairing;
+import edu.emory.prove_it.util.DialogHandler;
 
 
 @SuppressWarnings("serial")
@@ -30,6 +31,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem distributeItem;
     JMenuItem commuteItem;
     JMenuItem dropParensItem;
+    JMenuItem rearrangeRegroupItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -165,6 +167,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 		});
     	add(commuteItem);
     	
+    	//TODO: DropParens is not done yet!!! Finish it!!!
     	dropParensItem = new JMenuItem("Drop Parentheses");
     	dropParensItem.setEnabled(true);
     	dropParensItem.addActionListener(new ActionListener() {
@@ -183,6 +186,17 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}
 		});
     	add(dropParensItem);
+    	
+    	rearrangeRegroupItem = new JMenuItem("Rearrange//Regroup");
+    	rearrangeRegroupItem.setEnabled(true);
+    	rearrangeRegroupItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				String numberedArgsLatex = Manipulator.getNumberedArgsLatex(selectedSubExpression_);
+				String newArrangementString = DialogHandler.showArrangementAndGroupingDialog(numberedArgsLatex);
+				System.out.println(newArrangementString);
+			}});
+    	add(rearrangeRegroupItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);

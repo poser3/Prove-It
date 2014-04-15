@@ -118,5 +118,9 @@ public class Manipulator {
 		System.out.println("unable to distribute");
 		return null; 
 	}
+	
+	public static String getNumberedArgsLatex(Expression e) {
+		return "\\underbrace{x^2}_{1}+\\underbrace{7x}_2 + \\underbrace{5x}_3 + \\underbrace{35}_4";
+	}
 
 }

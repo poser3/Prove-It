@@ -1,7 +1,12 @@
 package edu.emory.prove_it.util;
+import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+
+import acm.graphics.GImage;
 import edu.emory.prove_it.MainWindow;
 import edu.emory.prove_it.expression.Expression;
 import edu.emory.prove_it.expression.OperatorExpression;
@@ -49,6 +54,11 @@ public class Tester {
 		
 		//VariableExpression ve = (VariableExpression) (Expression.parse("z"));
 		//oe.applyLeft(new Operator("*"), ve);
+		
+		//testing latex in a JOptionPane...
+		//String testLatexString = "\\underbrace{e^{i \\pi}}_{1}";
+		//String newArrangementString = DialogHandler.showArrangementAndGroupingDialog(testLatexString);
+		//System.out.println(newArrangementString);
 	}
 
 }
