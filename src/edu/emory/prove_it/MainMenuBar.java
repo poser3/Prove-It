@@ -71,6 +71,17 @@ public class MainMenuBar extends JMenuBar{
 			}});
 		
 		menu.add(menuItem);
+		
+		menuItem = new JMenuItem("Unhide All Drawables");
+		menuItem.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				mainWindow_.getSketchCanvas().unhideAllDrawables();
+			}});
+		
+		menu.add(menuItem);
+		
 		this.add(menu);
 		
 		//////////////////////////////////////////////////////////

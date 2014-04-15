@@ -17,6 +17,7 @@ public class SketchCanvasPopUpMenu extends JPopupMenu {
 	
 	MainWindow mainWindow_;
 	JMenuItem pairItem_;
+	JMenuItem hideItem_;
 	MouseEvent mouseEvent_;
 	String selectedDrawableExpressionString_;
 	
@@ -47,6 +48,16 @@ public class SketchCanvasPopUpMenu extends JPopupMenu {
 				mainWindow_.getTheoremPanel().update();
 			}});
     	add(pairItem_);
-	    	
+    	
+    	hideItem_ = new JMenuItem("Hide");
+    	//TODO: only enable "hide" in the right circumstances...
+    	hideItem_.setEnabled(true);
+    	hideItem_.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				selectedDrawable.setVisible(false);	
+			}});
+	    add(hideItem_);
 	}
 }

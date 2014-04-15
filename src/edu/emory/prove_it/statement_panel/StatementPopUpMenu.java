@@ -29,6 +29,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem simplifyItem;
     JMenuItem distributeItem;
     JMenuItem commuteItem;
+    JMenuItem dropParensItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -163,6 +164,25 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}
 		});
     	add(commuteItem);
+    	
+    	dropParensItem = new JMenuItem("Drop Parentheses");
+    	dropParensItem.setEnabled(true);
+    	dropParensItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Expression droppedParensVersion = Manipulator.dropParensOnSum(selectedSubExpression_);
+				if (droppedParensVersion != null) {
+					mainWindow_.addStatementAndSelect(new Statement(droppedParensVersion), true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,
+							  "I don't know how to legally drop the parentheses here.",
+							  "Whoops!",  
+							  JOptionPane.ERROR_MESSAGE); 					
+				}
+			}
+		});
+    	add(dropParensItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);

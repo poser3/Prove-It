@@ -6,6 +6,25 @@ public class Manipulator {
 	
 	public static int NUM_ARGS_FOR_BINARY_OPERATOR = 2;
 	
+	public static Expression dropParensOnSum(Expression e) {
+		Expression result = null;
+		OperatorExpression oe;
+		System.out.println("Entered dropParensOnSum()");
+		if (e instanceof OperatorExpression) {
+			oe = (OperatorExpression) e;
+			Operator sumOperator = oe.getOp();
+			System.out.println("operator found: " + sumOperator);
+			if (sumOperator.equals(new Operator("+"))) {
+				System.out.println("operator found was a sum operator");
+				
+				//now check if each operator is a sum
+			}
+		}
+		
+		//if you get this far, the parens could not be dropped
+		return null;
+	}
+	
 	public static Expression commute(Expression e) {
 		Expression result = null;
 		Expression leftExpression = null;

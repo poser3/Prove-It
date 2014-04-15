@@ -350,7 +350,7 @@ public class SketchCanvas extends GCanvas {
 			for (int i=0; i < drawables_.size(); i++) {
 				Drawable d = drawables_.get(i);
 				double distance = d.distanceTo(x,y);
-				if (distance < Selectable.EPSILON) {
+				if ((distance < Selectable.EPSILON) && (d.isVisible())) {
 					aCloseDrawable = d;
 					if (d instanceof PPoint) {
 						aClosePoint = (PPoint) d;
@@ -373,7 +373,7 @@ public class SketchCanvas extends GCanvas {
 			
 			for (Drawable d : points_) {
 				double distance = d.distanceTo(x,y);
-				if (distance < minDistance) {
+				if ((distance < minDistance) && (d.isVisible())) {
 					minDistance = distance;
 					closestPoint = d;
 				}
@@ -782,6 +782,12 @@ public class SketchCanvas extends GCanvas {
 				select(d, !(isCtrlDown && d.isSelected()));				
 			}
 		
+		}
+		
+		public void unhideAllDrawables() {
+			for (Drawable d : drawables_) {
+				d.setVisible(true);
+			}
 		}
 
 }

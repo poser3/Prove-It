@@ -22,5 +22,7 @@ public interface Drawable {
 	public void setExists(boolean exists);
 	public Drawables getParents();
 	public Drawables getDependents();
+	public void setVisible(boolean isVisible);
+	public boolean isVisible();
 	
 }
