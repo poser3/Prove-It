@@ -38,6 +38,10 @@ public class Operator implements Comparable<Operator> {
 		return false;
 	}
 	
+	public boolean isAssociative() {
+		return false;
+	}
+	
 	/**
 	 * Checks if this operator distributes over another.
 	 * @param op

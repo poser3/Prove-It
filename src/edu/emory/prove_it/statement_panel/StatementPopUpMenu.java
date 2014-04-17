@@ -29,6 +29,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem pairItem;
     JMenuItem simplifyItem;
     JMenuItem distributeItem;
+    JMenuItem factorItem;
     JMenuItem commuteItem;
     JMenuItem dropParensItem;
     JMenuItem rearrangeRegroupItem;
@@ -108,7 +109,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}});
     	add(pairItem);
     	
-    	simplifyItem = new JMenuItem("Simplify");
+    	simplifyItem = new JMenuItem("Evaluate Arithmetic Expression");
     	simplifyItem.setEnabled(selectedSubExpression_ != null);
     	simplifyItem.addActionListener(new ActionListener() {
     		@Override
@@ -146,6 +147,37 @@ public class StatementPopUpMenu extends JPopupMenu {
     	});
     	add(distributeItem);
     	
+    	factorItem = new JMenuItem("Factor");
+    	factorItem.setEnabled(true);
+    	factorItem.addActionListener(new ActionListener() {
+    		@Override
+    		public void actionPerformed(ActionEvent e) {
+    			Expression expr = selectedStatement_.getExpression();
+    			if (expr instanceof OperatorExpression) {
+    				OperatorExpression parent = ((OperatorExpression) expr).getParentOfSelected();
+    				OperatorExpression grandparent = ((OperatorExpression) expr).getGrandParentOfSelected();
+    				System.out.println("parent: " + parent.toString());
+    				System.out.println("grandparent: " + grandparent.toString());
+    				Expression factoredVersion = Manipulator.factor(selectedSubExpression_,parent,grandparent);
+    				if (factoredVersion != null) {
+    					selectedSubExpression_.setSelected(false);
+    					grandparent.setSelected(true);
+    					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(factoredVersion);
+    					//TODO: add logicParents and geometryParents..
+    					mainWindow_.addStatementAndSelect(result,true);
+    				}
+    				else {
+    					JOptionPane.showMessageDialog(null,
+    							  "I don't know how to factor this out of its parent expression.",
+    							  "Whoops!",  
+    							  JOptionPane.ERROR_MESSAGE); 
+    				}
+    			}
+    		}
+    	});
+    	add(factorItem);
+    	
+    	
     	commuteItem = new JMenuItem("Commute");
     	commuteItem.setEnabled(true);
     	commuteItem.addActionListener(new ActionListener() {
@@ -175,7 +207,9 @@ public class StatementPopUpMenu extends JPopupMenu {
 			public void actionPerformed(ActionEvent e) {
 				Expression droppedParensVersion = Manipulator.dropParensOnSum(selectedSubExpression_);
 				if (droppedParensVersion != null) {
-					mainWindow_.addStatementAndSelect(new Statement(droppedParensVersion), true);
+					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(droppedParensVersion);
+					//TODO: add logicParents and geometryParents..
+					mainWindow_.addStatementAndSelect(result, true);
 				}
 				else {
 					JOptionPane.showMessageDialog(null,
@@ -187,14 +221,20 @@ public class StatementPopUpMenu extends JPopupMenu {
 		});
     	add(dropParensItem);
     	
-    	rearrangeRegroupItem = new JMenuItem("Rearrange//Regroup");
+    	rearrangeRegroupItem = new JMenuItem("Rearrange/Regroup");
     	rearrangeRegroupItem.setEnabled(true);
     	rearrangeRegroupItem.addActionListener(new ActionListener() {
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				String numberedArgsLatex = Manipulator.getNumberedArgsLatex(selectedSubExpression_);
-				String newArrangementString = DialogHandler.showArrangementAndGroupingDialog(numberedArgsLatex);
-				System.out.println(newArrangementString);
+				String numberedArgsLatex = Manipulator.getNumberedArgsLatex(selectedSubExpression_,mainWindow_.getVariableEnvironment());
+				String newArgOrderAndGrouping = DialogHandler.showArrangementAndGroupingDialog(numberedArgsLatex);
+				System.out.println(newArgOrderAndGrouping);
+				Expression rearrangedRegroupedExpression = Manipulator.argsToExpression(selectedSubExpression_,newArgOrderAndGrouping);
+				System.out.println("selected expression: " + selectedSubExpression_.toString());
+				System.out.println("rearranged and regrouped expression: " + rearrangedRegroupedExpression.toString());
+				Statement result = selectedStatement_.substituteSelectedIntoDuplicate(rearrangedRegroupedExpression);
+				//TODO: add logicParents and geometryParents..
+				mainWindow_.addStatementAndSelect(result, true);
 			}});
     	add(rearrangeRegroupItem);
     	
