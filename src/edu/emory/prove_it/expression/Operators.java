@@ -225,6 +225,7 @@ public class Operators extends HashMap<String, Operator> {
 				return true;
 			}
 			
+			@Override
 			public String opNamesThisDistributesOver() {
 				return distributes;
 			}

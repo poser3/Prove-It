@@ -10,9 +10,6 @@ import java.util.Scanner;
 import javax.swing.*;
 
 import edu.emory.prove_it.expression.Expression;
-import edu.emory.prove_it.expression.Operator;
-import edu.emory.prove_it.expression.OperatorExpression;
-import edu.emory.prove_it.expression.Operators;
 import edu.emory.prove_it.expression.Statement;
 import edu.emory.prove_it.expression.VariableEnvironment;
 import edu.emory.prove_it.sketch_canvas.SketchCanvas;
@@ -26,7 +23,6 @@ import edu.emory.prove_it.util.ListUtils;
 import edu.emory.prove_it.util.SpringUtilities;
 import edu.emory.prove_it.util.Tester;
 import edu.emory.prove_it.variable_panel.VariablePanel;
-import acm.gui.TableLayout;
 import acm.program.Program;
 
 @SuppressWarnings("serial")
