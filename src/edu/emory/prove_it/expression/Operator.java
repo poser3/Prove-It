@@ -221,6 +221,17 @@ public class Operator implements Comparable<Operator> {
 		return new OperatorExpression(e.getOp(), args);
 	}
 	
+	public Expression evaluate(final OperatorExpression e) {
+		ArrayList<Expression> args = new ArrayList<Expression>();
+		for (Expression arg : e.getArgs()) {
+			if (arg instanceof OperatorExpression)
+				args.add(((OperatorExpression) arg).evaluate());
+			else
+				args.add(e);
+		}
+		return new OperatorExpression(e.getOp(), args);
+	}
+	
 	public Type getType(Type... argTypes) {
 		return Type.LOGICAL;
 	}

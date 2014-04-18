@@ -116,6 +116,7 @@ public class StatementPopUpMenu extends JPopupMenu {
     		public void actionPerformed(ActionEvent e) {
     			if (selectedSubExpression_ instanceof OperatorExpression) {
     				Expression simplifiedSubExpression = ((OperatorExpression) selectedSubExpression_).simplify();
+    				System.out.println("simplified version: " + simplifiedSubExpression.toString());
     				if (! simplifiedSubExpression.equals(selectedSubExpression_)) {
     					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(simplifiedSubExpression);
     					//TODO: add logicParents and geometryParents..

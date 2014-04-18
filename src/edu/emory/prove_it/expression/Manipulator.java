@@ -24,7 +24,7 @@ public class Manipulator {
 						OperatorExpression argOe = (OperatorExpression) arg;
 						Operator argOp = argOe.getOp();
 						int numArgArgs = argOe.getNumArgs();
-						if (argOp.getPrecedence() == op.getPrecedence()) {
+						if (argOp.equals(op)) {
 							for (int j=0; j < numArgArgs; j++) {
 								System.out.println(argOe.getArg(j).toString() + " added");
 								newArgs.add(argOe.getArg(j));
@@ -126,6 +126,11 @@ public class Manipulator {
 				    (((OperatorExpression) (gp.getArg(i))).getOp().equals(p.getOp()))) {
 					OperatorExpression product = (OperatorExpression) (gp.getArg(i));
 					product.getArgs().remove(e);
+					if (product.getNumArgs() == 1) {
+						Expression loneArg = product.getArg(0);
+						gp.getArgs().remove(i);
+						gp.getArgs().add(i, loneArg);
+					}
 				}
 				else {
 					return null; //not all terms of the grandparent expression were products 

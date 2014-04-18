@@ -324,4 +324,7 @@ public class OperatorExpression extends Expression {
 		return op.simplify(this);
 	}
 	
+	public Expression evaluate() {
+		return op.evaluate(this);
+	}
 }
