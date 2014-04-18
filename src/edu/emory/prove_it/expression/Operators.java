@@ -448,7 +448,7 @@ public class Operators extends HashMap<String, Operator> {
 		put("angle", new Operator("angle") {
 			@Override
 			public short getPrecedence() {
-				return Short.MIN_VALUE;
+				return Short.MIN_VALUE+1;
 			}
 			
 			@Override
@@ -481,12 +481,12 @@ public class Operators extends HashMap<String, Operator> {
 			
 			@Override
 			public short getPrecedence() {
-				return Short.MIN_VALUE;
+				return Short.MIN_VALUE+1;
 			}
 			
 			@Override
 			public String toLatex(final OperatorExpression e) {
-					return String.format("\\text{segment } \\overline{%s %s}",
+					return String.format("\\overline{%s %s}",
 									expressionWithParens(e.getArg(0)),
 									expressionWithParens(e.getArg(1)));
 			}
