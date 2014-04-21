@@ -102,8 +102,13 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("+", new Operator("+") {
-			public final boolean isAssociative = true;
-			private final String inverse = "-";
+			//public final boolean isAssociative = true;
+			//private final String inverse = "-";
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("-"); 
+			}
 			
 			@Override
 			public boolean isCommutative() {
@@ -157,7 +162,12 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("-", new Operator("-") {
-			private final String inverse = "+";
+			//private final String inverse = "+";
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("+"); 
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -225,9 +235,14 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("*", new Operator("*") {
-			public final boolean isAssociative = true;
 			private final String distributes = "+,-";
-			private final String inverse = "/";
+			//private final String inverse = "/";
+			//public final boolean isAssociative = true;
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("/"); 
+			}
 			
 			@Override
 			public boolean isCommutative() {
@@ -290,11 +305,16 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("/", new Operator("/") {
-			private final String inverse = "*";
+			//private final String inverse = "*";
 			
 			@Override
 			public short getPrecedence() {
 				return 3;
+			}
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("*"); 
 			}
 			
 			@Override

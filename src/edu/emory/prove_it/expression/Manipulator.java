@@ -6,6 +6,194 @@ public class Manipulator {
 	
 	public static int NUM_ARGS_FOR_BINARY_OPERATOR = 2;
 	
+	public static Expression cancelCommonFactor(Expression e, OperatorExpression parent, OperatorExpression grandParent, VariableEnvironment variableEnvironment) {
+		
+		OperatorExpression p = (OperatorExpression) parent.duplicate();
+		OperatorExpression gp = (OperatorExpression) grandParent.duplicate();
+		boolean hasParent = (p != null);
+		boolean hasGrandparent = (gp != null);
+		boolean parentIsDivision = p.getOp().equals(Operators.named("/"));
+		boolean parentIsProduct = p.getOp().equals(Operators.named("*"));
+		boolean grandParentIsDivision = gp.getOp().equals(Operators.named("/"));
+					
+		//******* Case 1 **********//
+	    //* quotient has form e/e *//
+		//*************************//
+		
+		if ( (hasParent) &&
+			 (parentIsDivision) &&
+			 (p.getArg(0).equals(e)) && 
+			 (p.getArg(1).equals(e))) { 
+			return Expression.parse("1", variableEnvironment);
+		}
+		
+		//**************** Case 2 *****************//
+		//* quotient has form e / (a * e * b * c) *//
+		//* and e in top expression is selected   *//
+		//*****************************************//
+		else if ( (hasParent) && 
+				  (parentIsDivision) &&
+				  (p.getArg(0).equals(e)) && 
+			      (p.getArg(1) instanceof OperatorExpression) && 
+			      (((OperatorExpression) p.getArg(1)).getOp().equals(Operators.named("*")))) { //i.e, case 2
+			ArrayList<Expression> denominatorProductArgs = ((OperatorExpression) p.getArg(1)).getArgs();
+			for (int i = 0; i < denominatorProductArgs.size(); i++) {
+				if (denominatorProductArgs.get(i).equals(e)) {
+					denominatorProductArgs.remove(i);
+					Expression newDenominator = null;
+					if (denominatorProductArgs.size() > 1) {
+						newDenominator = new OperatorExpression("*",denominatorProductArgs);
+					}
+					else {
+						newDenominator = denominatorProductArgs.get(0);
+					}
+					Expression newNumerator = Expression.parse("1", variableEnvironment);
+					System.out.println(newDenominator.toString());
+					if (newDenominator.equals(Expression.parse("1",variableEnvironment))) {
+						System.out.println("new denominator was a 1");
+						return newNumerator;
+					}
+					else {
+						System.out.println("new denominator was not a 1");
+						ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
+						newQuotientArgs.add(newNumerator);
+						newQuotientArgs.add(newDenominator);
+						return new OperatorExpression("/",newQuotientArgs);
+					}
+				}
+			}	
+		}
+		
+		//**************** Case 3 ******************//
+		//* quotient has form (a * e * b * c) / e  *//
+		//* and e in bottom expression is selected *//
+		//******************************************//
+		else if ( (hasParent) &&
+				  (parentIsDivision) &&
+				  (p.getArg(1).equals(e)) &&
+				  (p.getArg(0) instanceof OperatorExpression) &&
+				  (((OperatorExpression) p.getArg(0)).getOp().equals(Operators.named("*")))) { 
+			ArrayList<Expression> numeratorProductArgs = ((OperatorExpression) p.getArg(0)).getArgs();
+			for (int i = 0; i < numeratorProductArgs.size(); i++) {
+				if (numeratorProductArgs.get(i).equals(e)) {
+					numeratorProductArgs.remove(i);
+					Expression newNumerator = null;
+					if (numeratorProductArgs.size() > 1) {
+						newNumerator = new OperatorExpression("*",numeratorProductArgs);
+					}
+					else {
+						newNumerator = numeratorProductArgs.get(0);
+					}
+					Expression newDenominator = Expression.parse("1", variableEnvironment);
+					System.out.println(newDenominator.toString());
+					if (newDenominator.equals(Expression.parse("1",variableEnvironment))) {
+						System.out.println("new denominator was a 1");
+						return newNumerator;
+					}
+					else {
+						System.out.println("new denominator was not a 1");
+						ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
+						newQuotientArgs.add(newNumerator);
+						newQuotientArgs.add(newDenominator);
+						return new OperatorExpression("/",newQuotientArgs);
+					}
+				}
+			}
+		}
+		
+		//**************** Case 4 ******************//
+		//* quotient has form (a * e * b * c) / e  *//
+		//* and e in bottom expression is selected *//
+		//******************************************//
+		
+		
+		//************************ Case 5 ***********************//
+		//* quotient has form (a * e * b * c) / (d * e * f * g) *//
+		//*******************************************************//
+		else if ( (hasParent) &&
+				  (parentIsProduct) &&
+				  (hasGrandparent) &&
+				  (grandParentIsDivision) &&
+				  (gp.getArg(0) instanceof OperatorExpression) &&
+				  (((OperatorExpression) gp.getArg(0)).getOp().equals(Operators.named("*"))) &&
+				  (gp.getArg(1) instanceof OperatorExpression) &&
+				  (((OperatorExpression) gp.getArg(1)).getOp().equals(Operators.named("*"))) ) {
+			ArrayList<Expression> numeratorProductArgs = ((OperatorExpression) gp.getArg(0)).getArgs();
+			ArrayList<Expression> denominatorProductArgs = ((OperatorExpression) gp.getArg(1)).getArgs();
+			
+			Expression newNumerator = null;
+			for (int i = 0; i < numeratorProductArgs.size(); i++) {
+				System.out.println("checking to see if factor " + numeratorProductArgs.get(i) + " in numerator equals " + e.toString());
+				if (numeratorProductArgs.get(i).equals(e)) {
+					System.out.println("found it! will now remove it");
+					numeratorProductArgs.remove(i);
+					
+					if (numeratorProductArgs.size() > 1) {
+						newNumerator = new OperatorExpression("*",numeratorProductArgs);
+					}
+					else {
+						newNumerator = numeratorProductArgs.get(0);
+					}
+					System.out.println("new numerator: " + newNumerator);
+				}
+			}
+			
+			Expression newDenominator = null;
+			for (int i = 0; i < denominatorProductArgs.size(); i++) {
+				System.out.println("checking to see if factor " + denominatorProductArgs.get(i) + " in denominator equals " + e.toString());
+				if (denominatorProductArgs.get(i).equals(e)) {
+					System.out.println("found it! will now remove it");
+					denominatorProductArgs.remove(i);
+					if (denominatorProductArgs.size() > 1) {
+						newDenominator = new OperatorExpression("*",denominatorProductArgs);
+					}
+					else {
+						newDenominator = denominatorProductArgs.get(0);
+					}
+					System.out.println("new denominator: " + newDenominator);
+				}
+			}
+			if ( (newNumerator != null) && (newDenominator != null) ) {
+				System.out.println(newDenominator.toString());
+				if (newDenominator.equals(Expression.parse("1",variableEnvironment))) {
+					System.out.println("new denominator was a 1");
+					return newNumerator;
+				}
+				else {
+					System.out.println("new denominator was not a 1");
+					ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
+					newQuotientArgs.add(newNumerator);
+					newQuotientArgs.add(newDenominator);
+					return new OperatorExpression("/",newQuotientArgs);
+				}
+			}
+		}
+			
+		//if you get this far, there was a problem
+		return null;
+	}
+	
+	public static Expression applyDefinitionOfDivision(Expression e, VariableEnvironment variableEnvironment) {
+		OperatorExpression oe;
+		System.out.println("Entered divisionIntoProduct()");
+		if (e instanceof OperatorExpression) {
+			oe = (OperatorExpression) e;
+			Operator op = oe.getOp();
+			if (op.equals(Operators.named("/"))) {
+				ArrayList<Expression> newDivisionArgs = new ArrayList<Expression>();
+				newDivisionArgs.add(Expression.parse("1",variableEnvironment));
+				newDivisionArgs.add(oe.getArg(1));
+				OperatorExpression reciprical = new OperatorExpression(Operators.named("/"),newDivisionArgs);
+				ArrayList<Expression> newProductArgs = new ArrayList<Expression>();
+				newProductArgs.add(oe.getArg(0));
+				newProductArgs.add(reciprical);
+				return new OperatorExpression(Operators.named("*"),newProductArgs);
+			}
+		}
+		//if you get this far, there was a problem
+		return null;
+	}
+	
 	public static Expression dropParensOnSum(Expression e) {
 		Expression result = null;
 		OperatorExpression oe;
@@ -23,8 +211,8 @@ public class Manipulator {
 					if (arg instanceof OperatorExpression) {
 						OperatorExpression argOe = (OperatorExpression) arg;
 						Operator argOp = argOe.getOp();
-						int numArgArgs = argOe.getNumArgs();
-						if (argOp.equals(op)) {
+						int numArgArgs = argOe.getNumArgs();						
+						if (argOp.equals(op)) { 
 							for (int j=0; j < numArgArgs; j++) {
 								System.out.println(argOe.getArg(j).toString() + " added");
 								newArgs.add(argOe.getArg(j));
@@ -109,9 +297,9 @@ public class Manipulator {
 		return result;
 	}
 	
-	public static Expression factor(Expression e, OperatorExpression parent, OperatorExpression grandparent) {
+	public static Expression factor(Expression e, OperatorExpression parent, OperatorExpression grandparent, VariableEnvironment variableEnvironment) {
 		if (parent.getOp().equals(Operators.named("*")) && grandparent.getOp().equals(Operators.named("+"))) {
-			
+			System.out.println("in a product, inside a sum");
 			// we must take (+ (* x y) (* x 3 z) (* x 1)) and turn it into
 			//              (* x (+ y (* 3 z) 1)
 			
@@ -132,9 +320,12 @@ public class Manipulator {
 						gp.getArgs().add(i, loneArg);
 					}
 				}
+				else if (gp.getArg(i).equals(e)) {
+					gp.getArgs().remove(i);
+					gp.getArgs().add(Expression.parse("1",variableEnvironment));
+				}
 				else {
 					return null; //not all terms of the grandparent expression were products 
-					             //(specifically, not all were opExpr)
 				}
 			}
 			ArrayList<Expression> resultingProductFactors = new ArrayList<Expression>();
@@ -142,6 +333,40 @@ public class Manipulator {
 			resultingProductFactors.add(gp);
 			return (new OperatorExpression("*", resultingProductFactors)).duplicate();
 		}
+		
+		if (parent.getOp().equals(Operators.named("+"))) { //it might be a lone term in a sum of products
+			System.out.println("in a sum");
+			OperatorExpression p = (OperatorExpression) parent.duplicate();
+			System.out.println("parent: " + p.toString());
+			for (int i=0; i < p.getNumArgs(); i++) {
+				if ((p.getArg(i) instanceof OperatorExpression) && 
+				    (((OperatorExpression) (p.getArg(i))).getOp().equals(Operators.named("*")))) {
+					System.out.println("term encountered was a product: " + p.getArg(i).toString());
+					OperatorExpression product = (OperatorExpression) (p.getArg(i));
+					product.getArgs().remove(e);
+					if (product.getNumArgs() == 1) {
+						Expression loneArg = product.getArg(0);
+						p.getArgs().remove(i);
+						p.getArgs().add(i, loneArg);
+					}
+				}
+				else if (p.getArg(i).equals(e)) {
+					System.out.println("term encountered was expression e: " + p.getArg(i).toString());
+					p.getArgs().remove(i);
+					p.getArgs().add(i,Expression.parse("1",variableEnvironment));
+				}
+				else {
+					System.out.println("term encountered was not a product or expression e: " + p.getArg(i).toString());
+					return null; //not all terms of the parent expression were products or expression e
+				}
+			}
+			System.out.println("parent after processing: " + p.toString());
+			ArrayList<Expression> resultingProductFactors = new ArrayList<Expression>();
+			resultingProductFactors.add(e);
+			resultingProductFactors.add(p);
+			return (new OperatorExpression("*", resultingProductFactors)).duplicate();
+		}
+		
 		//if you get this far, there was a problem
 		return null;
 	}

@@ -11,6 +11,7 @@ import edu.emory.prove_it.MainWindow;
 import edu.emory.prove_it.expression.Expression;
 import edu.emory.prove_it.expression.Manipulator;
 import edu.emory.prove_it.expression.OperatorExpression;
+import edu.emory.prove_it.expression.Operators;
 import edu.emory.prove_it.expression.Statement;
 import edu.emory.prove_it.theorem.Pairing;
 import edu.emory.prove_it.util.DialogHandler;
@@ -33,6 +34,8 @@ public class StatementPopUpMenu extends JPopupMenu {
     JMenuItem commuteItem;
     JMenuItem dropParensItem;
     JMenuItem rearrangeRegroupItem;
+    JMenuItem multiplyByRecipricalItem;
+    JMenuItem cancelFactorItem;
     MainWindow mainWindow_;
     StatementPanel statementPanel_;
     Statement selectedStatement_;
@@ -109,7 +112,7 @@ public class StatementPopUpMenu extends JPopupMenu {
 			}});
     	add(pairItem);
     	
-    	simplifyItem = new JMenuItem("Evaluate Arithmetic Expression");
+    	simplifyItem = new JMenuItem("Evaluate");
     	simplifyItem.setEnabled(selectedSubExpression_ != null);
     	simplifyItem.addActionListener(new ActionListener() {
     		@Override
@@ -159,10 +162,13 @@ public class StatementPopUpMenu extends JPopupMenu {
     				OperatorExpression grandparent = ((OperatorExpression) expr).getGrandParentOfSelected();
     				System.out.println("parent: " + parent.toString());
     				System.out.println("grandparent: " + grandparent.toString());
-    				Expression factoredVersion = Manipulator.factor(selectedSubExpression_,parent,grandparent);
+    				Expression factoredVersion = Manipulator.factor(selectedSubExpression_,parent,grandparent,mainWindow_.getVariableEnvironment());
     				if (factoredVersion != null) {
     					selectedSubExpression_.setSelected(false);
-    					grandparent.setSelected(true);
+    					if (parent.getOp().equals(Operators.named("*"))) { 
+    							grandparent.setSelected(true);
+    					}
+    					else parent.setSelected(true);
     					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(factoredVersion);
     					//TODO: add logicParents and geometryParents..
     					mainWindow_.addStatementAndSelect(result,true);
@@ -238,6 +244,55 @@ public class StatementPopUpMenu extends JPopupMenu {
 				mainWindow_.addStatementAndSelect(result, true);
 			}});
     	add(rearrangeRegroupItem);
+    	
+    	multiplyByRecipricalItem = new JMenuItem("Apply Definition of Divison");
+    	multiplyByRecipricalItem.setEnabled(true);
+    	multiplyByRecipricalItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Expression defAppliedVersion = Manipulator.applyDefinitionOfDivision(selectedSubExpression_,mainWindow_.getVariableEnvironment());
+				if (defAppliedVersion != null) {
+					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(defAppliedVersion);
+					//TODO: add logicParents and geometryParents..
+					mainWindow_.addStatementAndSelect(result, true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,
+							  "I don't know how to legally apply the definition of division here.",
+							  "Whoops!",  
+							  JOptionPane.ERROR_MESSAGE); 					
+				}
+			}});
+    	add(multiplyByRecipricalItem);
+    	
+    	cancelFactorItem = new JMenuItem("Cancel Factor");
+    	cancelFactorItem.setEnabled(true);
+    	cancelFactorItem.addActionListener(new ActionListener() {
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				Expression expr = selectedStatement_.getExpression();
+				OperatorExpression parent = ((OperatorExpression) expr).getParentOfSelected();
+				OperatorExpression grandparent = ((OperatorExpression) expr).getGrandParentOfSelected();
+    			Expression cancelledVersion = Manipulator.cancelCommonFactor(selectedSubExpression_,parent,grandparent,mainWindow_.getVariableEnvironment());
+    			selectedSubExpression_.setSelected(false);
+				if (parent.getOp().equals(Operators.named("*"))) { 
+					grandparent.setSelected(true);
+				}
+				else parent.setSelected(true);
+				//TODO: add logicParents and geometryParents..
+				if (cancelledVersion != null) {
+					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(cancelledVersion);
+					//TODO: add logicParents and geometryParents..
+					mainWindow_.addStatementAndSelect(result, true);
+				}
+				else {
+					JOptionPane.showMessageDialog(null,
+							  "I don't know how to cancel a common factor here.",
+							  "Whoops!",  
+							  JOptionPane.ERROR_MESSAGE); 					
+				}
+			}});
+    	add(cancelFactorItem);
     	
     	hideItem = new JMenuItem("Hide Selected Statements");
     	hideItem.setEnabled(statementClicked_ != null);

@@ -1,5 +1,6 @@
 package edu.emory.prove_it.util;
 import java.awt.Image;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -51,7 +52,13 @@ public class Tester {
 		Expression e8 = Expression.parse("= x (+ y z)", environment);
 		System.out.println("expressions are equal is " + e7.equals(e8));
 		
-		
+		BigDecimal one = BigDecimal.ONE;
+		BigDecimal four = new BigDecimal("4");
+		BigDecimal oneFourth = new BigDecimal("0.25");
+		BigDecimal notherOne = four.multiply(oneFourth);
+		System.out.println(one);
+		System.out.println(notherOne);
+		System.out.println(one.equals(notherOne));
 		//VariableExpression ve = (VariableExpression) (Expression.parse("z"));
 		//oe.applyLeft(new Operator("*"), ve);
 		

@@ -42,6 +42,10 @@ public class Operator implements Comparable<Operator> {
 		return false;
 	}
 	
+	public Operator getInverseOperator() {
+		return null; 
+	}
+	
 	/**
 	 * Checks if this operator distributes over another.
 	 * @param op
