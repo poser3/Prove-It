@@ -2,6 +2,8 @@ package edu.emory.prove_it.util;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 
+import javax.swing.ImageIcon;
+
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
@@ -34,6 +36,10 @@ public class LatexHandler {
 		Image image = latexToImage(latex);
 		GImage gImage = new GImage(image);
 		return gImage;
+	}
+	
+	public static ImageIcon latexToIcon(String latex) {
+		return new ImageIcon(latexToImage(latex));
 	}
 
 }

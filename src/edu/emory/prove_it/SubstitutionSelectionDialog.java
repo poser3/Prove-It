@@ -35,7 +35,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		setSize(400, 300);
 		setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
 		this.substitutingIn = substitutingIn;
-		previewLabel = new JLabel(new ImageIcon(LatexHandler.latexToImage(substitutingIn.toLatex())));
+		previewLabel = new JLabel(LatexHandler.latexToIcon(substitutingIn.toLatex()));
 		
 		Object[] statementsFromMainWindow = owner.getStatements();
 		Vector<Statement> statements = new Vector<Statement>();
@@ -84,14 +84,14 @@ public class SubstitutionSelectionDialog extends JDialog {
 		});
 				
 		setLayout(new TableLayout(6, 2, 10, 10));
-		add(new JLabel(substitutingIn.toLatex()), "gridwidth=2");
+		add(new JLabel(LatexHandler.latexToIcon(substitutingIn.toLatex())), "gridwidth=2");
 		add(new JLabel("becomes"), "gridwidth=2");
 		add(previewLabel, "gridwidth=2");
-		add(new JLabel());
+		add(new JLabel(), "gridwidth=1");
 		add(checkBox);
 		add(selectionBox, "gridwidth=2");
-		add(okButton);
-		add(cancelButton);
+		add(okButton, "gridwidth=1");
+		add(cancelButton, "gridwidth=1");
 		
 	}
 	
@@ -121,7 +121,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 	
 	private void updatePreview() {
 		String latex = substitutingIn.substitute(getFrom(), getTo()).toLatex();
-		previewLabel.setIcon(new ImageIcon(LatexHandler.latexToImage(latex)));
+		previewLabel.setIcon(LatexHandler.latexToIcon(latex));
 	}
 
 }
