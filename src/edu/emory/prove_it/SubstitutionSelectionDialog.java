@@ -6,6 +6,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.util.Vector;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JComboBox;
@@ -16,6 +17,7 @@ import edu.emory.prove_it.expression.Expression;
 import edu.emory.prove_it.expression.OperatorExpression;
 import edu.emory.prove_it.expression.Operators;
 import edu.emory.prove_it.expression.Statement;
+import edu.emory.prove_it.util.LatexHandler;
 import acm.gui.TableLayout;
 
 @SuppressWarnings("serial")
@@ -33,7 +35,7 @@ public class SubstitutionSelectionDialog extends JDialog {
 		setSize(400, 300);
 		setModalityType(Dialog.DEFAULT_MODALITY_TYPE);
 		this.substitutingIn = substitutingIn;
-		previewLabel = new JLabel(substitutingIn.toLatex());
+		previewLabel = new JLabel(new ImageIcon(LatexHandler.latexToImage(substitutingIn.toLatex())));
 		
 		Object[] statementsFromMainWindow = owner.getStatements();
 		Vector<Statement> statements = new Vector<Statement>();
@@ -118,7 +120,8 @@ public class SubstitutionSelectionDialog extends JDialog {
 	}
 	
 	private void updatePreview() {
-		previewLabel.setText(substitutingIn.substitute(getFrom(), getTo()).toLatex());
+		String latex = substitutingIn.substitute(getFrom(), getTo()).toLatex();
+		previewLabel.setIcon(new ImageIcon(LatexHandler.latexToImage(latex)));
 	}
 
 }
