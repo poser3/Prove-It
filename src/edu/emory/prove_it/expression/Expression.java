@@ -626,4 +626,86 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			throw new ClassCastException();
 	}
 	
+	/**
+	 * Recursively go through expression to find expression that contains the selected Expression
+	 */
+	public OperatorExpression getParentOfSelected() {	
+		if (this.isSelected()) {
+			return null;
+		}
+		else if ((this instanceof OperatorExpression) && (this.isParentOfSelected())) {
+			return (OperatorExpression) this;
+		}
+		else if (this instanceof OperatorExpression) {
+			for (int i=0; i< ((OperatorExpression) this).getNumArgs(); i++) {
+				if (((OperatorExpression) this).getArg(i) instanceof OperatorExpression) {
+					Expression possibleParent = ((OperatorExpression) ((OperatorExpression) this).getArg(i)).getParentOfSelected();
+					if ((possibleParent != null) && (possibleParent instanceof OperatorExpression)) {
+						return (OperatorExpression) possibleParent;
+					}
+				}
+			}
+		}
+			//if you get this far, nothing was selected, so there is no parent
+		return null;
+	}
+	
+	public OperatorExpression getGrandParentOfSelected() {
+		if (this.isSelected()) {
+			return null;
+		}
+		else if (this.isParentOfSelected()) {
+			return null;
+		}
+		else if ((this instanceof OperatorExpression) && (this.isGrandParentOfSelected())) {
+			return (OperatorExpression) this;
+		}
+		else if (this instanceof OperatorExpression) {
+			for (int i=0; i < ((OperatorExpression) this).getNumArgs(); i++) {
+				if (((OperatorExpression) this).getArg(i) instanceof OperatorExpression) {
+					Expression possibleGrandParent = ((OperatorExpression) ((OperatorExpression) this).getArg(i)).getGrandParentOfSelected();
+					if ((possibleGrandParent != null) && (possibleGrandParent instanceof OperatorExpression)) {
+						return (OperatorExpression) possibleGrandParent;
+					}
+				}
+			}
+		}
+		return null;
+	}
+	
+	public boolean isParentOfSelected() {
+		if (this instanceof OperatorExpression) {
+			for (int i=0; i < ((OperatorExpression) this).getNumArgs(); i++) {
+				if (((OperatorExpression) this).getArg(i).isSelected()) {
+					return true;
+				}
+			}
+		}
+		return false;  //OperatorExpression overrides this
+	}
+	
+	public boolean hasArg(Expression arg) {
+		if (this instanceof OperatorExpression) {
+			for (int i=0; i < ((OperatorExpression) this).getNumArgs(); i++) {
+				if (((OperatorExpression) this).getArg(i).equals(arg)) {
+					return true;
+				}
+			}
+		}
+		return false;  //OperatorExpression overrides this
+	}
+	
+	public boolean isGrandParentOfSelected() {
+		if (this instanceof OperatorExpression) {
+			for (int i=0; i < ((OperatorExpression) this).getNumArgs(); i++) {
+				if (((OperatorExpression) this).getArg(i) instanceof OperatorExpression) {
+					if (((OperatorExpression) ((OperatorExpression) this).getArg(i)).isParentOfSelected()) {
+						return true;
+					}
+				}
+			}
+		}
+		return false;  //OperatorExpression overrides this
+	}
+	
 }

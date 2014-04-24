@@ -21,6 +21,11 @@ public class Operators extends HashMap<String, Operator> {
 			}
 			
 			@Override
+			public boolean isAssociative() {
+				return true;
+			}
+			
+			@Override
 			public short getPrecedence() {
 				return 1;
 			}
@@ -97,8 +102,13 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("+", new Operator("+") {
-			public final boolean isAssociative = true;
-			private final String inverse = "-";
+			//public final boolean isAssociative = true;
+			//private final String inverse = "-";
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("-"); 
+			}
 			
 			@Override
 			public boolean isCommutative() {
@@ -107,6 +117,10 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public short getPrecedence() {
 				return 2;
+			}
+			@Override
+			public boolean isAssociative() {
+				return true;
 			}
 			
 			@Override
@@ -148,7 +162,12 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("-", new Operator("-") {
-			private final String inverse = "+";
+			//private final String inverse = "+";
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("+"); 
+			}
 			
 			@Override
 			public short getPrecedence() {
@@ -216,12 +235,21 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("*", new Operator("*") {
-			public final boolean isAssociative = true;
 			private final String distributes = "+,-";
-			private final String inverse = "/";
+			//private final String inverse = "/";
+			//public final boolean isAssociative = true;
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("/"); 
+			}
 			
 			@Override
 			public boolean isCommutative() {
+				return true;
+			}
+			@Override
+			public boolean isAssociative() {
 				return true;
 			}
 			
@@ -278,11 +306,16 @@ public class Operators extends HashMap<String, Operator> {
 			}
 		});
 		put("/", new Operator("/") {
-			private final String inverse = "*";
+			//private final String inverse = "*";
 			
 			@Override
 			public short getPrecedence() {
 				return 3;
+			}
+			
+			@Override
+			public Operator getInverseOperator() {
+				return Operators.named("*"); 
 			}
 			
 			@Override
@@ -443,6 +476,19 @@ public class Operators extends HashMap<String, Operator> {
 			@Override
 			public Type getType(Type... argTypes) {
 				return Type.NUMBER;
+			}
+		});
+		put("underbrace", new Operator("underbrace") {
+			@Override
+			public short getPrecedence() {
+				return Short.MAX_VALUE;
+			}
+			
+			@Override
+			public String toLatex(OperatorExpression e) {
+				return String.format("\\underbrace{ %s }_{ %s }",
+						expressionWithParens(e.getArg(0)),
+						expressionWithParens(e.getArg(1)));
 			}
 		});
 		put("angle", new Operator("angle") {

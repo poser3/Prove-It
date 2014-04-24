@@ -38,6 +38,14 @@ public class Operator implements Comparable<Operator> {
 		return false;
 	}
 	
+	public boolean isAssociative() {
+		return false;
+	}
+	
+	public Operator getInverseOperator() {
+		return null; 
+	}
+	
 	/**
 	 * Checks if this operator distributes over another.
 	 * @param op
@@ -211,6 +219,17 @@ public class Operator implements Comparable<Operator> {
 		for (Expression arg : e.getArgs()) {
 			if (arg instanceof OperatorExpression)
 				args.add(((OperatorExpression) arg).simplify());
+			else
+				args.add(e);
+		}
+		return new OperatorExpression(e.getOp(), args);
+	}
+	
+	public Expression evaluate(final OperatorExpression e) {
+		ArrayList<Expression> args = new ArrayList<Expression>();
+		for (Expression arg : e.getArgs()) {
+			if (arg instanceof OperatorExpression)
+				args.add(((OperatorExpression) arg).evaluate());
 			else
 				args.add(e);
 		}
