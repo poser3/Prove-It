@@ -9,5 +9,6 @@ hypotheses
 on A L
 on B L
 on C L
+between B A C
 conclusions
-= (+ (m (angle A B D)) (m (angle D B C))) 180
+= (+ (m (angle A B D)) (m (angle C B D))) 180

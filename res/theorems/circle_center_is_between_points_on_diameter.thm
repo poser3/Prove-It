@@ -1,0 +1,16 @@
+Circle center is between points on diameter
+variables
+circle c
+line l
+point A
+point B
+point C
+hypotheses
+center A c
+on B c
+on C c
+on A l
+on B l
+on C l
+conclusions
+between A B C
