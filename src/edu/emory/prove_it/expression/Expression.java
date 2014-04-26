@@ -11,6 +11,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	////////////////////////
 	
 	private boolean isSelected_ = false;
+	private OperatorExpression parent_ = null;
 	
 	////////////////////
 	// Static Methods //
@@ -213,6 +214,14 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			}
 		}
 		return null;
+	}
+	
+	public OperatorExpression getParent() {
+		return parent_;
+	}
+	
+	public void setParent(OperatorExpression exp) {
+		parent_ = exp;
 	}
 	
 	public void deselectRecursive() {

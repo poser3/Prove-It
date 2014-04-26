@@ -9,6 +9,11 @@ public class OperatorExpression extends Expression {
 	public static OperatorExpression make(Operator op, Collection<? extends Expression> arguments) {
 		ArrayList<Expression> args = new ArrayList<Expression>(arguments);
 		OperatorExpression exp = new OperatorExpression(op, args);
+		for (int i=0; i<args.size(); i++) {
+			Expression arg = args.get(i).duplicate();
+			arg.setParent(exp);
+			args.set(i, arg);
+		}
 		return exp;
 	}
 	
