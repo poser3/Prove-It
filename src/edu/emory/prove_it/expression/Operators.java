@@ -153,7 +153,7 @@ public class Operators extends HashMap<String, Operator> {
 				else if (args.size() == 1)
 					return args.get(0);
 				else
-					return new OperatorExpression(this, args);
+					return OperatorExpression.make(this, args);
 			}
 			
 			@Override
@@ -206,7 +206,7 @@ public class Operators extends HashMap<String, Operator> {
 					if (args.size() == 1)
 						return args.get(0);
 					else
-						return new OperatorExpression(this, args);
+						return OperatorExpression.make(this, args);
 				}
 				else {
 					BigDecimal constant = BigDecimal.ZERO;
@@ -225,7 +225,7 @@ public class Operators extends HashMap<String, Operator> {
 					if (args.size() == 1)
 						return args.get(0);
 					else
-						return new OperatorExpression(this, args);
+						return OperatorExpression.make(this, args);
 				}
 			}
 			
@@ -297,7 +297,7 @@ public class Operators extends HashMap<String, Operator> {
 				else if (args.size() == 1)
 					return args.get(0);
 				else
-					return new OperatorExpression(this, args);
+					return OperatorExpression.make(this, args);
 			}
 			
 			@Override
@@ -363,7 +363,7 @@ public class Operators extends HashMap<String, Operator> {
 						if (args.size() == 1)
 							return args.get(0);
 						else
-							return new OperatorExpression(this, args);
+							return OperatorExpression.make(this, args);
 					}
 				}
 				else {
@@ -383,7 +383,7 @@ public class Operators extends HashMap<String, Operator> {
 					if (args.size() == 1)
 						return args.get(0);
 					else
-						return new OperatorExpression(this, args);
+						return OperatorExpression.make(this, args);
 				}
 			}
 			
@@ -438,10 +438,7 @@ public class Operators extends HashMap<String, Operator> {
 					else if (power instanceof NumberExpression && ((NumberExpression) power).getValue().equals(BigDecimal.ONE))
 						return base;
 					else {
-						ArrayList<Expression> args = new ArrayList<Expression>();
-						args.add(base);
-						args.add(power);
-						return new OperatorExpression(this, args);
+						return OperatorExpression.make(this, base, power);
 					}
 				}
 				else {
@@ -452,7 +449,7 @@ public class Operators extends HashMap<String, Operator> {
 						else
 							args.add(arg);
 					}
-					return new OperatorExpression(this, args);
+					return OperatorExpression.make(this, args);
 				}
 			}
 			

@@ -1,6 +1,5 @@
 package edu.emory.prove_it;
 import java.awt.Component;
-import java.util.ArrayList;
 
 import javax.swing.JList;
 
@@ -20,10 +19,7 @@ public class SubstitutionCellRenderer extends StatementListCellRenderer {
 			
 			if (opEx.getOp().equals(Operators.named("="))) {
 				if (reversed) {
-					ArrayList<Expression> args = new ArrayList<Expression>();
-					args.add(opEx.getArg(1));
-					args.add(opEx.getArg(0));
-					Expression result = new OperatorExpression(Operators.named("="), args);
+					Expression result = OperatorExpression.make("=", opEx.getArg(1), opEx.getArg(0));
 					return super.getListCellRendererComponent(list,
 							new Statement(result, value.logicParents(), value.geometryParents()),
 							index, isSelected, cellHasFocus);

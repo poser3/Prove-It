@@ -123,7 +123,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			}
 			
 			// Make and return the OperatorExpression mentioned above
-			return new OperatorExpression(op, args);
+			return OperatorExpression.make(op, args);
 		}
 		
 		// If it's got multiple words and it's not an operator expression,
@@ -273,7 +273,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.addAll(oeThis.getArgs());
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 			
@@ -292,7 +292,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(e);
 					newArgs.addAll(oeThis.getArgs());
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 			
@@ -311,7 +311,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeE.getArgs());
 					newArgs.add(this);
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 		}
@@ -323,10 +323,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		//   op = "+"
 		//   e = "* x y"
 		// Then the result should be this = "+ (* x y) (- a b)"
-		ArrayList<Expression> newArgs = new ArrayList<Expression>();
-		newArgs.add(e);
-		newArgs.add(this);
-		return new OperatorExpression(op, newArgs);
+		return OperatorExpression.make(op, e, this);
 	}
 	
 	
@@ -357,7 +354,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.addAll(oeE.getArgs());
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 			
@@ -376,7 +373,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.addAll(oeThis.getArgs());
 					newArgs.add(e);
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 			
@@ -395,7 +392,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 					ArrayList<Expression> newArgs = new ArrayList<Expression>();
 					newArgs.add(this);
 					newArgs.addAll(oeE.getArgs());
-					return new OperatorExpression(op, newArgs);
+					return OperatorExpression.make(op, newArgs);
 				}
 			}
 		}
@@ -407,10 +404,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		//   op = "+"
 		//   e = "* x y"
 		// Then the result should be this = "+ (- a b) (* x y)"
-		ArrayList<Expression> newArgs = new ArrayList<Expression>();
-		newArgs.add(this);
-		newArgs.add(e);
-		return new OperatorExpression(op, newArgs);
+		return OperatorExpression.make(op, this, e);
 	}
 	
 	/**
@@ -425,7 +419,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for (int i=0; i < oeThis.getNumArgs(); i++) {
 				args.add(oeThis.getArg(i).duplicate());
 			}
-			return new OperatorExpression(oeThis.getOp(), args);
+			return OperatorExpression.make(oeThis.getOp(), args);
 		}
 		else if (this instanceof VariableExpression) {
 			return new VariableExpression(this.toString(), this.getType());
@@ -466,7 +460,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for (int i=0; i < oeThis.getNumArgs(); i++) {
 				args.add(oeThis.getArg(i).substitute(quid, quo));
 			}
-			return new OperatorExpression(oeThis.getOp(), args);
+			return OperatorExpression.make(oeThis.getOp(), args);
 		}
 		else
 			return this;
@@ -499,7 +493,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for (int i=0; i < oeThis.getNumArgs(); i++) {
 				args.add(oeThis.getArg(i).substituteSelected(quo));
 			}
-			return new OperatorExpression(oeThis.getOp(), args);
+			return OperatorExpression.make(oeThis.getOp(), args);
 		}
 		else
 			return this;
@@ -540,7 +534,7 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 			for(int i=0; i<args.size(); i++) 
 				newArgs.add(args.get(i).substitute(map));
 			
-			return new OperatorExpression(op, newArgs);
+			return OperatorExpression.make(op, newArgs);
 		}
 	}
 	

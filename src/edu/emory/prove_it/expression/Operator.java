@@ -222,7 +222,7 @@ public class Operator implements Comparable<Operator> {
 			else
 				args.add(e);
 		}
-		return new OperatorExpression(e.getOp(), args);
+		return OperatorExpression.make(e.getOp(), args);
 	}
 	
 	public Expression evaluate(final OperatorExpression e) {
@@ -233,7 +233,7 @@ public class Operator implements Comparable<Operator> {
 			else
 				args.add(e);
 		}
-		return new OperatorExpression(e.getOp(), args);
+		return OperatorExpression.make(e.getOp(), args);
 	}
 	
 	public Type getType(Type... argTypes) {

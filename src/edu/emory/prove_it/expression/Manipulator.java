@@ -42,7 +42,7 @@ public class Manipulator {
 					denominatorProductArgs.remove(i);
 					Expression newDenominator = null;
 					if (denominatorProductArgs.size() > 1) {
-						newDenominator = new OperatorExpression("*",denominatorProductArgs);
+						newDenominator = OperatorExpression.make("*",denominatorProductArgs);
 					}
 					else {
 						newDenominator = denominatorProductArgs.get(0);
@@ -55,10 +55,7 @@ public class Manipulator {
 					}
 					else {
 						System.out.println("new denominator was not a 1");
-						ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
-						newQuotientArgs.add(newNumerator);
-						newQuotientArgs.add(newDenominator);
-						return new OperatorExpression("/",newQuotientArgs);
+						return OperatorExpression.make("/", newNumerator, newDenominator);
 					}
 				}
 			}	
@@ -79,7 +76,7 @@ public class Manipulator {
 					numeratorProductArgs.remove(i);
 					Expression newNumerator = null;
 					if (numeratorProductArgs.size() > 1) {
-						newNumerator = new OperatorExpression("*",numeratorProductArgs);
+						newNumerator = OperatorExpression.make("*", numeratorProductArgs);
 					}
 					else {
 						newNumerator = numeratorProductArgs.get(0);
@@ -92,10 +89,7 @@ public class Manipulator {
 					}
 					else {
 						System.out.println("new denominator was not a 1");
-						ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
-						newQuotientArgs.add(newNumerator);
-						newQuotientArgs.add(newDenominator);
-						return new OperatorExpression("/",newQuotientArgs);
+						return OperatorExpression.make("/", newNumerator, newDenominator);
 					}
 				}
 			}
@@ -129,7 +123,7 @@ public class Manipulator {
 					numeratorProductArgs.remove(i);
 					
 					if (numeratorProductArgs.size() > 1) {
-						newNumerator = new OperatorExpression("*",numeratorProductArgs);
+						newNumerator = OperatorExpression.make("*", numeratorProductArgs);
 					}
 					else {
 						newNumerator = numeratorProductArgs.get(0);
@@ -145,7 +139,7 @@ public class Manipulator {
 					System.out.println("found it! will now remove it");
 					denominatorProductArgs.remove(i);
 					if (denominatorProductArgs.size() > 1) {
-						newDenominator = new OperatorExpression("*",denominatorProductArgs);
+						newDenominator = OperatorExpression.make("*", denominatorProductArgs);
 					}
 					else {
 						newDenominator = denominatorProductArgs.get(0);
@@ -161,10 +155,7 @@ public class Manipulator {
 				}
 				else {
 					System.out.println("new denominator was not a 1");
-					ArrayList<Expression> newQuotientArgs = new ArrayList<Expression>();
-					newQuotientArgs.add(newNumerator);
-					newQuotientArgs.add(newDenominator);
-					return new OperatorExpression("/",newQuotientArgs);
+					return OperatorExpression.make("/", newNumerator, newDenominator);
 				}
 			}
 		}
@@ -180,14 +171,8 @@ public class Manipulator {
 			oe = (OperatorExpression) e;
 			Operator op = oe.getOp();
 			if (op.equals(Operators.named("/"))) {
-				ArrayList<Expression> newDivisionArgs = new ArrayList<Expression>();
-				newDivisionArgs.add(Expression.parse("1",variableEnvironment));
-				newDivisionArgs.add(oe.getArg(1));
-				OperatorExpression reciprical = new OperatorExpression(Operators.named("/"),newDivisionArgs);
-				ArrayList<Expression> newProductArgs = new ArrayList<Expression>();
-				newProductArgs.add(oe.getArg(0));
-				newProductArgs.add(reciprical);
-				return new OperatorExpression(Operators.named("*"),newProductArgs);
+				OperatorExpression reciprocal = OperatorExpression.make("/", new NumberExpression(1), oe.getArg(1));
+				return OperatorExpression.make("*", oe.getArg(0), reciprocal);
 			}
 		}
 		//if you get this far, there was a problem
@@ -195,7 +180,6 @@ public class Manipulator {
 	}
 	
 	public static Expression dropParensOnSum(Expression e) {
-		Expression result = null;
 		OperatorExpression oe;
 		System.out.println("Entered dropParensOnSum()");
 		if (e instanceof OperatorExpression) {
@@ -226,8 +210,7 @@ public class Manipulator {
 						newArgs.add(arg);
 					}
 				}
-				result = (new OperatorExpression(op,newArgs)).duplicate();
-				return result;
+				return OperatorExpression.make(op, newArgs).duplicate();
 			}
 		}
 		
@@ -288,7 +271,7 @@ public class Manipulator {
 						newArgs.add(oe.getArg(argIndex));
 					}
 				}
-				return (new OperatorExpression(op,newArgs)).duplicate();
+				return OperatorExpression.make(op, newArgs).duplicate();
 			}
 		}
 		
@@ -328,10 +311,7 @@ public class Manipulator {
 					return null; //not all terms of the grandparent expression were products 
 				}
 			}
-			ArrayList<Expression> resultingProductFactors = new ArrayList<Expression>();
-			resultingProductFactors.add(e);
-			resultingProductFactors.add(gp);
-			return (new OperatorExpression("*", resultingProductFactors)).duplicate();
+			return OperatorExpression.make("*", e, gp).duplicate();
 		}
 		
 		if (parent.getOp().equals(Operators.named("+"))) { //it might be a lone term in a sum of products
@@ -361,10 +341,7 @@ public class Manipulator {
 				}
 			}
 			System.out.println("parent after processing: " + p.toString());
-			ArrayList<Expression> resultingProductFactors = new ArrayList<Expression>();
-			resultingProductFactors.add(e);
-			resultingProductFactors.add(p);
-			return (new OperatorExpression("*", resultingProductFactors)).duplicate();
+			return OperatorExpression.make("*", e, p).duplicate();
 		}
 		
 		//if you get this far, there was a problem
@@ -388,10 +365,7 @@ public class Manipulator {
 				System.out.println("left expression : " + leftExpression);
 				rightExpression = oe.getArg(1);
 				System.out.println("right expression : " + rightExpression);
-				ArrayList<Expression> pair = new ArrayList<Expression>();
-				pair.add(rightExpression);
-				pair.add(leftExpression);
-				result = (new OperatorExpression(commutativeOp.toString(),pair)).duplicate();
+				result = OperatorExpression.make(commutativeOp, rightExpression, leftExpression).duplicate();
 				System.out.println("commuted expression : " + result);
 				return result;
 			}
@@ -451,9 +425,9 @@ public class Manipulator {
 							pair.add(opExpressionToDistributeInto.getArgs().get(i));
 							pair.add(expToDistribute);
 						}
-						newArgs.add(new OperatorExpression(distributiveOp.toString(),pair));
+						newArgs.add(OperatorExpression.make(distributiveOp, pair));
 					}
-					result = (new OperatorExpression(opExpressionToDistributeInto.getOp().toString(),newArgs)).duplicate();
+					result = OperatorExpression.make(opExpressionToDistributeInto.getOp(), newArgs).duplicate();
 					System.out.println("distributed over addition: " + result);
 					return result;
 				}

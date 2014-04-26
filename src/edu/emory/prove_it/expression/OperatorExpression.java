@@ -1,9 +1,30 @@
 package edu.emory.prove_it.expression;
 import java.util.ArrayList;
+import java.util.Collection;
 
 import edu.emory.prove_it.util.LookAndFeel;
 
 public class OperatorExpression extends Expression {
+	
+	public static OperatorExpression make(Operator op, Collection<? extends Expression> arguments) {
+		ArrayList<Expression> args = new ArrayList<Expression>(arguments);
+		OperatorExpression exp = new OperatorExpression(op, args);
+		return exp;
+	}
+	
+	public static OperatorExpression make(String op, Collection<? extends Expression> arguments) {
+		return make(Operators.named(op), arguments);
+	}
+	
+	public static OperatorExpression make(Operator op, Expression... arguments) {
+		ArrayList<Expression> args = new ArrayList<Expression>(arguments.length);
+		for (Expression exp : arguments) args.add(exp);
+		return make(op, args);
+	}
+	
+	public static OperatorExpression make(String op, Expression... arguments) {
+		return make(Operators.named(op), arguments);
+	}
 	
 	////////////////////////
 	// Instance Variables //
@@ -21,18 +42,8 @@ public class OperatorExpression extends Expression {
 	 * @param op the operator for the expression
 	 * @param arguments an ArrayList of expressions to which the operator will be applied
 	 */
-	public OperatorExpression(Operator op, ArrayList<Expression> arguments) {
+	private OperatorExpression(Operator op, ArrayList<Expression> arguments) {
 		this.op = op;
-		this.arguments = arguments;
-	}	
-	
-	/**
-	 * Construct an OperatorExpression with the given operator (as named by some string) and arguments.
-	 * @param the name of the operator for the expression
-	 * @param arguments an ArrayList of expressions to which the operator will be applied
-	 */
-	public OperatorExpression(final String op, ArrayList<Expression> arguments) {
-		this.op = Operators.named(op);
 		this.arguments = arguments;
 	}
 	
