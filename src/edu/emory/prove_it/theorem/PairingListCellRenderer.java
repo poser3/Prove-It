@@ -24,7 +24,7 @@ public class PairingListCellRenderer implements ListCellRenderer<Pairing> {
 			if (value.isPaired()) {
 				//make a copy of the expression so that any selections can be removed,
 				//otherwise the selected subexpression will show as highlighted in the pairings list.
-				Expression copy = value.getPairedExpression().duplicate();
+				Expression copy = value.getPairedExpression().clone();
 				copy.deselectRecursive();
 				latex = String.format("\\textrm{%s } %s \\leftarrow %s",
 						type,

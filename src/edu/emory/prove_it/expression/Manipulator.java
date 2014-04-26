@@ -8,8 +8,8 @@ public class Manipulator {
 	
 	public static Expression cancelCommonFactor(Expression e, OperatorExpression parent, OperatorExpression grandParent, VariableEnvironment variableEnvironment) {
 		
-		OperatorExpression p = (OperatorExpression) parent.duplicate();
-		OperatorExpression gp = (OperatorExpression) grandParent.duplicate();
+		OperatorExpression p = parent.clone();
+		OperatorExpression gp = grandParent.clone();
 		boolean hasParent = (p != null);
 		boolean hasGrandparent = (gp != null);
 		boolean parentIsDivision = p.getOp().equals(Operators.named("/"));
@@ -210,7 +210,7 @@ public class Manipulator {
 						newArgs.add(arg);
 					}
 				}
-				return OperatorExpression.make(op, newArgs).duplicate();
+				return OperatorExpression.make(op, newArgs);
 			}
 		}
 		
@@ -271,7 +271,7 @@ public class Manipulator {
 						newArgs.add(oe.getArg(argIndex));
 					}
 				}
-				return OperatorExpression.make(op, newArgs).duplicate();
+				return OperatorExpression.make(op, newArgs);
 			}
 		}
 		
@@ -289,8 +289,8 @@ public class Manipulator {
 			//TODO: can/should we tighten the user experience for the "1" above?
 			//i.e., let the computer do the work for (+ (* x y) (* x 3 z) x)
 			
-			OperatorExpression p = (OperatorExpression) parent.duplicate();
-			OperatorExpression gp = (OperatorExpression) grandparent.duplicate();
+			OperatorExpression p = parent.clone();
+			OperatorExpression gp = grandparent.clone();
 			
 			for (int i=0; i < gp.getNumArgs(); i++) {
 				if ((gp.getArg(i) instanceof OperatorExpression) && 
@@ -311,12 +311,12 @@ public class Manipulator {
 					return null; //not all terms of the grandparent expression were products 
 				}
 			}
-			return OperatorExpression.make("*", e, gp).duplicate();
+			return OperatorExpression.make("*", e, gp);
 		}
 		
 		if (parent.getOp().equals(Operators.named("+"))) { //it might be a lone term in a sum of products
 			System.out.println("in a sum");
-			OperatorExpression p = (OperatorExpression) parent.duplicate();
+			OperatorExpression p = parent.clone();
 			System.out.println("parent: " + p.toString());
 			for (int i=0; i < p.getNumArgs(); i++) {
 				if ((p.getArg(i) instanceof OperatorExpression) && 
@@ -341,7 +341,7 @@ public class Manipulator {
 				}
 			}
 			System.out.println("parent after processing: " + p.toString());
-			return OperatorExpression.make("*", e, p).duplicate();
+			return OperatorExpression.make("*", e, p);
 		}
 		
 		//if you get this far, there was a problem
@@ -365,7 +365,7 @@ public class Manipulator {
 				System.out.println("left expression : " + leftExpression);
 				rightExpression = oe.getArg(1);
 				System.out.println("right expression : " + rightExpression);
-				result = OperatorExpression.make(commutativeOp, rightExpression, leftExpression).duplicate();
+				result = OperatorExpression.make(commutativeOp, rightExpression, leftExpression);
 				System.out.println("commuted expression : " + result);
 				return result;
 			}
@@ -427,7 +427,7 @@ public class Manipulator {
 						}
 						newArgs.add(OperatorExpression.make(distributiveOp, pair));
 					}
-					result = OperatorExpression.make(opExpressionToDistributeInto.getOp(), newArgs).duplicate();
+					result = OperatorExpression.make(opExpressionToDistributeInto.getOp(), newArgs);
 					System.out.println("distributed over addition: " + result);
 					return result;
 				}

@@ -1,7 +1,8 @@
 package edu.emory.prove_it.expression;
 
 import edu.emory.prove_it.util.LookAndFeel;
- public class VariableExpression extends Expression {
+
+public class VariableExpression extends Expression {
 	 
 	///////////////
 	// Constants //
@@ -36,6 +37,11 @@ import edu.emory.prove_it.util.LookAndFeel;
 	@Override
 	public boolean equals(final Object obj) {
 		return obj instanceof VariableExpression && ((VariableExpression) obj).toString().equals(name_);
+	}
+	
+	@Override
+	public VariableExpression clone() {
+		return new VariableExpression(name_, type_);
 	}
 	
 	/**

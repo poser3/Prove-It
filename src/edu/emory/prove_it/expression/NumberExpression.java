@@ -61,6 +61,11 @@ public class NumberExpression extends Expression {
 		return obj instanceof NumberExpression && ((NumberExpression) obj).getValue().equals(value);
 	}
 	
+	@Override
+	public NumberExpression clone() {
+		return new NumberExpression(value);
+	}
+	
 	/**
 	 * Compare this NumberExpression to another expression
 	 * An OperatorExpression or VariableExpression is comes before any NumberExpression.

@@ -10,7 +10,7 @@ public class OperatorExpression extends Expression {
 		ArrayList<Expression> args = new ArrayList<Expression>(arguments);
 		OperatorExpression exp = new OperatorExpression(op, args);
 		for (int i=0; i<args.size(); i++) {
-			Expression arg = args.get(i).duplicate();
+			Expression arg = args.get(i).clone();
 			arg.setParent(exp);
 			args.set(i, arg);
 		}
@@ -187,6 +187,11 @@ public class OperatorExpression extends Expression {
 		}
 		// No operatorExpression is equal to a numberExpression or a variableExpression
 		else return false;
+	}
+	
+	@Override
+	public OperatorExpression clone() {
+		return OperatorExpression.make(op, arguments);
 	}
 	
 	/**

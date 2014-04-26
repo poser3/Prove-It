@@ -62,7 +62,7 @@ public class Statement implements Comparable<Statement> {
 	}
 	
 	public Statement substituteSelectedIntoDuplicate(Expression quo) {
-		return new Statement(expression.substituteSelected(quo).duplicate(), logicDependencies, geometryDependencies);
+		return new Statement(expression.substituteSelected(quo).clone(), logicDependencies, geometryDependencies);
 	}
 	
 	public Statement substitute(HashMap<String, String> map) {

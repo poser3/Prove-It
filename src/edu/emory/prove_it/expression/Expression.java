@@ -4,7 +4,7 @@ import java.util.HashMap;
 
 import edu.emory.prove_it.Selectable;
 
-public abstract class Expression implements Comparable<Expression>, Selectable {
+public abstract class Expression implements Comparable<Expression>, Cloneable, Selectable {
 	
 	////////////////////////
 	// Instance Variables //
@@ -157,6 +157,9 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 	 */
 	@Override
 	public abstract boolean equals(Object obj);
+	
+	@Override
+	public abstract Expression clone();
 	
 	/**
 	 * Return a string representation of this Expression.
@@ -414,28 +417,6 @@ public abstract class Expression implements Comparable<Expression>, Selectable {
 		//   e = "* x y"
 		// Then the result should be this = "+ (- a b) (* x y)"
 		return OperatorExpression.make(op, this, e);
-	}
-	
-	/**
-	 * Create a new expression that is identical to this expression
-	 * @return
-	 */
-    public Expression duplicate() {
-		
-		if (this instanceof OperatorExpression) {
-			OperatorExpression oeThis = (OperatorExpression) this;
-			ArrayList<Expression> args = new ArrayList<Expression>(oeThis.getNumArgs());
-			for (int i=0; i < oeThis.getNumArgs(); i++) {
-				args.add(oeThis.getArg(i).duplicate());
-			}
-			return OperatorExpression.make(oeThis.getOp(), args);
-		}
-		else if (this instanceof VariableExpression) {
-			return new VariableExpression(this.toString(), this.getType());
-		}
-		else { // i.e., this is an instance of NumberExpression 
-			return new NumberExpression(this.toString());
-		}
 	}
 	
 	/**
