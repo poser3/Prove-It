@@ -6,10 +6,15 @@ public class Manipulator {
 	
 	public static int NUM_ARGS_FOR_BINARY_OPERATOR = 2;
 	
-	public static Expression cancelCommonFactor(Expression e, OperatorExpression parent, OperatorExpression grandParent, VariableEnvironment variableEnvironment) {
+	public static Expression cancelCommonFactor(Expression e, VariableEnvironment variableEnvironment) {
+		
+		OperatorExpression parent = e.getParent();
+		if (parent == null) return e;
+		OperatorExpression grandparent = parent.getParent();
+		if (grandparent == null) return e;
 		
 		OperatorExpression p = parent.clone();
-		OperatorExpression gp = grandParent.clone();
+		OperatorExpression gp = grandparent.clone();
 		boolean hasParent = (p != null);
 		boolean hasGrandparent = (gp != null);
 		boolean parentIsDivision = p.getOp().equals(Operators.named("/"));
@@ -280,7 +285,12 @@ public class Manipulator {
 		return result;
 	}
 	
-	public static Expression factor(Expression e, OperatorExpression parent, OperatorExpression grandparent, VariableEnvironment variableEnvironment) {
+	public static Expression factor(Expression e, VariableEnvironment variableEnvironment) {
+		OperatorExpression parent = e.getParent();
+		if (parent == null) return e;
+		OperatorExpression grandparent = parent.getParent();
+		if (grandparent == null) return e;
+		
 		if (parent.getOp().equals(Operators.named("*")) && grandparent.getOp().equals(Operators.named("+"))) {
 			System.out.println("in a product, inside a sum");
 			// we must take (+ (* x y) (* x 3 z) (* x 1)) and turn it into

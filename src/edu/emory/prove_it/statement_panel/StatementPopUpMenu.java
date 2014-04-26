@@ -158,17 +158,12 @@ public class StatementPopUpMenu extends JPopupMenu {
     		public void actionPerformed(ActionEvent e) {
     			Expression expr = selectedStatement_.getExpression();
     			if (expr instanceof OperatorExpression) {
-    				OperatorExpression parent = ((OperatorExpression) expr).getParentOfSelected();
-    				OperatorExpression grandparent = ((OperatorExpression) expr).getGrandParentOfSelected();
-    				System.out.println("parent: " + parent.toString());
-    				System.out.println("grandparent: " + grandparent.toString());
-    				Expression factoredVersion = Manipulator.factor(selectedSubExpression_,parent,grandparent,mainWindow_.getVariableEnvironment());
-    				if (factoredVersion != null) {
+    				OperatorExpression parent = selectedSubExpression_.getParent();
+    				OperatorExpression grandparent = parent.getParent();
+    				Expression factoredVersion = Manipulator.factor(selectedSubExpression_, mainWindow_.getVariableEnvironment());
+    				if (factoredVersion != null && parent != null && grandparent != null) {
     					selectedSubExpression_.setSelected(false);
-    					if (parent.getOp().equals(Operators.named("*"))) { 
-    							grandparent.setSelected(true);
-    					}
-    					else parent.setSelected(true);
+    					(parent.getOp().equals(Operators.named("*")) ? grandparent : parent).setSelected(true);
     					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(factoredVersion);
     					//TODO: add logicParents and geometryParents..
     					mainWindow_.addStatementAndSelect(result,true);
@@ -271,14 +266,11 @@ public class StatementPopUpMenu extends JPopupMenu {
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				Expression expr = selectedStatement_.getExpression();
-				OperatorExpression parent = ((OperatorExpression) expr).getParentOfSelected();
-				OperatorExpression grandparent = ((OperatorExpression) expr).getGrandParentOfSelected();
-    			Expression cancelledVersion = Manipulator.cancelCommonFactor(selectedSubExpression_,parent,grandparent,mainWindow_.getVariableEnvironment());
+				OperatorExpression parent = expr.getSelectedSubExpression().getParent();
+				OperatorExpression grandparent = parent.getParent();
+    			Expression cancelledVersion = Manipulator.cancelCommonFactor(selectedSubExpression_, mainWindow_.getVariableEnvironment());
     			selectedSubExpression_.setSelected(false);
-				if (parent.getOp().equals(Operators.named("*"))) { 
-					grandparent.setSelected(true);
-				}
-				else parent.setSelected(true);
+    			(parent.getOp().equals(Operators.named("*")) ? grandparent : parent).setSelected(true);
 				//TODO: add logicParents and geometryParents..
 				if (cancelledVersion != null) {
 					Statement result = selectedStatement_.substituteSelectedIntoDuplicate(cancelledVersion);
