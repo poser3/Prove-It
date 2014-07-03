@@ -235,9 +235,6 @@ public abstract class Expression implements Comparable<Expression>, Cloneable, S
 				arg.deselectRecursive();
 			}
 		}
-		else { //this is an instance of VariableExpression or NumberExpression
-			this.setSelected(false);
-		}
 	}
 	
 	///////////////////
