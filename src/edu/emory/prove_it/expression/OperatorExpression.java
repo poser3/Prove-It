@@ -269,4 +269,17 @@ public class OperatorExpression extends Expression {
 	public Expression evaluate() {
 		return op.evaluate(this);
 	}
+	
+	/**
+	 * Does this have a given expression as an argument, an argument to an argument, or so on?
+	 * @param exp
+	 * @return
+	 */
+	public boolean contains(Expression exp) {
+		for (Expression arg : arguments)
+			if (arg.equals(exp) || (arg instanceof OperatorExpression) && (((OperatorExpression) arg).contains(exp)))
+				return true;
+		return false;
+	}
+	
 }
