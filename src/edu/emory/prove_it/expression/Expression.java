@@ -428,11 +428,6 @@ public abstract class Expression implements Comparable<Expression>, Cloneable, S
 	public Expression substitute(Expression quid, Expression quo) {
 		
 		/* TODO:
-		 * This builds a new OperatorExpression even if this contains no instances of quid,
-		 * which I consider a design flaw but can't envision a way around.  L.V.
-		 */
-		
-		/* TODO:
 		 * This may have a problem with messing up the precedence of operators. For example,
 		 * if this expression is a - b(c+d) and quid = b(c+d), while quo = bc + bd the substitution
 		 * results in a - bc + bd, which is incorrect. Parens are needed.
@@ -441,7 +436,7 @@ public abstract class Expression implements Comparable<Expression>, Cloneable, S
 		if (this.equals(quid)) {
 			return quo;
 		}
-		else if (this instanceof OperatorExpression) {
+		else if (this instanceof OperatorExpression && ((OperatorExpression) this).contains(quid)) {
 			OperatorExpression oeThis = (OperatorExpression) this;
 			ArrayList<Expression> args = new ArrayList<Expression>(oeThis.getNumArgs());
 			for (int i=0; i < oeThis.getNumArgs(); i++) {
