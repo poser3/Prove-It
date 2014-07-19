@@ -248,7 +248,7 @@ public abstract class Expression implements Comparable<Expression>, Cloneable, S
 	public boolean isEquation() {
 		if (this instanceof OperatorExpression) {
 			OperatorExpression oe = (OperatorExpression) this;
-			return (oe.getOp().equals(new Operator("="))); 
+			return (oe.getOp().equals(Operators.named("="))); 
 		}
 		else {
 			return false;
